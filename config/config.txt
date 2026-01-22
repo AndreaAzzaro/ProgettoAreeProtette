@@ -1,0 +1,55 @@
+# Configurazione Mensa 'Oasi del Golfo' (Versione Completa - 30pt)
+
+# --- Parametri Temporali ---
+# Durata simulazione in giorni
+SIM_DURATION=1 
+# Nanosecondi per minuto simulato (es. 1ms = 1min -> 60000ns?? No, 1minuto reale = X ns simulati)
+# Se vogliamo che 1 giorno duri poco, 1 minuto simulato deve essere veloce.
+# Mettiamo che 1 giorno (8 ore lavorative? O 24h?) duri qualche secondo reale.
+NNANOSECS=100000 
+
+# --- Parametri Stazioni e Operatori ---
+# Numero totale processi operatore (esclusi cassieri o inclusi? La traccia dice "N processi operatore... e operatorecassa")
+NOF_WORKERS=10
+# Postazioni per servizio (quanti operatori possono servire contemporaneamente)
+NOF_WK_SEATS_PRIMI=2
+NOF_WK_SEATS_SECONDI=2
+NOF_WK_SEATS_COFFEE=2
+NOF_WK_SEATS_CASSA=2
+
+# Tempi medi di servizio (in secondi simulati, o minuti?) - Assumiamo secondi reali per semplicità o unità di tempo
+# La traccia dice "AVG... secondi".
+AVG_SRVC_PRIMI=3
+AVG_SRVC_SECONDI=4
+AVG_SRVC_COFFEE=2
+AVG_SRVC_CASSA=3
+
+# Pause
+NOF_PAUSE=3
+
+# --- Parametri Cibo e Refill ---
+# Quantità iniziale e massima
+AVG_REFILL_PRIMI=20
+AVG_REFILL_SECONDI=20
+MAX_PORZIONI_PRIMI=50
+MAX_PORZIONI_SECONDI=50
+# Tempo di refill (Versione Completa)
+AVG_REFILL_TIME=5
+
+# --- Parametri Utenti ---
+NOF_USERS=50
+# Soglia overload (utenti in attesa a fine giornata)
+OVERLOAD_THRESHOLD=100
+# Max utenti per gruppo
+MAX_USERS_PER_GROUP=4
+
+# --- Prezzi ---
+PRICE_PRIMI=5
+PRICE_SECONDI=7
+PRICE_COFFEE=1
+
+# --- Parametri Extra (Versione 30pt) ---
+# Durata blocco cassa (communication disorder)
+STOP_DURATION=10
+# Numero nuovi utenti da aggiungere dinamicamente
+N_NEW_USERS=10
