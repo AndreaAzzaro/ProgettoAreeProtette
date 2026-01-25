@@ -3,171 +3,191 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define CONFIG_PATH "config/config.conf"
-#define MAX_LINE_LEN 256
+/** Path predefinito per il file di configurazione */
+#define CONFIGURATION_FILE_PATH "config/config.conf"
+#define MAX_LINE_LENGTH 256
 
-// 1. DEFINIAMO UN ENUM PER IDENTIFICARE LE CHIAVI
-// Questo trasforma le stringhe in numeri gestibili dallo switch
+/**
+ * @brief Identificatori univoci per le chiavi di configurazione.
+ */
 typedef enum {
     KEY_UNKNOWN = 0,
     
-    // Quantities
-    KEY_N_WORKERS, KEY_N_USERS, KEY_N_NEW_USERS, KEY_N_PAUSE,
+    /* Quantities */
+    KEY_NUMBER_OF_WORKERS, 
+    KEY_NUMBER_OF_USERS, 
+    KEY_NUMBER_OF_NEW_USERS_BATCH, 
+    KEY_NUMBER_OF_PAUSE, 
+    KEY_MAXIMUM_USERS_PER_GROUP,
     
-    // Seats
-    KEY_SEATS_PRIMI, KEY_SEATS_SECONDI, KEY_SEATS_COFFEE, KEY_SEATS_CASSA, KEY_TOTAL_SEATS,
+    /* Seats */
+    KEY_SEATS_PRIMI, 
+    KEY_SEATS_SECONDI, 
+    KEY_SEATS_COFFEE, 
+    KEY_SEATS_CASSA, 
+    KEY_TOTAL_DINING_SEATS,
     
-    // Prices
-    KEY_PRICE_PRIMI, KEY_PRICE_SECONDI, KEY_PRICE_COFFEE,
+    /* Prices */
+    KEY_PRICE_PRIMI, 
+    KEY_PRICE_SECONDI, 
+    KEY_PRICE_COFFEE,
     
-    // Timings
-    KEY_SIM_DURATION, KEY_N_NANO_SECS, 
-    KEY_AVG_SERVICE_PRIMI, KEY_AVG_SERVICE_MAIN, KEY_AVG_SERVICE_COFFEE, 
-    KEY_AVG_SERVICE_CASSA, KEY_AVG_REFILL_TIME, KEY_STOP_DURATION,
-    
-    // Threshold
-    KEY_OVERLOAD_THRESHOLD
-} ConfigKey;
+    /* Timings */
+    KEY_SIMULATION_DURATION, 
+    KEY_MEAL_DURATION, 
+    KEY_NANOSECONDS_PER_TICK, 
+    KEY_AVERAGE_SERVICE_PRIMI, 
+    KEY_AVERAGE_SERVICE_SECONDI, 
+    KEY_AVERAGE_SERVICE_COFFEE, 
+    KEY_AVERAGE_SERVICE_CASSA, 
+    KEY_AVERAGE_SERVICE_TICKET,
+    KEY_AVERAGE_REFILL_TIME, 
+    KEY_STOP_DURATION,
+      
+    /* Thresholds */
+    KEY_OVERLOAD_THRESHOLD,
+    KEY_MAXIMUM_PORTIONS_PRIMI, 
+    KEY_MAXIMUM_PORTIONS_SECONDI,
+    KEY_REFILL_AMOUNT_PRIMI, 
+    KEY_REFILL_AMOUNT_SECONDI,
+    KEY_QUEUE_PATIENCE_THRESHOLD
+} ConfigurationKey;
 
-// 2. CREIAMO UNA TABELLA DI MAPPING (LOOKUP TABLE)
-// Associa la stringa nel file al valore Enum corrispondente
-// 2. CREIAMO UNA TABELLA DI MAPPING (LOOKUP TABLE)
-// Associa la stringa nel file al valore Enum corrispondente
+/**
+ * @brief Associazione tra stringa nel file e identificatore Enum.
+ */
 typedef struct {
     const char *string_key;
-    ConfigKey enum_key;
-} KeyMap;
+    ConfigurationKey enum_identifier;
+} ConfigurationKeyMap;
 
-static const KeyMap mapping_table[] = {
-    // Quantities (NOF_...)
-    {"NOF_WORKERS", KEY_N_WORKERS},
-    {"NOF_USERS", KEY_N_USERS},
-    {"N_NEW_USERS", KEY_N_NEW_USERS}, // Questo è ok da config.txt
-    {"NOF_PAUSE", KEY_N_PAUSE},
+/** Tabella di lookup per la risoluzione delle chiavi */
+static const ConfigurationKeyMap configuration_mapping_table[] = {
+    {"NOF_WORKERS", KEY_NUMBER_OF_WORKERS},
+    {"NOF_USERS", KEY_NUMBER_OF_USERS},
+    {"N_NEW_USERS", KEY_NUMBER_OF_NEW_USERS_BATCH},
+    {"NOF_PAUSE", KEY_NUMBER_OF_PAUSE},
+    {"MAX_USERS_PER_GROUP", KEY_MAXIMUM_USERS_PER_GROUP},
     
-    // Seats (NOF_WK_SEATS_...)
     {"NOF_WK_SEATS_PRIMI", KEY_SEATS_PRIMI},
     {"NOF_WK_SEATS_SECONDI", KEY_SEATS_SECONDI},
     {"NOF_WK_SEATS_COFFEE", KEY_SEATS_COFFEE},
     {"NOF_WK_SEATS_CASSA", KEY_SEATS_CASSA},
-    {"NOF_TABLE_SEATS", KEY_TOTAL_SEATS}, // O TOTAL_SEATS, dipenda da config.txt. Useremo TOTAL_SEATS come fallback
+    {"NOF_TABLE_SEATS", KEY_TOTAL_DINING_SEATS},
     
-    // Prices (PRICE_...)
     {"PRICE_PRIMI", KEY_PRICE_PRIMI},
     {"PRICE_SECONDI", KEY_PRICE_SECONDI},
     {"PRICE_COFFEE", KEY_PRICE_COFFEE},
     
-    // Timings
-    {"SIM_DURATION", KEY_SIM_DURATION},
-    {"NNANOSECS", KEY_N_NANO_SECS},
-    {"AVG_SRVC_PRIMI", KEY_AVG_SERVICE_PRIMI},
-    {"AVG_SRVC_SECONDI", KEY_AVG_SERVICE_MAIN}, // Mappato su SECONDI nel txt
-    {"AVG_SRVC_COFFEE", KEY_AVG_SERVICE_COFFEE},
-    {"AVG_SRVC_CASSA", KEY_AVG_SERVICE_CASSA},
-    {"AVG_REFILL_TIME", KEY_AVG_REFILL_TIME},
+    {"SIM_DURATION", KEY_SIMULATION_DURATION},
+    {"SIM_PASTO_DURATION", KEY_MEAL_DURATION},
+    {"NNANOSECS", KEY_NANOSECONDS_PER_TICK},
+    {"AVG_SRVC_PRIMI", KEY_AVERAGE_SERVICE_PRIMI},
+    {"AVG_SRVC_SECONDI", KEY_AVERAGE_SERVICE_SECONDI},
+    {"AVG_SRVC_COFFEE", KEY_AVERAGE_SERVICE_COFFEE},
+    {"AVG_SRVC_CASSA", KEY_AVERAGE_SERVICE_CASSA},
+    {"AVG_SRVC_TICKET", KEY_AVERAGE_SERVICE_TICKET},
+    {"AVG_REFILL_TIME", KEY_AVERAGE_REFILL_TIME},
     {"STOP_DURATION", KEY_STOP_DURATION},
     
-    // Threshold
     {"OVERLOAD_THRESHOLD", KEY_OVERLOAD_THRESHOLD},
+    {"MAX_PORZIONI_PRIMI", KEY_MAXIMUM_PORTIONS_PRIMI},
+    {"MAX_PORZIONI_SECONDI", KEY_MAXIMUM_PORTIONS_SECONDI},
+    {"AVG_REFILL_PRIMI", KEY_REFILL_AMOUNT_PRIMI},
+    {"AVG_REFILL_SECONDI", KEY_REFILL_AMOUNT_SECONDI},
+    {"QUEUE_PATIENCE_THRESHOLD", KEY_QUEUE_PATIENCE_THRESHOLD},
     
-    {NULL, KEY_UNKNOWN} // Sentinella di fine array
+    {NULL, KEY_UNKNOWN}
 };
 
-// 3. FUNZIONE DI RISOLUZIONE
-// Converte stringa -> Enum scorrendo la tabella
-ConfigKey resolve_key(const char *key) {
-    for (int i = 0; mapping_table[i].string_key != NULL; i++) {
-        if (strcmp(key, mapping_table[i].string_key) == 0) {
-            return mapping_table[i].enum_key;
+/**
+ * @brief Risolve una stringa di testo nell'identificatore di configurazione corrispondente.
+ */
+static ConfigurationKey resolve_configuration_key(const char *key_string) {
+    ConfigurationKey found_key = KEY_UNKNOWN;
+    int i = 0;
+    while (configuration_mapping_table[i].string_key != NULL) {
+        if (strcmp(key_string, configuration_mapping_table[i].string_key) == 0) {
+            found_key = configuration_mapping_table[i].enum_identifier;
         }
+        i++;
     }
-    return KEY_UNKNOWN;
+    return found_key;
 }
 
-// 4. IMPLEMENTAZIONE LOAD CONFIG CON SWITCH
-SimConfig loadConfig() {
-    SimConfig cfg;
-    memset(&cfg, 0, sizeof(SimConfig));
+SimulationConfiguration load_simulation_configuration() {
+    SimulationConfiguration configuration;
+    memset(&configuration, 0, sizeof(SimulationConfiguration));
 
-    FILE *file = fopen(CONFIG_PATH, "r");
-    if (file == NULL) {
-        // Fallback: prova se esiste nella directory corrente
-        file = fopen("config.txt", "r");
-        if (file == NULL) {
+    FILE *config_file = fopen(CONFIGURATION_FILE_PATH, "r");
+    if (config_file == NULL) {
+        config_file = fopen("config.conf", "r");
+        if (config_file == NULL) {
             perror("ERRORE CRITICO: Impossibile aprire il file di configurazione");
             exit(EXIT_FAILURE);
         }
     }
 
-    char line[MAX_LINE_LEN];
-    char key_str[100];
-    long val;
+    char line_buffer[MAX_LINE_LENGTH];
+    while (fgets(line_buffer, sizeof(line_buffer), config_file)) {
+        if (line_buffer[0] != '#' && line_buffer[0] != '\n' && line_buffer[0] != '\r') {
+            char *equality_position = strchr(line_buffer, '=');
+            if (equality_position != NULL) {
+                *equality_position = '\0';
+                char *key_part = line_buffer;
+                char *value_part = equality_position + 1;
 
-    while (fgets(line, sizeof(line), file)) {
-        // Salta commenti e righe vuote
-        if (line[0] == '#' || line[0] == '\n' || line[0] == '\r') continue;
+                while (*key_part == ' ' || *key_part == '\t') key_part++;
+                int key_length = strlen(key_part);
+                while (key_length > 0 && (key_part[key_length - 1] == ' ' || key_part[key_length - 1] == '\t' || key_part[key_length - 1] == '\n' || key_part[key_length - 1] == '\r')) {
+                    key_part[--key_length] = '\0';
+                }
 
-        // Parsing robusto: cerca CHIAVE=VALORE o CHIAVE = VALORE
-        char *eq_pos = strchr(line, '=');
-        if (eq_pos) {
-            *eq_pos = '\0'; // Spezza la stringa sull'uguale
-            char *key = line;
-            char *val_str = eq_pos + 1;
+                long variable_value = atol(value_part);
+                ConfigurationKey identified_key = resolve_configuration_key(key_part);
 
-            // Trim manuale (molto grezzo ma efficace per questo scopo)
-            while(*key == ' ') key++; // Salta spazi iniziali chiave
-            // Per la chiave, dobbiamo rimuovere spazi finali PRIMA dell'uguale
-            int len = strlen(key);
-            while(len > 0 && (key[len-1] == ' ' || key[len-1] == '\t')) key[--len] = '\0';
-
-            val = atol(val_str); // Converte il valore
-            strcpy(key_str, key); // Copia per lo switch
-
-            // --- QUI AVVIENE LA MAGIA ---
-            switch (resolve_key(key_str)) {
-                
-                // Quantities
-                case KEY_N_WORKERS:     cfg.quantities.n_workers = (int)val; break;
-                
-                /* Mapping corretto per i nomi usati in config.txt */
-                case KEY_N_USERS:       cfg.quantities.n_users = (int)val; break;
-                case KEY_N_NEW_USERS:   cfg.quantities.n_new_users = (int)val; break;
-                case KEY_N_PAUSE:       cfg.quantities.n_pause = (int)val; break;
-                
-                // Seats
-                case KEY_SEATS_PRIMI:   cfg.seat.primi = (int)val; break;
-                case KEY_SEATS_SECONDI: cfg.seat.secondi = (int)val; break;
-                case KEY_SEATS_COFFEE:  cfg.seat.coffee = (int)val; break;
-                case KEY_SEATS_CASSA:   cfg.seat.cassa = (int)val; break;
-                case KEY_TOTAL_SEATS:   cfg.seat.seats = (int)val; break;
-                
-                // Prices
-                case KEY_PRICE_PRIMI:   cfg.price.primi = (int)val; break;
-                case KEY_PRICE_SECONDI: cfg.price.secondi = (int)val; break;
-                case KEY_PRICE_COFFEE:  cfg.price.coffee = (int)val; break;
-                
-                // Timings
-                case KEY_SIM_DURATION:       cfg.timing.sim_duration = (int)val; break;
-                case KEY_N_NANO_SECS:        cfg.timing.n_nano_secs = val; break;
-                case KEY_AVG_SERVICE_PRIMI:  cfg.timing.avg_service_primi = (int)val; break;
-                case KEY_AVG_SERVICE_MAIN:   cfg.timing.avg_service_main = (int)val; break;
-                case KEY_AVG_SERVICE_COFFEE: cfg.timing.avg_service_coffee = (int)val; break;
-                case KEY_AVG_SERVICE_CASSA:  cfg.timing.avg_service_cassa = (int)val; break;
-                case KEY_AVG_REFILL_TIME:    cfg.timing.avg_refill_time = (int)val; break;
-                case KEY_STOP_DURATION:      cfg.timing.stop_duration = (int)val; break;
-                
-                // Threshold
-                case KEY_OVERLOAD_THRESHOLD: cfg.threshold.overload_threshold = (int)val; break;
-
-                case KEY_UNKNOWN:
-                default:
-                    // printf("Warning: Chiave ignorata: '%s'\n", key_str); // Debug verbose off
-                    break;
+                switch (identified_key) {
+                    case KEY_NUMBER_OF_WORKERS: configuration.quantities.number_of_workers = (int)variable_value; break;
+                    case KEY_NUMBER_OF_USERS: configuration.quantities.number_of_initial_users = (int)variable_value; break;
+                    case KEY_NUMBER_OF_NEW_USERS_BATCH: configuration.quantities.number_of_new_users_batch = (int)variable_value; break;
+                    case KEY_NUMBER_OF_PAUSE: configuration.quantities.number_of_allowed_breaks = (int)variable_value; break;
+                    case KEY_MAXIMUM_USERS_PER_GROUP: configuration.quantities.maximum_users_per_group = (int)variable_value; break;
+                    
+                    case KEY_SEATS_PRIMI: configuration.seats.seats_first_course = (int)variable_value; break;
+                    case KEY_SEATS_SECONDI: configuration.seats.seats_second_course = (int)variable_value; break;
+                    case KEY_SEATS_COFFEE: configuration.seats.seats_coffee_dessert = (int)variable_value; break;
+                    case KEY_SEATS_CASSA: configuration.seats.seats_cash_desk = (int)variable_value; break;
+                    case KEY_TOTAL_DINING_SEATS: configuration.seats.total_dining_seats = (int)variable_value; break;
+                    
+                    case KEY_PRICE_PRIMI: configuration.prices.price_first_course = (double)variable_value; break;
+                    case KEY_PRICE_SECONDI: configuration.prices.price_second_course = (double)variable_value; break;
+                    case KEY_PRICE_COFFEE: configuration.prices.price_coffee_dessert = (double)variable_value; break;
+                    
+                    case KEY_SIMULATION_DURATION: configuration.timings.simulation_duration_days = (int)variable_value; break;
+                    case KEY_MEAL_DURATION: configuration.timings.meal_duration_minutes = (int)variable_value; break;
+                    case KEY_NANOSECONDS_PER_TICK: configuration.timings.nanoseconds_per_tick = variable_value; break;
+                    case KEY_AVERAGE_SERVICE_PRIMI: configuration.timings.average_service_time_primi = (int)variable_value; break;
+                    case KEY_AVERAGE_SERVICE_SECONDI: configuration.timings.average_service_time_secondi = (int)variable_value; break;
+                    case KEY_AVERAGE_SERVICE_COFFEE: configuration.timings.average_service_time_coffee = (int)variable_value; break;
+                    case KEY_AVERAGE_SERVICE_CASSA: configuration.timings.average_service_time_cassa = (int)variable_value; break;
+                    case KEY_AVERAGE_SERVICE_TICKET: configuration.timings.average_service_time_ticket = (int)variable_value; break;
+                    case KEY_AVERAGE_REFILL_TIME: configuration.timings.average_refill_time = (int)variable_value; break;
+                    case KEY_STOP_DURATION: configuration.timings.stop_duration_minutes = (int)variable_value; break;
+                    
+                    case KEY_OVERLOAD_THRESHOLD: configuration.thresholds.overload_threshold = (int)variable_value; break;
+                    case KEY_MAXIMUM_PORTIONS_PRIMI: configuration.thresholds.maximum_portions_primi = (int)variable_value; break;
+                    case KEY_MAXIMUM_PORTIONS_SECONDI: configuration.thresholds.maximum_portions_secondi = (int)variable_value; break;
+                    case KEY_REFILL_AMOUNT_PRIMI: configuration.thresholds.refill_amount_primi = (int)variable_value; break;
+                    case KEY_REFILL_AMOUNT_SECONDI: configuration.thresholds.refill_amount_secondi = (int)variable_value; break;
+                    case KEY_QUEUE_PATIENCE_THRESHOLD: configuration.thresholds.queue_patience_threshold = (int)variable_value; break;
+                    
+                    default: break;
+                }
             }
         }
     }
 
-    fclose(file);
-    printf("Configurazione caricata correttamente.\n");
-    return cfg;
+    fclose(config_file);
+    printf("[CONFIG] Parametri caricati correttamente.\n");
+    return configuration;
 }

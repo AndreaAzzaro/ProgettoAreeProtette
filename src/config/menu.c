@@ -3,72 +3,156 @@
 #include <string.h>
 #include "../../include/menu.h"
 
-Menu load_menu() {
-    Menu m;
-    // Pulisce tutto a 0 per sicurezza
-    memset(&m, 0, sizeof(Menu));
+/* ==========================================================================
+ *                          TIPI E MAPPING INTERNI
+ * ========================================================================= */
 
-    FILE *file = fopen(MENU_CONFIG_PATH, "r");
-    if (file == NULL) {
-        // Fallback locale
-        file = fopen("menu.txt", "r");
-        if (file == NULL) {
-            perror("ERRORE CRITICO: Impossibile aprire menu.txt");
+/**
+ * @brief Identificatori interni per la risoluzione della chiave nel file.
+ */
+typedef enum {
+    CATEGORY_KEY_UNKNOWN = -1,
+    CATEGORY_KEY_FIRST,
+    CATEGORY_KEY_SECOND,
+    CATEGORY_KEY_SIDE,
+    CATEGORY_KEY_DESSERT,
+    CATEGORY_KEY_BEVERAGE
+} MenuCategoryKey;
+
+/**
+ * @brief Struttura per il mapping tra flag del file e categoria interna.
+ */
+typedef struct {
+    const char *character_key;
+    MenuCategoryKey enum_identifier;
+} MenuCategoryKeyMap;
+
+/** Tabella di lookup per i flag del menu (P=Primo, S=Secondo, etc.) */
+static const MenuCategoryKeyMap menu_category_mapping_table[] = {
+    {"P", CATEGORY_KEY_FIRST},
+    {"S", CATEGORY_KEY_SECOND},
+    {"C", CATEGORY_KEY_SIDE},
+    {"D", CATEGORY_KEY_DESSERT},
+    {"B", CATEGORY_KEY_BEVERAGE},
+    {NULL, CATEGORY_KEY_UNKNOWN}
+};
+
+/* ==========================================================================
+ *                          FUNZIONI PRIVATE
+ * ========================================================================= */
+
+/**
+ * @brief Risolve il flag testuale del file nella categoria corrispondente.
+ */
+static MenuCategoryKey resolve_menu_category_key(const char *key_string) {
+    MenuCategoryKey identified_category = CATEGORY_KEY_UNKNOWN;
+    int i = 0;
+    while (menu_category_mapping_table[i].character_key != NULL) {
+        if (strcmp(key_string, menu_category_mapping_table[i].character_key) == 0) {
+            identified_category = menu_category_mapping_table[i].enum_identifier;
+        }
+        i++;
+    }
+    return identified_category;
+}
+
+/* ==========================================================================
+ *                          FUNZIONI PUBBLICHE
+ * ========================================================================= */
+
+SimulationMenu load_simulation_menu() {
+    SimulationMenu menu_data;
+    memset(&menu_data, 0, sizeof(SimulationMenu));
+
+    FILE *menu_config_file = fopen(MENU_CONFIGURATION_PATH, "r");
+    if (menu_config_file == NULL) {
+        menu_config_file = fopen("config/menu.conf", "r");
+        if (menu_config_file == NULL) {
+            perror("ERRORE CRITICO: Impossibile aprire file menu.conf");
             exit(EXIT_FAILURE);
         }
     }
 
-    char line[128];
-    while (fgets(line, sizeof(line), file)) {
-        // Salta commenti e righe vuote
-        if (line[0] == '#' || line[0] == '\n' || line[0] == '\r') continue;
-
-        char type;
-        char name[MAX_DISH_NAME];
-
-        // Formato atteso: TIPO NOME (es: P Pasta_al_Pomodoro)
-        if (sscanf(line, " %c %31s", &type, name) == 2) {
+    char line_buffer[128];
+    while (fgets(line_buffer, sizeof(line_buffer), menu_config_file)) {
+        /* Gestione righe valide (no commenti, no vuote) - Sostituzione di 'continue' */
+        if (line_buffer[0] != '#' && line_buffer[0] != '\n' && line_buffer[0] != '\r') {
             
-            switch (type) {
-                case 'P': // Primo
-                    if (m.n_primi < MAX_DISHES_PER_TYPE) {
-                        strcpy(m.primi[m.n_primi].name, name);
-                        m.n_primi++;
-                    }
-                    break;
-                case 'S': // Secondo
-                    if (m.n_secondi < MAX_DISHES_PER_TYPE) {
-                        strcpy(m.secondi[m.n_secondi].name, name);
-                        m.n_secondi++;
-                    }
-                    break;
-                case 'C': // Contorno
-                    if (m.n_contorni < MAX_DISHES_PER_TYPE) {
-                        strcpy(m.contorni[m.n_contorni].name, name);
-                        m.n_contorni++;
-                    }
-                    break;
-                case 'D': // Dolce
-                    if (m.n_desserts < MAX_DISHES_PER_TYPE) {
-                        strcpy(m.desserts[m.n_desserts].name, name);
-                        m.n_desserts++;
-                    }
-                    break;
-                case 'B': // Bevanda/Caffè
-                    if (m.n_beverages < MAX_DISHES_PER_TYPE) {
-                        strcpy(m.beverages[m.n_beverages].name, name);
-                        m.n_beverages++;
-                    }
-                    break;
-                default:
-                    fprintf(stderr, "Warning: Tipo piatto sconosciuto '%c' in menu.txt\n", type);
+            char type_identifier[4];
+            char dish_name[MAX_DISH_NAME_LENGTH];
+
+            /* Parsing: Identificatore categoria (P, S, C, D, B) e Nome Piatto */
+            if (sscanf(line_buffer, "%3s %31s", type_identifier, dish_name) == 2) {
+                
+                switch (resolve_menu_category_key(type_identifier)) {
+                    case CATEGORY_KEY_FIRST:
+                        if (menu_data.number_of_first_courses < MAX_DISHES_PER_CATEGORY) {
+                            strcpy(menu_data.first_courses[menu_data.number_of_first_courses].name, dish_name);
+                            menu_data.number_of_first_courses++;
+                        }
+                        break;
+                    case CATEGORY_KEY_SECOND:
+                        if (menu_data.number_of_second_courses < MAX_DISHES_PER_CATEGORY) {
+                            strcpy(menu_data.second_courses[menu_data.number_of_second_courses].name, dish_name);
+                            menu_data.number_of_second_courses++;
+                        }
+                        break;
+                    case CATEGORY_KEY_SIDE:
+                        if (menu_data.number_of_side_courses < MAX_DISHES_PER_CATEGORY) {
+                            strcpy(menu_data.side_courses[menu_data.number_of_side_courses].name, dish_name);
+                            menu_data.number_of_side_courses++;
+                        }
+                        break;
+                    case CATEGORY_KEY_DESSERT:
+                        if (menu_data.number_of_dessert_courses < MAX_DISHES_PER_CATEGORY) {
+                            strcpy(menu_data.dessert_courses[menu_data.number_of_dessert_courses].name, dish_name);
+                            menu_data.number_of_dessert_courses++;
+                        }
+                        break;
+                    case CATEGORY_KEY_BEVERAGE:
+                        if (menu_data.number_of_beverage_courses < MAX_DISHES_PER_CATEGORY) {
+                            strcpy(menu_data.beverage_courses[menu_data.number_of_beverage_courses].name, dish_name);
+                            menu_data.number_of_beverage_courses++;
+                        }
+                        break;
+                    case CATEGORY_KEY_UNKNOWN:
+                    default:
+                        fprintf(stderr, "Warning: Categoria piatto '%s' non riconosciuta.\n", type_identifier);
+                        break;
+                }
             }
         }
     }
 
-    fclose(file);
-    printf("Menu caricato: %d Primi, %d Secondi, %d Contorni, %d Dolci, %d Bevande.\n",
-           m.n_primi, m.n_secondi, m.n_contorni, m.n_desserts, m.n_beverages);
+    fclose(menu_config_file);
+    printf("[MENU] Configurazione menu caricata correttamente.\n");
+    return menu_data;
+}
+
+const char* get_dish_name_by_id(SimulationMenu *menu_ptr, MenuDishCategory category, int dish_index) {
+    const char* result = "Sconosciuto";
+
+    if (menu_ptr != NULL && dish_index >= 0 && dish_index < MAX_DISHES_PER_CATEGORY) {
+        switch (category) {
+            case MENU_DISH_TYPE_FIRST_COURSE:
+                result = menu_ptr->first_courses[dish_index].name;
+                break;
+            case MENU_DISH_TYPE_SECOND_COURSE:
+                result = menu_ptr->second_courses[dish_index].name;
+                break;
+            case MENU_DISH_TYPE_SIDE_COURSE:
+                result = menu_ptr->side_courses[dish_index].name;
+                break;
+            case MENU_DISH_TYPE_DESSERT:
+                result = menu_ptr->dessert_courses[dish_index].name;
+                break;
+            case MENU_DISH_TYPE_BEVERAGE:
+                result = menu_ptr->beverage_courses[dish_index].name;
+                break;
+            default:
+                break;
+        }
+    }
     
-    return m;
+    return result;
 }

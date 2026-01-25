@@ -3,7 +3,6 @@
 
 # Compilatore e Flag
 CC = gcc
-# -D_GNU_SOURCE è fondamentale per abilitare le estensioni GNU (riferimento consegna riga 273-274)
 CFLAGS = -Wall -Wextra -std=c11 -D_GNU_SOURCE -Iinclude
 LDFLAGS = 
 
@@ -11,53 +10,68 @@ LDFLAGS =
 SRC_DIR = src
 OBJ_DIR = obj
 BIN_DIR = bin
-INCLUDE_DIR = include
 
 # Moduli comuni (librerie interne)
 COMMON_SRCS = $(SRC_DIR)/common/common.c \
-              $(SRC_DIR)/common/menu.c \
+              $(SRC_DIR)/config/menu.c \
               $(SRC_DIR)/config/config.c \
               $(SRC_DIR)/ipc/sem.c \
               $(SRC_DIR)/ipc/shm.c \
               $(SRC_DIR)/ipc/queue.c \
               $(SRC_DIR)/statistics/statistics.c \
-              $(SRC_DIR)/utils/utils.c
+              $(SRC_DIR)/utils/utils.c \
+              $(SRC_DIR)/signal/signals_handler.c
 
-# Trasforma i .c in .o mantenendo la struttura delle cartelle in obj/
 COMMON_OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(COMMON_SRCS))
 
-# Lista dei programmi da generare
+# Programmi
 PROGS = add_users communication_disorder operatore operatore_cassa responsabile_mensa utente
 TARGETS = $(addprefix $(BIN_DIR)/, $(PROGS))
 
-# Regola di default
 all: $(TARGETS)
 
-# Regola per linkare ogni singolo programma
-# Ogni programma dipende dai suoi oggetti specifici e da tutti i moduli comuni
-$(BIN_DIR)/%: $(OBJ_DIR)/programs/%/%.o $(COMMON_OBJS) | $(BIN_DIR)
+# Regola per ogni eseguibile
+$(BIN_DIR)/add_users: $(OBJ_DIR)/programs/add_users/add_users.o $(COMMON_OBJS) | $(BIN_DIR)
 	@echo "Linking $@..."
-	@$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
+	@$(CC) $(CFLAGS) $^ -o $@
 
-# Regola per compilare gli oggetti dei programmi (aggiunge il path locale agli include)
-$(OBJ_DIR)/programs/%.o: $(SRC_DIR)/programs/%.c | $(OBJ_DIR)_dirs
+$(BIN_DIR)/communication_disorder: $(OBJ_DIR)/programs/communication_disorder/communication_disorder.o $(COMMON_OBJS) | $(BIN_DIR)
+	@echo "Linking $@..."
+	@$(CC) $(CFLAGS) $^ -o $@
+
+$(BIN_DIR)/operatore: $(OBJ_DIR)/programs/operatore/operatore.o $(COMMON_OBJS) | $(BIN_DIR)
+	@echo "Linking $@..."
+	@$(CC) $(CFLAGS) $^ -o $@
+
+$(BIN_DIR)/operatore_cassa: $(OBJ_DIR)/programs/operatore_cassa/operatore_cassa.o $(COMMON_OBJS) | $(BIN_DIR)
+	@echo "Linking $@..."
+	@$(CC) $(CFLAGS) $^ -o $@
+
+$(BIN_DIR)/responsabile_mensa: $(OBJ_DIR)/programs/responsabile_mensa/responsabile_mensa.o $(OBJ_DIR)/programs/responsabile_mensa/setup_ipc.o $(OBJ_DIR)/programs/responsabile_mensa/setup_population.o $(OBJ_DIR)/programs/responsabile_mensa/simulation_engine.o $(COMMON_OBJS) | $(BIN_DIR)
+	@echo "Linking $@..."
+	@$(CC) $(CFLAGS) $^ -o $@
+
+$(BIN_DIR)/utente: $(OBJ_DIR)/programs/utente/utente.o $(COMMON_OBJS) | $(BIN_DIR)
+	@echo "Linking $@..."
+	@$(CC) $(CFLAGS) $^ -o $@
+
+# Regola per compilare gli oggetti dei programmi
+$(OBJ_DIR)/programs/%/%.o: $(SRC_DIR)/programs/%/%.c | $(OBJ_DIR)_dirs
 	@echo "Compiling program module $<..."
-	@$(CC) $(CFLAGS) -I$(dir $<) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 # Regola generale per compilare i moduli comuni
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)_dirs
 	@echo "Compiling common module $<..."
 	@$(CC) $(CFLAGS) -c $< -o $@
 
-# Creazione cartelle necessarie
 $(BIN_DIR):
 	@mkdir -p $(BIN_DIR)
 
 $(OBJ_DIR)_dirs:
-	@mkdir -p $(OBJ_DIR)/common $(OBJ_DIR)/config $(OBJ_DIR)/ipc $(OBJ_DIR)/statistics $(OBJ_DIR)/utils
+	@mkdir -p $(OBJ_DIR)/common $(OBJ_DIR)/config $(OBJ_DIR)/ipc $(OBJ_DIR)/statistics $(OBJ_DIR)/utils $(OBJ_DIR)/signal
 	@mkdir -p $(addprefix $(OBJ_DIR)/programs/, $(PROGS))
 
-# Pulizia dei file compilati
 clean:
 	@echo "Cleaning up..."
 	@rm -rf $(OBJ_DIR) $(BIN_DIR)
