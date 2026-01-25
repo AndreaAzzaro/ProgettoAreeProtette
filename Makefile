@@ -4,7 +4,7 @@
 # Compilatore e Flag
 CC = gcc
 CFLAGS = -Wall -Wextra -std=c11 -D_GNU_SOURCE -Iinclude
-LDFLAGS = 
+LDFLAGS = -lrt
 
 # Directory del progetto
 SRC_DIR = src
@@ -33,27 +33,27 @@ all: $(TARGETS)
 # Regola per ogni eseguibile
 $(BIN_DIR)/add_users: $(OBJ_DIR)/programs/add_users/add_users.o $(COMMON_OBJS) | $(BIN_DIR)
 	@echo "Linking $@..."
-	@$(CC) $(CFLAGS) $^ -o $@
+	@$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
 
 $(BIN_DIR)/communication_disorder: $(OBJ_DIR)/programs/communication_disorder/communication_disorder.o $(COMMON_OBJS) | $(BIN_DIR)
 	@echo "Linking $@..."
-	@$(CC) $(CFLAGS) $^ -o $@
+	@$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
 
 $(BIN_DIR)/operatore: $(OBJ_DIR)/programs/operatore/operatore.o $(COMMON_OBJS) | $(BIN_DIR)
 	@echo "Linking $@..."
-	@$(CC) $(CFLAGS) $^ -o $@
+	@$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
 
 $(BIN_DIR)/operatore_cassa: $(OBJ_DIR)/programs/operatore_cassa/operatore_cassa.o $(COMMON_OBJS) | $(BIN_DIR)
 	@echo "Linking $@..."
-	@$(CC) $(CFLAGS) $^ -o $@
+	@$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
 
 $(BIN_DIR)/responsabile_mensa: $(OBJ_DIR)/programs/responsabile_mensa/responsabile_mensa.o $(OBJ_DIR)/programs/responsabile_mensa/setup_ipc.o $(OBJ_DIR)/programs/responsabile_mensa/setup_population.o $(OBJ_DIR)/programs/responsabile_mensa/simulation_engine.o $(COMMON_OBJS) | $(BIN_DIR)
 	@echo "Linking $@..."
-	@$(CC) $(CFLAGS) $^ -o $@
+	@$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
 
 $(BIN_DIR)/utente: $(OBJ_DIR)/programs/utente/utente.o $(COMMON_OBJS) | $(BIN_DIR)
 	@echo "Linking $@..."
-	@$(CC) $(CFLAGS) $^ -o $@
+	@$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
 
 # Regola per compilare gli oggetti dei programmi
 $(OBJ_DIR)/programs/%/%.o: $(SRC_DIR)/programs/%/%.c | $(OBJ_DIR)_dirs

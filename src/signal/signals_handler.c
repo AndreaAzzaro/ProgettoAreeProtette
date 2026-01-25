@@ -1,96 +1,76 @@
 /**
  * @file signals_handler.c
- * @brief Implementazione dei gestori di segnali per il sistema di simulazione.
+ * @brief Implementazione dei gestori di segnale.
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
-#include "../../include/signals_handler.h"
+#include "signals_handler.h"
 
-/* ==========================================================================
- *                          COSTANTI E MACRO
- * ========================================================================= */
-
-/** Prefisso per i messaggi di log relativi ai segnali */
-#define SIGNAL_LOG_PREFIX "[SISTEMA-SEGNALI]"
-
-/* ==========================================================================
- *                          VARIABILI GLOBALI
- * ========================================================================= */
-
+/* Definizione variabili globali atomiche */
 volatile sig_atomic_t refill_request_flag = 0;
 volatile sig_atomic_t termination_requested_flag = 0;
 
-/* Puntatori interni per aggiornare lo stato nei processi figli */
-static volatile sig_atomic_t *child_simulation_status_ptr = NULL;
-static volatile sig_atomic_t *child_daily_cycle_status_ptr = NULL;
-
-/* ==========================================================================
- *                          SIGNAL HANDLERS (PRIVATE)
- * ========================================================================= */
+/* Puntatori a flag locali del processo figlio */
+static volatile sig_atomic_t *p_sim_running = NULL;
+static volatile sig_atomic_t *p_day_running = NULL;
 
 /**
- * @brief Gestore per i segnali di terminazione (SIGINT, SIGTERM).
- * 
- * Imposta la flag globale che verrà monitorata dal loop principale
- * per avviare la procedura di cleanup_ipc_resources.
+ * @brief Handler universale per terminazione pulita.
  */
-static void handle_termination_signal(int signal_number) {
-    (void)signal_number;
+static void handle_termination(int sig) {
     termination_requested_flag = 1;
-    
-    /* Se siamo un figlio, impostiamo a 0 la flag di esecuzione per uscire dai loop */
-    if (child_simulation_status_ptr != NULL) {
-        *child_simulation_status_ptr = 0;
+    if (p_sim_running) *p_sim_running = 0;
+    if (p_day_running) *p_day_running = 0;
+}
+
+/**
+ * @brief Handler per eventi specifici della simulazione.
+ */
+static void handle_simulation_event(int sig) {
+    if (sig == SIGUSR1) {
+        /* Es: richiesta dinamica nuovi utenti */
+    } else if (sig == SIGUSR2) {
+        /* Fine giornata per i figli o richiesta refill */
+        if (p_day_running) *p_day_running = 0;
+        refill_request_flag = 1;
     }
 }
 
-/**
- * @brief Gestore per la richiesta di rifornimento (SIGUSR2).
- */
-static void handle_refill_request_signal(int signal_number) {
-    (void)signal_number;
-    refill_request_flag = 1;
-}
-
-/* ==========================================================================
- *                          FUNZIONI PUBBLICHE
- * ========================================================================= */
-
 void configure_director_signal_handlers(void) {
-    struct sigaction termination_action;
-    struct sigaction refill_action;
+    struct sigaction sa_term, sa_event;
 
-    /* Configurazione per Terminazione (SIGINT, SIGTERM) */
-    termination_action.sa_handler = handle_termination_signal;
-    sigemptyset(&termination_action.sa_mask);
-    termination_action.sa_flags = SA_RESTART; /* Evita fallimento system calls lente */
+    /* Configurazione terminazione */
+    sa_term.sa_handler = handle_termination;
+    sigemptyset(&sa_term.sa_mask);
+    sa_term.sa_flags = 0;
+    sigaction(SIGINT, &sa_term, NULL);
+    sigaction(SIGTERM, &sa_term, NULL);
 
-    sigaction(SIGINT, &termination_action, NULL);
-    sigaction(SIGTERM, &termination_action, NULL);
-
-    /* Configurazione per Refill (SIGUSR2) */
-    refill_action.sa_handler = handle_refill_request_signal;
-    sigemptyset(&refill_action.sa_mask);
-    refill_action.sa_flags = SA_RESTART;
-
-    sigaction(SIGUSR2, &refill_action, NULL);
+    /* Configurazione eventi */
+    sa_event.sa_handler = handle_simulation_event;
+    sigemptyset(&sa_event.sa_mask);
+    sa_event.sa_flags = SA_RESTART;
+    sigaction(SIGUSR1, &sa_event, NULL);
+    sigaction(SIGUSR2, &sa_event, NULL);
 }
 
 void configure_child_signal_handlers(volatile sig_atomic_t *simulation_running_status, 
                                      volatile sig_atomic_t *daily_cycle_running_status) {
-    
-    /* Salviamo il riferimento alle flag del processo figlio per poterle resettare al volo */
-    child_simulation_status_ptr = simulation_running_status;
-    child_daily_cycle_status_ptr = daily_cycle_running_status;
+    p_sim_running = simulation_running_status;
+    p_day_running = daily_cycle_running_status;
 
-    struct sigaction child_termination_action;
-    
-    child_termination_action.sa_handler = handle_termination_signal;
-    sigemptyset(&child_termination_action.sa_mask);
-    child_termination_action.sa_flags = SA_RESTART;
+    struct sigaction sa;
+    sa.sa_handler = handle_termination;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+    sigaction(SIGINT, &sa, NULL);
+    sigaction(SIGTERM, &sa, NULL);
 
-    sigaction(SIGINT, &child_termination_action, NULL);
-    sigaction(SIGTERM, &child_termination_action, NULL);
+    struct sigaction sa_cycle;
+    sa_cycle.sa_handler = handle_simulation_event;
+    sigemptyset(&sa_cycle.sa_mask);
+    sa_cycle.sa_flags = SA_RESTART;
+    sigaction(SIGUSR2, &sa_cycle, NULL);
 }

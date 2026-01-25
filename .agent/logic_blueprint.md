@@ -4,7 +4,22 @@ Questo documento funge da "Memoria Centrale" per Antigravity. Deve essere consul
 
 ## 1. Architettura dei Processi
 
-- **Responsabile Mensa (Master):** Coordinatore principale, gestisce IPC e spawn dei processi figli.
+- **Responsabile Mensa (Master):** Coordinatore principale, gestisce IPC e spawn dei processi figli. Utilizza un'architettura a **Moduli (Facade)** centralizzata in `responsabile_mensa.h`.
+
+### Architettura del Responsabile Mensa
+
+Per gestire la complessità del processo Master, il codice è diviso in sotto-moduli operativi:
+
+- `setup_ipc`: Creazione e inizializzazione di SHM, Semafori e Code.
+- `setup_population`: Calcolo distribuzione e spawn di Operatori e Utenti.
+- `simulation_engine`: Ciclo di vita della simulazione (Giorno/Notte, Refill).
+
+**Double Prototype Pattern:**
+Ogni funzione dei sotto-moduli deve seguire questo schema:
+
+1.  **Definizione Dettagliata:** Nel file `.h` del modulo (es. `setup_ipc.h`) con JSDoc/Doxygen completo.
+2.  **Puntamento (Facade):** In `responsabile_mensa.h`, si ripete il prototipo con un commento che indica l'origine (es. `/* Definizione in setup_ipc.h */`). Questo permette di avere una vista globale di tutte le capacità del Master in un unico file.
+
 - **Operatore:** Processi dedicati al servizio e alla gestione delle scorte.
 - **Utente:** Processi che usufruiscono della mensa.
 - **Operatore Cassa:** Gestione pagamenti/flusso finale.
@@ -111,6 +126,11 @@ Per rendere efficiente la comunicazione tra processi tramite le code di messaggi
     4. Funzioni Private (`static`).
     5. Funzioni Pubbliche.
        Questo garantisce che la configurazione e lo stato globale siano visibili prima della logica.
+14. **Error First Policy (Compilation):** In caso di errore di compilazione (`gcc` failure), è obbligatorio interrompere qualsiasi azione automatica. Bisogna spiegare la causa tecnica dell'errore all'utente e proporre una soluzione formale in chat. La correzione fisica del file può avvenire solo dopo l'esplicito "procedi" dell'utente.
+15. **Main First Strategy:** In ogni file sorgente `.c` contenente un punto di ingresso, la funzione `main` deve essere posizionata all'inizio (subito dopo gli include e le variabili globali/statiche). Tutte le altre funzioni locali devono essere implementate sotto il `main`.
+16. **Function Shortness Policy:** Ogni funzione deve avere una lunghezza massima di 50 righe (escluse intestazioni JSDoc/Doxygen). Se la logica eccede questo limite, è obbligatorio scomporla in sotto-funzioni specializzate.
+17. **Cross-Document Compliance:** Ogni decisione tecnica e architetturale deve derivare dalla sintesi di tre documenti: `Governance Rules` (Global), `.agent/logic_blueprint.md` e `consegna.md`. La violazione di uno solo di questi documenti è considerata un errore critico.
+18. **Blueprint Persistence:** La logica definita nel `logic_blueprint.md` è immutabile e obbligatoria anche in "modalità emergenza", durante la ricostruzione di file persi o in caso di errori di sistema. Non sono ammesse semplificazioni o deviazioni senza esplicita approvazione.
 
 ## 6. Sviluppi Futuri (To-Do)
 

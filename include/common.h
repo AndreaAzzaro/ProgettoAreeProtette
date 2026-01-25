@@ -36,11 +36,13 @@ typedef enum {
  * Implementa il pattern "Ping-Pong Barrier" per l'avvio e la fine del giorno.
  */
 typedef enum {
-    BARRIER_MORNING_READY = 0,  /**< Mattina: Conteggio processi pronti alla partenza */
-    BARRIER_MORNING_GATE,       /**< Mattina: Cancello di avvio (aperto dal Direttore) */
+    BARRIER_STARTUP_READY = 0,  /**< Startup: Conteggio processi pronti all'avvio iniziale */
+    BARRIER_STARTUP_GATE,       /**< Startup: Cancello di avvio globale (aperto dal Direttore) */
+    BARRIER_MORNING_READY,      /**< Mattina: Conteggio processi pronti alla partenza giornaliera */
+    BARRIER_MORNING_GATE,       /**< Mattina: Cancello di avvio giornaliero */
     BARRIER_EVENING_READY,      /**< Sera: Conteggio processi arrivati a fine giornata */
-    BARRIER_EVENING_GATE,       /**< Sera: Cancello di chiusura/reset giorno e sblocco per il giorno successivo */
-    SYNC_BARRIER_SEM_COUNT      /**< Totale semafori in questo set */
+    BARRIER_EVENING_GATE,       /**< Sera: Cancello di chiusura/reset giorno e sblocco */
+    SYNC_BARRIER_SEM_COUNT      /**< Totale semafori in questo set (incrementato a 6) */
 } SyncBarrierIndex;
 
 /**
@@ -71,7 +73,7 @@ typedef struct {
     int message_queue_id;               /**< ID della coda di messaggi per gli ordini */
     int semaphore_set_id;               /**< ID del set di semafori della stazione (StationSemaphoreIndex) */
     int num_operators_assigned;         /**< Numero di operatori assegnati a questa stazione */
-    int portions[MAX_DISHES_PER_TYPE];  /**< Disponibilità fisica delle porzioni di cibo */
+    int portions[MAX_DISHES_PER_CATEGORY];  /**< Disponibilità fisica delle porzioni di cibo */
 } FoodDistributionStation;
 
 /**
@@ -95,10 +97,10 @@ typedef struct {
  * @brief Struttura principale della Memoria Condivisa.
  * Contiene lo stato globale della simulazione accessibile a tutti i processi.
  */
-typedef struct {
-    SimConfig configuration;            /**< Parametri di configurazione caricati dai file .conf */
-    SimulationStats statistics;         /**< Statistiche globali aggiornate in tempo reale */
-    Menu food_menu;                     /**< Menu della mensa con i nomi dei piatti */
+struct MainSharedMemory {
+    SimulationConfiguration configuration;    /**< Parametri di configurazione caricati dai file .conf */
+    SimulationStatistics statistics;          /**< Statistiche globali aggiornate in tempo reale */
+    SimulationMenu food_menu;                 /**< Menu della mensa con i nomi dei piatti */
     
     int shared_memory_id;               /**< ID della risorsa Shared Memory stessa */
     int semaphore_sync_id;              /**< ID Set Semafori Barriera (SyncBarrierIndex) */
@@ -118,7 +120,17 @@ typedef struct {
     int simulation_minutes_passed;      /**< Minuti simulati trascorsi dall'inizio del giorno */
     int is_simulation_running;          /**< Flag globale (1: Attiva, 0: Arresto Totale) */
     int current_simulation_status;      /**< Stato attuale (Aperto, In Chiusura, Disorder) */
-} MainSharedMemory;
+};
+
+typedef struct MainSharedMemory MainSharedMemory;
+
+/**
+ * @brief Collega il processo alla memoria condivisa della simulazione.
+ * 
+ * @param shared_memory_id ID della risorsa SHM (solitamente passato via argv).
+ * @return MainSharedMemory* Puntatore all'area di memoria, termina il processo su errore.
+ */
+MainSharedMemory* attach_to_simulation_shared_memory(int shared_memory_id);
 
 /**
  * @brief Esegue la pulizia di tutte le risorse IPC allocate.

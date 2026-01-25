@@ -10,6 +10,7 @@
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
+#include <stdbool.h>
 #include "../../include/queue.h"
 
 /* ==========================================================================
