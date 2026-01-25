@@ -62,7 +62,22 @@ Per gestire più giorni di simulazione, si utilizzano due set di barriere (Matti
 
 **Vantaggio Tecnico:** Il "Reset Incrociato" garantisce che la barriera inattiva sia sempre pronta e pulita prima che i processi la raggiungano, eliminando ogni possibile asincronia tra i giorni.
 
-_(Sezione da compilare seguendo le istruzioni dell'utente)_
+## 4. Gestione Segnali
+
+### Pattern di Controllo Asincrono
+
+La simulazione utilizza i segnali UNIX per gestire eventi imprevisti o interruzioni globali senza ricorrere al polling.
+
+**Utilizzo nel Responsabile Mensa (Direttore):**
+
+- **Inizializzazione:** Chiama `configure_director_signal_handlers()` all'avvio del `Main`.
+- **Terminazione:** Monitora `termination_requested_flag`. Se impostata a 1 (via `SIGINT` o `SIGTERM`), avvia la procedura `terminate_simulation_gracefully()`.
+- **Rifornimento:** Monitora `refill_request_flag` (innescata da `SIGUSR2`) per coordinare il rifornimento delle stazioni se richiesto esternamente.
+
+**Utilizzo nei Processi Figli (Operatori, Utenti):**
+
+- **Inizializzazione:** Chiamano `configure_child_signal_handlers()` passando i riferimenti alle proprie flag di loop (`simulation_running_status`, `daily_cycle_running_status`).
+- **Reattività:** Gli handler aggiornano i puntatori forniti, permettendo l'uscita immediata dai cicli `while` in caso di segnali di terminazione globale, garantendo una chiusura pulita e coordinata di tutta la gerarchia dei processi.
 
 ## 5. Regole d'Oro (Non violabili)
 
@@ -89,6 +104,13 @@ Per rendere efficiente la comunicazione tra processi tramite le code di messaggi
 10. **Logic Preservation:** È severamente vietato modificare la logica strutturale esistente senza permesso.
 11. **Proposal First Policy:** Prima di apportare qualsiasi modifica fisica ai file del codice, è obbligatorio mostrare un esempio o una bozza della modifica in chat. L'applicazione effettiva sui file può avvenire solo dopo il comando esplicito dell'utente (es. "procedi").
 12. **No Redundancy Removal:** È vietato eliminare righe di codice o logica esistente con il pretesto della "pulizia" senza avvisare esplicitamente l'utente. Ogni modifica ai nomi deve mantenere l'integrità dei dati esistenti; nel dubbio, è preferibile aggiungere piuttosto che togliere.
+13. **Code Layout Order:** In ogni file, l'ordine degli elementi deve essere rigorosamente:
+    1. Macro e Costanti (`#define`).
+    2. Variabili Globali (se necessarie) e `extern`.
+    3. Gestori di Segnali (Signal Handlers).
+    4. Funzioni Private (`static`).
+    5. Funzioni Pubbliche.
+       Questo garantisce che la configurazione e lo stato globale siano visibili prima della logica.
 
 ## 6. Sviluppi Futuri (To-Do)
 

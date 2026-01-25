@@ -1,26 +1,53 @@
+/**
+ * @file signals_handler.h
+ * @brief Gestione dei segnali per la sincronizzazione e terminazione dei processi.
+ * 
+ * Questo modulo isola la configurazione della `sigaction` e le flag atomiche
+ * necessarie per la comunicazione asincrona via segnali UNIX.
+ */
+
 #ifndef SIGNALS_HANDLER_H
 #define SIGNALS_HANDLER_H
 
 #include <signal.h>
+#include <stdbool.h>
 
-#include "common.h"
+/* ==========================================================================
+ *                          VARIABILI GLOBALI (EXTERN)
+ * ========================================================================= */
+
+/** 
+ * @brief Flag atomica per la gestione delle richieste di rifornimento (Innescata da SIGUSR2).
+ */
+extern volatile sig_atomic_t refill_request_flag;
 
 /**
- * @brief Imposta i gestori dei segnali per il processo Direttore.
- * @param shm Puntatore alla memoria condivisa per permettere la pulizia.
+ * @brief Flag atomica per la gestione del blocco terminazione (Innescata da SIGINT/SIGTERM).
  */
-void setup_director_signals(SharedMemory *shm);
+extern volatile sig_atomic_t termination_requested_flag;
 
-// Flag globale per gestire le richieste di rifornimento (Innescata da SIGUSR2)
-extern volatile sig_atomic_t refill_needed;
-
-void terminate_simulation(SharedMemory *shm, int exit_code);
+/* ==========================================================================
+ *                          FUNZIONI PUBBLICHE
+ * ========================================================================= */
 
 /**
- * @brief Imposta i gestori dei segnali per i processi figli (Operatori/Utenti).
- * @param sim_running_flag Puntatore alla flag globale della simulazione.
- * @param day_running_flag Puntatore alla flag specifica della giornata attuale.
+ * @brief Configura i gestori dei segnali per il processo Responsabile Mensa (Direttore).
+ * 
+ * Abilita la gestione di SIGINT per la chiusura controllata, SIGALRM per il timeout 
+ * e SIGUSR1 per l'aggiunta dinamica di nuovi utenti alla simulazione.
  */
-void setup_child_signals(volatile sig_atomic_t *sim_running_flag, volatile sig_atomic_t *day_running_flag);
+void configure_director_signal_handlers(void);
+
+/**
+ * @brief Configura i gestori dei segnali per i processi figli (Operatori, Utenti).
+ * 
+ * Permette alla popolazione della mensa di reagire a comandi esterni del Direttore
+ * o a segnali di terminazione di emergenza.
+ * 
+ * @param simulation_running_status Puntatore alla flag di stato globale del processo figlio.
+ * @param daily_cycle_running_status Puntatore alla flag del ciclo giornaliero attuale.
+ */
+void configure_child_signal_handlers(volatile sig_atomic_t *simulation_running_status, 
+                                     volatile sig_atomic_t *daily_cycle_running_status);
 
 #endif

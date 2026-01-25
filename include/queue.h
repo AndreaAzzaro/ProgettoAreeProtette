@@ -1,67 +1,84 @@
+/**
+ * @file queue.h
+ * @brief Definizioni per la gestione delle code di messaggi (System V IPC).
+ * 
+ * Questo modulo fornisce un'astrazione sopra le primitive msgsnd, msgrcv e msgctl
+ * per facilitare lo scambio di dati tra i processi della simulazione.
+ */
+
 #ifndef QUEUE_H
 #define QUEUE_H
 
 #include <sys/types.h>  
 #include <sys/ipc.h>    
 #include <sys/msg.h>    
-#include <stdio.h>
-#include <stdlib.h>
-#include <errno.h>
+#include <stddef.h>
 
-#define MAX_MTEXT_SIZE 1024 // Dimensione arbitraria per il buffer di esempio
+/** Dimensione massima del buffer di testo per i messaggi della simulazione */
+#define MAX_MESSAGE_TEXT_SIZE 256
 
-struct mymsg {
-    long mtype;                 /* Message type (deve essere > 0) */
-    char mtext[MAX_MTEXT_SIZE]; /* Message body */
-};
-
-/* * Crea o ottiene una coda di messaggi.
- * Utilizza msgget().
- * Parametri:
- * key: chiave generata con ftok() o IPC_PRIVATE[cite: 1185, 1186].
- * msgflg: permessi e flag (es. IPC_CREAT | IPC_EXCL)[cite: 1193, 1195].
- * Riferimento: Slide 28-30[cite: 1179, 1206].
+/**
+ * @brief Struttura standard per lo scambio di messaggi IPC.
+ * 
+ * NOTA: Il kernel richiede che il primo campo sia un long (mtype).
+ * Questa struttura verrà utilizzata per passare ordini, feedback e stati.
  */
-int create_queue(key_t key, int msgflg);
+typedef struct {
+    long message_type;                           /**< Tipo/Priorità del messaggio (deve essere > 0) */
+    char message_text[MAX_MESSAGE_TEXT_SIZE];    /**< Payload del messaggio */
+} SimulationMessage;
 
-/* * Invia un messaggio alla coda.
- * Utilizza msgsnd().
- * Parametri:
- * msqid: identificatore della coda.
- * msgp: puntatore alla struct mymsg (cast a void*).
- * msgsz: dimensione del payload (mtext), non dell'intera struct.
- * msgflg: flag come IPC_NOWAIT[cite: 1286].
- * Riferimento: Slide 35-36[cite: 1271, 1272].
+/**
+ * @brief Crea o ottiene un identificatore per una coda di messaggi.
+ * 
+ * @param key Chiave IPC (solitamente generata tramite ftok).
+ * @param message_flags Permessi e flag di creazione (es. IPC_CREAT | 0666).
+ * @return int L'identificatore della coda (msqid) o -1 in caso di errore.
  */
-int send_message(int msqid, struct mymsg *msgp, size_t msgsz, int msgflg);
+int create_message_queue(key_t key, int message_flags);
 
-/* * Riceve un messaggio dalla coda.
- * Utilizza msgrcv().
- * Parametri:
- * msqid: identificatore della coda.
- * msgp: puntatore al buffer dove salvare il messaggio.
- * maxmsgsz: dimensione massima accettabile del payload[cite: 1314].
- * msgtyp: selettore del tipo di messaggio (0, >0, <0) [cite: 1320-1322].
- * msgflg: flag come IPC_NOWAIT o MSG_NOERROR[cite: 1350, 1352].
- * Riferimento: Slide 37-41[cite: 1307, 1308].
+/**
+ * @brief Invia un messaggio alla coda specificata.
+ * 
+ * Gestisce internamente l'interruzione da segnali (EINTR) riprovando l'invio.
+ * 
+ * @param message_queue_id Identificatore della coda di messaggi.
+ * @param message_pointer Puntatore alla struttura SimulationMessage da inviare.
+ * @param message_size Dimensione effettiva del payload (escluso message_type).
+ * @param message_flags Flag di controllo per l'invio (es. IPC_NOWAIT).
+ * @return int 0 in caso di successo, -1 in caso di errore critico.
  */
-ssize_t receive_message(int msqid, struct mymsg *msgp, size_t maxmsgsz, long msgtyp, int msgflg);
+int send_message_to_queue(int message_queue_id, SimulationMessage *message_pointer, size_t message_size, int message_flags);
 
-/* * Rimuove la coda di messaggi.
- * Utilizza msgctl() con comando IPC_RMID.
- * Parametri:
- * msqid: identificatore della coda.
- * Riferimento: Slide 42-43[cite: 1377, 1378].
+/**
+ * @brief Riceve un messaggio dalla coda specificata.
+ * 
+ * Gestisce internamente l'interruzione da segnali (EINTR) a meno che non si verifichino errori gravi.
+ * 
+ * @param message_queue_id Identificatore della coda di messaggi.
+ * @param message_pointer Puntatore al buffer SimulationMessage dove salvare il dato.
+ * @param maximum_message_size Dimensione massima del payload (mtext) accettabile.
+ * @param message_type Selettore del tipo di messaggio (0 per il primo, >0 per tipo specifico).
+ * @param message_flags Flag di controllo per la ricezione (es. MSG_NOERROR).
+ * @return ssize_t Numero di byte ricevuti nel payload o -1 in caso di errore.
  */
-int remove_queue(int msqid);
+ssize_t receive_message_from_queue(int message_queue_id, SimulationMessage *message_pointer, size_t maximum_message_size, long message_type, int message_flags);
 
-/* * Ottiene informazioni sulla coda (statistiche).
- * Utilizza msgctl() con comando IPC_STAT.
- * Parametri:
- * msqid: identificatore della coda.
- * buf: puntatore a struct msqid_ds dove salvare i dati.
- * Riferimento: Slide 44[cite: 1392].
+/**
+ * @brief Rimuove definitivamente una coda di messaggi dal sistema operativo.
+ * 
+ * @param message_queue_id Identificatore della coda da eliminare.
+ * @return int 0 in caso di successo, -1 in caso di errore.
  */
-int get_queue_stats(int msqid, struct msqid_ds *buf);
+int remove_message_queue(int message_queue_id);
+
+/**
+ * @brief Recupera le informazioni di stato e controllo di una coda di messaggi.
+ * 
+ * @param message_queue_id Identificatore della coda.
+ * @param statistics_buffer Puntatore alla struttura msqid_ds in cui scrivere i dati.
+ * @return int 0 in caso di successo, -1 in caso di errore.
+ */
+int get_message_queue_statistics(int message_queue_id, struct msqid_ds *statistics_buffer);
 
 #endif
