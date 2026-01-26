@@ -27,6 +27,6 @@ void launch_simulation_operators(struct MainSharedMemory *shared_memory_ptr);
  * @param shared_memory_ptr Puntatore alla memoria condivisa.
  * @param users_to_launch_count Numero di utenti da creare in questa chiamata.
  */
-void launch_simulation_users(struct MainSharedMemory *shared_memory_ptr, int users_to_launch_count);
+void launch_simulation_users(struct MainSharedMemory *shared_memory_ptr);
 
 #endif

@@ -87,8 +87,9 @@ void launch_simulation_operators(MainSharedMemory *shared_memory_ptr) {
     shared_memory_ptr->process_group_pids[GROUP_CASHIERS] = cassa_pgid;
 }
 
-void launch_simulation_users(MainSharedMemory *shared_memory_ptr, int users_to_launch_count) {
+void launch_simulation_users(MainSharedMemory *shared_memory_ptr) {
     int shmid = shared_memory_ptr->shared_memory_id;
+    int users_to_launch_count = shared_memory_ptr->configuration.quantities.number_of_initial_users;
     pid_t users_pgid = shared_memory_ptr->process_group_pids[GROUP_USERS];
 
     for (int i = 0; i < users_to_launch_count; i++) {

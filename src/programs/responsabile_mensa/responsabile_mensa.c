@@ -35,13 +35,13 @@ int main(int argc, char *argv[]) {
 
     /* Lancio processi figli */
     launch_simulation_operators(shm_ptr);
-    launch_simulation_users(shm_ptr, shm_ptr->configuration.quantities.number_of_initial_users);
+    launch_simulation_users(shm_ptr);
 
     /* Sincronizzazione Master sulla Barriera di Startup */
     synchronize_prework_barrier(shm_ptr);
 
-    /* 4. Avvio Ciclo della Simulazione */
-    start_simulation(shm_ptr);
+    /* 4. Avvio Ciclo della Simulazione (DISATTIVATO PER TEST BARRIERA) */
+    // start_simulation(shm_ptr);
 
     /* 5. Terminazione Coordinata dei Figli (Compliance Consegna.md) */
     printf("[MASTER] Fine simulazione rilevata. Notifica ai figli...\n");
