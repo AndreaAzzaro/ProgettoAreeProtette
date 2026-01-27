@@ -135,6 +135,24 @@ int wait_for_zero(int sem_id, int semaphore_index) {
     return _execute_sem_op(sem_id, semaphore_index, 0, 0);
 }
 
+/** Inizializzazione riserva interrompibile (ritorna su EINTR) */
+int reserve_sem_interruptible(int sem_id, int semaphore_index) {
+    struct sembuf sb;
+    sb.sem_num = (unsigned short)semaphore_index;
+    sb.sem_op = -1;
+    sb.sem_flg = SEM_UNDO;
+    return semop(sem_id, &sb, 1);
+}
+
+/** Attesa zero interrompibile (ritorna su EINTR) */
+int wait_for_zero_interruptible(int sem_id, int semaphore_index) {
+    struct sembuf sb;
+    sb.sem_num = (unsigned short)semaphore_index;
+    sb.sem_op = 0;
+    sb.sem_flg = 0;
+    return semop(sem_id, &sb, 1);
+}
+
 /** Legge il valore corrente di un semaforo. */
 int get_sem_val(int sem_id, int sem_num) {
     int val = semctl(sem_id, sem_num, GETVAL);

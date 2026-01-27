@@ -162,6 +162,17 @@ int wait_for_zero(int sem_id, int semaphore_index);
  */
 int get_sem_val(int sem_id, int sem_num);
 
+/**
+ * @brief Esegue P (reserve) ma non riprova su EINTR.
+ * Utile per bloccare un processo permettendogli però di svegliarsi se arriva un segnale (es. fine giorno).
+ */
+int reserve_sem_interruptible(int sem_id, int semaphore_index);
+
+/**
+ * @brief Attende lo zero ma non riprova su EINTR.
+ */
+int wait_for_zero_interruptible(int sem_id, int semaphore_index);
+
 /* ==========================================================================
  *                     SEZIONE: BARRIERE DI SINCRONIZZAZIONE
  * ========================================================================== */

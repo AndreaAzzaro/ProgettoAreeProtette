@@ -94,11 +94,12 @@ typedef struct {
 /**
  * @brief Carica la configurazione dal file di sistema.
  * 
- * Legge il file `config/config.conf` e popola la struttura SimulationConfiguration.
+ * Legge il file specificato (o config/config.conf di default) e popola la struttura SimulationConfiguration.
  * In caso di errore di lettura, termina il processo con EXIT_FAILURE.
  * 
+ * @param filepath Percorso al file di configurazione (NULL per il default).
  * @return SimulationConfiguration Struttura popolata con i parametri letti.
  */
-SimulationConfiguration load_simulation_configuration();
+SimulationConfiguration load_simulation_configuration(const char *filepath);
 
 #endif /* CONFIG_H */

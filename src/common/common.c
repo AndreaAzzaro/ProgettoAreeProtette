@@ -57,7 +57,7 @@ void cleanup_ipc_resources(MainSharedMemory *shared_memory_ptr) {
     delete_sem_set(shared_memory_ptr->semaphore_sync_id);
     delete_sem_set(shared_memory_ptr->semaphore_mutex_id);
     delete_sem_set(shared_memory_ptr->semaphore_ticket_id);
-    delete_sem_set(shared_memory_ptr->seat_area.semaphore_set_id);
+    delete_sem_set(shared_memory_ptr->seat_area.condition_semaphore_id);
 
     /* 4. Memoria condivisa (detach prima, remove dopo) */
     int shmid = shared_memory_ptr->shared_memory_id;

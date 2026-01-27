@@ -27,13 +27,12 @@
  * ========================================================================== */
 
 int main(int argc, char *argv[]) {
-    (void)argc; 
-    (void)argv;
+    const char *config_path = (argc > 1) ? argv[1] : NULL;
     
     printf("[MASTER] Responsabile Mensa in avvio...\n");
 
     /* 1. Caricamento Configurazione e Menu */
-    SimulationConfiguration config = load_simulation_configuration();
+    SimulationConfiguration config = load_simulation_configuration(config_path);
     SimulationMenu menu = load_simulation_menu();
     
     /* 2. Setup SHM e Risorse IPC */

@@ -154,17 +154,26 @@ static ConfigurationKey resolve_configuration_key(const char *key_string) {
  * Carica la configurazione dal file.
  * Fallback: cerca "config.conf" nella directory corrente se il path principale fallisce.
  */
-SimulationConfiguration load_simulation_configuration() {
+SimulationConfiguration load_simulation_configuration(const char *filepath) {
     SimulationConfiguration configuration;
     memset(&configuration, 0, sizeof(SimulationConfiguration));
 
-    FILE *config_file = fopen(CONFIGURATION_FILE_PATH, "r");
+    const char *target_path = (filepath != NULL) ? filepath : CONFIGURATION_FILE_PATH;
+
+    FILE *config_file = fopen(target_path, "r");
     if (config_file == NULL) {
-        config_file = fopen("config.conf", "r");
+        if (filepath == NULL) {
+            config_file = fopen("config.conf", "r");
+        }
+        
         if (config_file == NULL) {
-            perror("ERRORE CRITICO: Impossibile aprire il file di configurazione");
+            fprintf(stderr, "ERRORE CRITICO: Impossibile aprire il file di configurazione '%s'\n", target_path);
             exit(EXIT_FAILURE);
         }
+    }
+    
+    if (filepath != NULL) {
+        printf("[CONFIG] Caricamento da file personalizzato: %s\n", filepath);
     }
 
     char line_buffer[MAX_LINE_LENGTH];

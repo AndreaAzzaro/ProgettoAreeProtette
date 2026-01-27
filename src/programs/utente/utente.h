@@ -48,6 +48,9 @@ typedef struct {
     int selected_dessert_coffee_index;   /**< Scelta random per il caffè/dolce */
 
     int group_patience_threshold;       /**< Minuti simulati di attesa tollerati prima dell'abbandono */
+
+    /* Social Seating (Step 3) */
+    int assigned_table_id;              /**< ID del tavolo occupato dal gruppo (-1 se nessuno) */
 } StatoUtente;
 
 /* ==========================================================================

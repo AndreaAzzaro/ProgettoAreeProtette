@@ -121,6 +121,9 @@ void initialize_global_simulation_mutexes(MainSharedMemory *shared_memory_ptr) {
     
     /* Semaforo di controllo per add_users (inizializzato a 0, sbloccato dal Master) */
     init_sem_val(semid, MUTEX_ADD_USERS_PERMISSION, 0); 
+
+    /* Mutex per la scansione dei tavoli (inizializzato a 1) */
+    init_sem_val(semid, MUTEX_TABLES, 1);
     
     shared_memory_ptr->semaphore_mutex_id = semid;
 }
@@ -140,7 +143,7 @@ void initialize_dining_area_seats_semaphores(MainSharedMemory *shared_memory_ptr
     
     /* Il valore reale verrà impostato dal Master dopo il caricamento della configurazione */
     init_sem_val(semid, 0, 0);
-    shared_memory_ptr->seat_area.semaphore_set_id = semid;
+    shared_memory_ptr->seat_area.condition_semaphore_id = semid;
 }
 
 void initialize_ticket_validation_semaphores(MainSharedMemory *shared_memory_ptr) {

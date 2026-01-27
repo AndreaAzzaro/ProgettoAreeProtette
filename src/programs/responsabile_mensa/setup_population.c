@@ -213,6 +213,36 @@ void launch_simulation_users(MainSharedMemory *shared_memory_ptr) {
     }
 }
 
+/**
+ * @brief Genera la topologia dinamica dei tavoli nell'area di refezione.
+ * Distribuisce posti tra tavoli da 2, 4 e 6 fino a NOFTABLESEATS.
+ */
+static void initialize_table_topology(MainSharedMemory *shm_ptr) {
+    int total_seats_to_assign = shm_ptr->configuration.seats.total_dining_seats;
+    int table_idx = 0;
+
+    while (total_seats_to_assign > 0 && table_idx < MAX_TABLES) {
+        int capacity;
+        int rnd = generate_random_integer(1, 100);
+
+        if (rnd <= 30)      capacity = 2; // 30% piccoli
+        else if (rnd <= 80) capacity = 4; // 50% medi
+        else                capacity = 6; // 20% grandi
+
+        if (capacity > total_seats_to_assign) capacity = total_seats_to_assign;
+
+        shm_ptr->seat_area.tables[table_idx].id = table_idx;
+        shm_ptr->seat_area.tables[table_idx].capacity = capacity;
+        shm_ptr->seat_area.tables[table_idx].occupied_seats = 0;
+
+        total_seats_to_assign -= capacity;
+        table_idx++;
+    }
+    shm_ptr->seat_area.active_tables_count = table_idx;
+    printf("[MASTER] Topologia tavoli: %d tavoli pronti (Capacità Tot: %d).\n", 
+           table_idx, shm_ptr->configuration.seats.total_dining_seats);
+}
+
 void initialize_station_operator_semaphores(MainSharedMemory *shm_ptr) {
     /* Set semaforo posti disponibili basato sulla distribuzione calcolata */
     init_sem_val(shm_ptr->first_course_station.semaphore_set_id, 
@@ -232,10 +262,11 @@ void initialize_station_operator_semaphores(MainSharedMemory *shm_ptr) {
                  STATION_SEM_AVAILABLE_POSTS, 
                  shm_ptr->configuration.seats.seats_cash_desk);
  
-    /* Posti a sedere totali della mensa */
-    init_sem_val(shm_ptr->seat_area.semaphore_set_id, 
-                 0, 
-                 shm_ptr->configuration.seats.total_dining_seats);
+    /* Semaforo di condizione (segnalazione) per i tavoli della mensa */
+    init_sem_val(shm_ptr->seat_area.condition_semaphore_id, 0, 0);
+
+    /* Inizializza l'array dei tavoli (Step 2 Social Seating) */
+    initialize_table_topology(shm_ptr);
 }
 
 /* ==========================================================================

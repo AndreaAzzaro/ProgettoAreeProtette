@@ -124,6 +124,7 @@ void reset_stato_giornaliero_utente(StatoUtente *utente) {
     local_daily_cycle_is_active = 1;
     genera_identita_casuale(utente);
     utente->ticket_is_validated = false;
+    utente->assigned_table_id = -1;
 }
 
 void esegui_percorso_mensa_giornaliero(StatoUtente *utente) {
@@ -162,7 +163,7 @@ void esegui_percorso_mensa_giornaliero(StatoUtente *utente) {
 void fase_validazione_ticket(StatoUtente *utente) {
     if (utente->has_ticket && local_daily_cycle_is_active) {
         printf("[UTENTE] PID %d: In coda per validazione ticket...\n", getpid());
-        if (reserve_sem(utente->shm_ptr->semaphore_ticket_id, 0) != -1) {
+        if (reserve_sem_interruptible(utente->shm_ptr->semaphore_ticket_id, 0) != -1) {
             if (local_daily_cycle_is_active) {
                 usleep(utente->shm_ptr->configuration.timings.average_service_time_ticket);
                 utente->ticket_is_validated = true;
@@ -259,9 +260,9 @@ void fase_riunione_gruppo(StatoUtente *utente) {
     int base_sem = s_idx * GROUP_SEMS_PER_ENTRY;
     printf("[UTENTE] PID %d: Riunione amici al meeting point...\n", getpid());
     
-    if (reserve_sem_no_undo(utente->shm_ptr->group_sync_semaphore_id, base_sem + GROUP_SEM_PRE_CASHIER) != -1) {
+    if (reserve_sem_interruptible(utente->shm_ptr->group_sync_semaphore_id, base_sem + GROUP_SEM_PRE_CASHIER) != -1) {
         if (local_daily_cycle_is_active) {
-            wait_for_zero(utente->shm_ptr->group_sync_semaphore_id, base_sem + GROUP_SEM_PRE_CASHIER);
+            wait_for_zero_interruptible(utente->shm_ptr->group_sync_semaphore_id, base_sem + GROUP_SEM_PRE_CASHIER);
         }
     }
 }
@@ -307,24 +308,67 @@ void fase_prenotazione_tavolo(StatoUtente *utente) {
         int members = utente->shm_ptr->group_statuses[s_idx].active_members;
         release_sem(utente->shm_ptr->semaphore_mutex_id, MUTEX_SHARED_DATA);
 
-        printf("[UTENTE] PID %d: Prenoto tavolo per %d amici.\n", getpid(), members);
-        if (reserve_sem_amount(utente->shm_ptr->seat_area.semaphore_set_id, 0, members) != -1) {
-            if (local_daily_cycle_is_active) {
-                open_barrier_gate(utente->shm_ptr->group_sync_semaphore_id, base_sem + GROUP_SEM_TABLE_GATE);
+        printf("[UTENTE] PID %d: Leader cerca tavolo per %d persone...\n", getpid(), members);
+        
+        bool found = false;
+        while (local_daily_cycle_is_active && !found) {
+            reserve_sem(utente->shm_ptr->semaphore_mutex_id, MUTEX_TABLES);
+            
+            for (int i = 0; i < utente->shm_ptr->seat_area.active_tables_count; i++) {
+                Table *t = &utente->shm_ptr->seat_area.tables[i];
+                if ((t->capacity - t->occupied_seats) >= members) {
+                    t->occupied_seats += members;
+                    utente->assigned_table_id = i;
+                    
+                    reserve_sem(utente->shm_ptr->semaphore_mutex_id, MUTEX_SHARED_DATA);
+                    utente->shm_ptr->group_statuses[s_idx].assigned_table_id = i;
+                    release_sem(utente->shm_ptr->semaphore_mutex_id, MUTEX_SHARED_DATA);
+                    
+                    found = true;
+                    break;
+                }
+            }
+            
+            release_sem(utente->shm_ptr->semaphore_mutex_id, MUTEX_TABLES);
+            
+            if (!found && local_daily_cycle_is_active) {
+                /* Attesa passiva su semaforo di condizione - RITORNA SU SEGNALE FINE GIORNO */
+                reserve_sem_interruptible(utente->shm_ptr->seat_area.condition_semaphore_id, 0);
             }
         }
+
+        if (found) {
+            printf("[UTENTE] PID %d: Tavolo %d trovato e occupato per il gruppo.\n", getpid(), utente->assigned_table_id);
+            open_barrier_gate(utente->shm_ptr->group_sync_semaphore_id, base_sem + GROUP_SEM_TABLE_GATE);
+        }
     } else {
-        printf("[UTENTE] PID %d: In attesa del tavolo...\n", getpid());
-        wait_for_zero(utente->shm_ptr->group_sync_semaphore_id, base_sem + GROUP_SEM_TABLE_GATE);
+        printf("[UTENTE] PID %d: In attesa del leader per il tavolo...\n", getpid());
+        wait_for_zero_interruptible(utente->shm_ptr->group_sync_semaphore_id, base_sem + GROUP_SEM_TABLE_GATE);
+        
+        if (local_daily_cycle_is_active) {
+            reserve_sem(utente->shm_ptr->semaphore_mutex_id, MUTEX_SHARED_DATA);
+            utente->assigned_table_id = utente->shm_ptr->group_statuses[s_idx].assigned_table_id;
+            release_sem(utente->shm_ptr->semaphore_mutex_id, MUTEX_SHARED_DATA);
+        }
     }
 }
 
 void fase_consumazione_pasto(StatoUtente *utente, bool p1, bool p2) {
-    if (!local_daily_cycle_is_active) return;
+    if (!local_daily_cycle_is_active || utente->assigned_table_id == -1) return;
+
     int count = (p1?1:0) + (p2?1:0);
     if (count > 0) usleep(count * 100000); /* Tempo di consumo proporzionale */
-    release_sem(utente->shm_ptr->seat_area.semaphore_set_id, 0);
-    printf("[UTENTE] PID %d: Pasto terminato.\n", getpid());
+    
+    /* Fase Rilascio Posto (Step 4) */
+    reserve_sem(utente->shm_ptr->semaphore_mutex_id, MUTEX_TABLES);
+    utente->shm_ptr->seat_area.tables[utente->assigned_table_id].occupied_seats--;
+    release_sem(utente->shm_ptr->semaphore_mutex_id, MUTEX_TABLES);
+    
+    /* Notifica a chi è in attesa */
+    release_sem(utente->shm_ptr->seat_area.condition_semaphore_id, 0);
+
+    printf("[UTENTE] PID %d: Pasto terminato al tavolo %d. Posto liberato.\n", 
+           getpid(), utente->assigned_table_id);
 }
 
 void fase_servizio_caffe(StatoUtente *utente) {
@@ -342,9 +386,9 @@ void fase_uscita_collettiva(StatoUtente *utente) {
     int s_idx = utente->group_id;
     int base_sem = s_idx * GROUP_SEMS_PER_ENTRY;
     
-    if (reserve_sem_no_undo(utente->shm_ptr->group_sync_semaphore_id, base_sem + GROUP_SEM_EXIT) != -1) {
+    if (reserve_sem_interruptible(utente->shm_ptr->group_sync_semaphore_id, base_sem + GROUP_SEM_EXIT) != -1) {
         if (local_daily_cycle_is_active) {
-            wait_for_zero(utente->shm_ptr->group_sync_semaphore_id, base_sem + GROUP_SEM_EXIT);
+            wait_for_zero_interruptible(utente->shm_ptr->group_sync_semaphore_id, base_sem + GROUP_SEM_EXIT);
         }
     }
     printf("[UTENTE] PID %d: Uscita gruppo completata.\n", getpid());

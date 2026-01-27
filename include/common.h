@@ -26,6 +26,9 @@
 /** Numero massimo di utenti per gruppo di amici */
 #define MAX_USERS_PER_GROUP 8
 
+/** Numero massimo di tavoli gestibili nell'area refezione */
+#define MAX_TABLES 128
+
 /* ==========================================================================
  *                         SEZIONE: INDICI SEMAFORICI
  * ========================================================================== */
@@ -73,6 +76,7 @@ typedef enum {
     MUTEX_SIMULATION_STATS = 0, /**< Protegge la struttura delle statistiche globali */
     MUTEX_SHARED_DATA,          /**< Protegge i campi comuni della memoria condivisa (es. giorno corrente) */
     MUTEX_ADD_USERS_PERMISSION, /**< Permesso per i processi add_users di procedere */
+    MUTEX_TABLES,               /**< Protegge l'accesso atomico all'array dei tavoli */
     MUTEX_SEMAPHORE_COUNT       /**< Numero totale di semafori mutex */
 } MutexSemaphoreIndex;
 
@@ -125,10 +129,21 @@ typedef struct {
 } UserProcessMetadata;
 
 /**
+ * @brief Rappresentazione di un singolo tavolo della mensa.
+ */
+typedef struct {
+    int id;               /**< Identificativo univoco del tavolo */
+    int capacity;         /**< Numero massimo di posti (es. 2, 4, 6) */
+    int occupied_seats;   /**< Numero di posti attualmente occupati */
+} Table;
+
+/**
  * @brief Area dedicata al consumo dei pasti (Refezione).
  */
 typedef struct {
-    int semaphore_set_id;               /**< ID Semaforo a conteggio per gestire i posti a sedere */
+    int condition_semaphore_id;         /**< Semaforo di segnalazione per posti liberati */
+    int active_tables_count;            /**< Numero di tavoli effettivamente inizializzati */
+    Table tables[MAX_TABLES];           /**< Stato dinamico della topologia dei tavoli */
 } DiningArea;
 
 /**
@@ -137,6 +152,7 @@ typedef struct {
 typedef struct {
     int active_members;                 /**< Numero di membri del gruppo ancora in mensa */
     pid_t group_leader_pid;             /**< PID del leader attuale (per coordinamento tavolo) */
+    int assigned_table_id;              /**< ID del tavolo occupato dal gruppo (Social Seating) */
 } GroupStatus;
 
 /* ==========================================================================
