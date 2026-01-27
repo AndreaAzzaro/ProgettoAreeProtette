@@ -99,6 +99,7 @@ void run_simulation_loop(MainSharedMemory *shm) {
         /* 3. Fase Chiusura Giorno */
         if (shm->current_simulation_day + 1 >= shm->configuration.timings.simulation_duration_days) {
             shm->is_simulation_running = 0;
+            shm->statistics.reason_for_termination = TERMINATION_REASON_TIMEOUT;
         }
 
         /* Notifica figli (Fine turno o Fine Simulazione) */
@@ -122,6 +123,16 @@ void run_simulation_loop(MainSharedMemory *shm) {
 
             /* Reporting */
             SimulationStatistics daily_stats = collect_simulation_statistics(shm);
+            
+            /* Controllo OVERLOAD (Sez 5.6 della Consegna) */
+            if (daily_stats.clients_statistics.total_clients_not_served > shm->configuration.thresholds.overload_threshold) {
+                printf("[MASTER] TERMINAZIONE PER OVERLOAD: %d utenti rinunciatari (Soglia: %d)\n", 
+                       daily_stats.clients_statistics.total_clients_not_served,
+                       shm->configuration.thresholds.overload_threshold);
+                shm->is_simulation_running = 0;
+                shm->statistics.reason_for_termination = TERMINATION_REASON_OVERLOAD;
+            }
+
             display_daily_statistics_report(daily_stats, shm->current_simulation_day);
             save_statistics_to_csv(daily_stats, shm->current_simulation_day, "statistics_report.csv");
 
@@ -133,8 +144,12 @@ void run_simulation_loop(MainSharedMemory *shm) {
     }
 
     /* 4. Fine Simulazione */
-    printf("\n[MASTER] Simulazione completata dopo %d giorni.\n", shm->current_simulation_day);
-    if (!shm->is_simulation_running && shm->current_simulation_day < shm->configuration.timings.simulation_duration_days) {
+    const char *reasons[] = {"NON SPECIFICATE", "TIMEOUT (DURATA GIORNI RAGGIUNTA)", "OVERLOAD (TROPPI UTENTI NON SERVITI)", "SEGNALE ESTERNO"};
+    printf("\n[MASTER] --- SIMULAZIONE TERMINATA ---\n");
+    printf("[MASTER] Causa: %s\n", reasons[shm->statistics.reason_for_termination]);
+    printf("[MASTER] Giorni simulati: %d\n", shm->current_simulation_day);
+
+    if (shm->current_simulation_day < shm->configuration.timings.simulation_duration_days) {
         SimulationStatistics final_stats = collect_simulation_statistics(shm);
         display_daily_statistics_report(final_stats, shm->current_simulation_day);
     }
@@ -274,7 +289,10 @@ static void handle_daily_cycle_end(int sig) {
 
 static void handle_emergency_termination(int sig) {
     (void)sig;
-    if (global_shm_ref != NULL) global_shm_ref->is_simulation_running = 0;
+    if (global_shm_ref != NULL) {
+        global_shm_ref->is_simulation_running = 0;
+        global_shm_ref->statistics.reason_for_termination = TERMINATION_REASON_SIGNAL;
+    }
     daily_cycle_is_active = 0;
 }
 

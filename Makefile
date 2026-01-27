@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -pthread -g
+CFLAGS = -Wall -Wextra -Wvla -Werror -pthread -g -D_GNU_SOURCE
 INCLUDES = -Iinclude
 
 # Directory
