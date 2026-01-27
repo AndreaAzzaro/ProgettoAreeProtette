@@ -1,13 +1,26 @@
 /**
  * @file operatore_cassa.c
- * @brief Implementazione del processo Operatore di Cassa.
+ * @brief Implementazione del processo Operatore di Cassa (Cassiere).
+ * 
+ * Gestisce i pagamenti degli utenti alla fine del percorso mensa.
+ * Ciclo di vita:
+ * 1. Loop Settimanale: Attivo finché shm->is_simulation_running è true.
+ * 2. Loop Giornaliero: Sincronizzato con barriere.
+ * 3. Loop Lavoro: Acquisisce cassa -> Processa Pagamento -> Gestisce Pause.
+ * 
+ * Supporta la gestione del "Communication Disorder" tramite semaforo di gate.
+ * 
+ * @see operatore_cassa.h
  */
 
+/* Includes di sistema */
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
 #include <errno.h>
+
+/* Includes del progetto */
 #include "operatore_cassa.h"
 #include "sem.h"
 #include "shm.h"
@@ -15,11 +28,20 @@
 #include "queue.h"
 #include "message.h"
 
-/* Flag atomiche per la gestione del ciclo giornaliero (Identiche a operatore.c) */
+/* ==========================================================================
+ *                        VARIABILI GLOBALI (SEGNALI)
+ * ========================================================================== */
+
+/* Flag atomiche per la gestione del ciclo giornaliero */
 static volatile sig_atomic_t local_daily_cycle_is_active = 0;
 static volatile sig_atomic_t is_at_work = 0;
 
+/* Prototypes locali */
 static void handle_cassiere_signals(int sig);
+
+/* ==========================================================================
+ *                             SEZIONE: MAIN
+ * ========================================================================== */
 
 int main(int argc, char *argv[]) {
     StatoCassiere cassiere;
@@ -40,8 +62,12 @@ int main(int argc, char *argv[]) {
     /* 5. Cleanup */
     detach_shared_memory_segment(cassiere.shm_ptr);
     printf("[CASSIERE] PID %d: Terminazione pulita.\n", getpid());
-    return 0;
+    return EXIT_SUCCESS;
 }
+
+/* ==========================================================================
+ *                    SEZIONE: IMPLEMENTAZIONE LOGICA
+ * ========================================================================== */
 
 void init_cassiere(StatoCassiere *cassiere, int argc, char *argv[]) {
     if (argc < 2) {
@@ -67,16 +93,6 @@ void setup_cassiere_signals(void) {
     sigaction(SIGINT,  &sa, NULL); /* Interrupt manuale */
 }
 
-static void handle_cassiere_signals(int sig) {
-    if (sig == SIGUSR2 || sig == SIGTERM || sig == SIGINT) {
-        local_daily_cycle_is_active = 0;
-        is_at_work = 0;
-    }
-    if (sig == SIGUSR1) {
-        is_at_work = 0; /* Richiesta di pausa */
-    }
-}
-
 void run_cassiere_simulation(StatoCassiere *cassiere) {
     /* LOOP 1: Ciclo "Settimanale" */
     while (cassiere->shm_ptr->is_simulation_running) {
@@ -94,36 +110,97 @@ void run_cassiere_simulation(StatoCassiere *cassiere) {
             /* Competizione per la postazione cassa (Interrompibile) */
             int res = reserve_sem(cassiere->shm_ptr->register_station.semaphore_set_id, STATION_SEM_AVAILABLE_POSTS);
             
-            if (res == -1) {
-                /* Se interrotti da segnale, il loop while ricontrollerà la condizione di uscita */
-                continue; 
-            }
+            if (res != -1) {
+                is_at_work = 1;
 
-            is_at_work = 1;
+                /* Tracciamento Cassiere Attivo nelle statistiche globali */
+                if (!already_counted_active_today) {
+                    reserve_sem(cassiere->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
+                    cassiere->shm_ptr->statistics.operators_statistics.daily_active_operators++;
+                    already_counted_active_today = true;
+                    release_sem(cassiere->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
+                }
 
-            /* Tracciamento Cassiere Attivo nelle statistiche globali */
-            if (!already_counted_active_today) {
-                reserve_sem(cassiere->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
-                cassiere->shm_ptr->statistics.operators_statistics.daily_active_operators++;
-                already_counted_active_today = true;
-                release_sem(cassiere->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
-            }
+                /* LOOP 3: Fase di Lavoro */
+                fase_lavoro_cassa(cassiere);
 
-            /* LOOP 3: Fase di Lavoro */
-            fase_lavoro_cassa(cassiere);
+                /* Decisione Atomica Pausa/Fine Giorno */
+                fase_decisione_pausa_cassa(cassiere);
 
-            /* Decisione Atomica Pausa/Fine Giorno */
-            fase_decisione_pausa_cassa(cassiere);
-
-            /* Logica per gestione durata pausa */
-            if (local_daily_cycle_is_active && !is_at_work) {
-                esegui_pausa_cassa(cassiere);
+                /* Logica per gestione durata pausa */
+                if (local_daily_cycle_is_active && !is_at_work) {
+                    esegui_pausa_cassa(cassiere);
+                }
             }
         }
 
         /* [FINE GIORNATA] Sincronizzazione Serale */
         sync_child_start(cassiere->shm_ptr->semaphore_sync_id, BARRIER_EVENING_READY, BARRIER_EVENING_GATE);
     }
+}
+
+void fase_lavoro_cassa(StatoCassiere *cassiere) {
+    int avg_service_time = cassiere->shm_ptr->configuration.timings.average_service_time_cassa;
+
+    while (local_daily_cycle_is_active && is_at_work) {
+        SimulationMessage msg;
+        
+        /* [COMMUNICATION DISORDER] Attesa se il gate è bloccato */
+        /* [COMMUNICATION DISORDER] Attesa se il gate è bloccato */
+        int wait_res = wait_for_zero(cassiere->shm_ptr->register_station.semaphore_set_id, STATION_SEM_STOP_GATE);
+        
+        /* Se wait ha successo (0) o se fallisce ma NON per interruzione segnale (es. errore grave, ignoriamo per ora), procediamo.
+           Se wait fallisce per EINTR, il loop ricomincerebbe. Per evitare continue, usiamo un if grande. */
+        
+        if (wait_res == 0 || (wait_res == -1 && errno != EINTR)) {
+            /* Ricezione Dati Pagamento (MSQ Cassa) */
+            ssize_t result = receive_message_from_queue(cassiere->shm_ptr->register_station.message_queue_id, 
+                                                       &msg, sizeof(CashierPayload), MSG_TYPE_ORDER, 0);
+            
+            if (result == -1) {
+                if (errno != EINTR) {
+                    is_at_work = 0;
+                }
+            } else {   
+                CashierPayload *payload = (CashierPayload *)msg.message_text;
+                double amount = 0.0;
+
+                /* [PUNTO 4.1] Calcolo Importo in base ai prezzi configurati */
+                if (payload->had_first)  amount += cassiere->shm_ptr->configuration.prices.price_first_course;
+                if (payload->had_second) amount += cassiere->shm_ptr->configuration.prices.price_second_course;
+                if (payload->want_coffee) amount += cassiere->shm_ptr->configuration.prices.price_coffee_dessert;
+
+                /* Applicazione Sconto Ticket (es. 50% di sconto se ticket validato) */
+                if (payload->has_discount) {
+                    amount *= 0.5; 
+                }
+
+                /* [PUNTO 4.2] Aggiornamento Incassi (Protezione Mutex) */
+                reserve_sem(cassiere->shm_ptr->semaphore_mutex_id, MUTEX_SHARED_DATA);
+                cassiere->shm_ptr->register_station.daily_income += amount;
+                cassiere->shm_ptr->register_station.total_income += amount;
+                release_sem(cassiere->shm_ptr->semaphore_mutex_id, MUTEX_SHARED_DATA);
+
+                /* Aggiornamento Statistiche Globali (PROTEZIONE MUTEX_SIMULATION_STATS) */
+                reserve_sem(cassiere->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
+                cassiere->shm_ptr->statistics.income_statistics.current_daily_income += amount;
+                cassiere->shm_ptr->statistics.income_statistics.accumulated_total_income += amount;
+                release_sem(cassiere->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
+
+                /* [PUNTO 4.3] Simulazione Tempo di Servizio */
+                usleep(avg_service_time);
+                cassiere->total_customers_processed++;
+
+                /* Invio Ricevuta (Feedback all'Utente) */
+                msg.message_type = payload->user_pid;
+                send_message_to_queue(cassiere->shm_ptr->register_station.message_queue_id, 
+                                     &msg, sizeof(CashierPayload), 0);
+                
+                printf("[CASSIERE] PID %d: Gestito Utente %d. Incassato: %.2f EUR.\n", 
+                       getpid(), payload->user_pid, amount);
+            }
+        }
+}
 }
 
 void fase_decisione_pausa_cassa(StatoCassiere *cassiere) {
@@ -162,63 +239,12 @@ void esegui_pausa_cassa(StatoCassiere *cassiere) {
     simulate_time_passage(break_mins, cassiere->shm_ptr->configuration.timings.nanoseconds_per_tick);
 }
 
-void fase_lavoro_cassa(StatoCassiere *cassiere) {
-    int avg_service_time = cassiere->shm_ptr->configuration.timings.average_service_time_cassa;
-
-    while (local_daily_cycle_is_active && is_at_work) {
-        SimulationMessage msg;
-        
-        /* [COMMUNICATION DISORDER] Attesa se il gate è bloccato */
-        if (wait_for_zero(cassiere->shm_ptr->register_station.semaphore_set_id, STATION_SEM_STOP_GATE) == -1) {
-            if (errno == EINTR) continue; /* Interrotto da segnale, ricontrolla */
-        }
-        
-        /* Ricezione Dati Pagamento (MSQ Cassa) - Correzione Busy Loop */
-        ssize_t result = receive_message_from_queue(cassiere->shm_ptr->register_station.message_queue_id, 
-                                                   &msg, sizeof(CashierPayload), MSG_TYPE_ORDER, 0);
-        
-        if (result == -1) {
-            if (errno != EINTR) {
-                is_at_work = 0;
-            }
-            continue;
-        }
-            
-        CashierPayload *payload = (CashierPayload *)msg.message_text;
-            double amount = 0.0;
-
-            /* [PUNTO 4.1] Calcolo Importo in base ai prezzi configurati */
-            if (payload->had_first)  amount += cassiere->shm_ptr->configuration.prices.price_first_course;
-            if (payload->had_second) amount += cassiere->shm_ptr->configuration.prices.price_second_course;
-            if (payload->want_coffee) amount += cassiere->shm_ptr->configuration.prices.price_coffee_dessert;
-
-            /* Applicazione Sconto Ticket (es. 50% di sconto se ticket validato) */
-            if (payload->has_discount) {
-                amount *= 0.5; 
-            }
-
-            /* [PUNTO 4.2] Aggiornamento Incassi (Protezione Mutex) */
-            reserve_sem(cassiere->shm_ptr->semaphore_mutex_id, MUTEX_SHARED_DATA);
-            cassiere->shm_ptr->register_station.daily_income += amount;
-            cassiere->shm_ptr->register_station.total_income += amount;
-            release_sem(cassiere->shm_ptr->semaphore_mutex_id, MUTEX_SHARED_DATA);
-
-            /* Aggiornamento Statistiche Globali (PROTEZIONE MUTEX_SIMULATION_STATS) */
-            reserve_sem(cassiere->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
-            cassiere->shm_ptr->statistics.income_statistics.current_daily_income += amount;
-            cassiere->shm_ptr->statistics.income_statistics.accumulated_total_income += amount;
-            release_sem(cassiere->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
-
-            /* [PUNTO 4.3] Simulazione Tempo di Servizio */
-            usleep(avg_service_time);
-            cassiere->total_customers_processed++;
-
-            /* Invio Ricevuta (Feedback all'Utente) */
-            msg.message_type = payload->user_pid;
-            send_message_to_queue(cassiere->shm_ptr->register_station.message_queue_id, 
-                                 &msg, sizeof(CashierPayload), 0);
-            
-            printf("[CASSIERE] PID %d: Gestito Utente %d. Incassato: %.2f EUR.\n", 
-                   getpid(), payload->user_pid, amount);
+static void handle_cassiere_signals(int sig) {
+    if (sig == SIGUSR2 || sig == SIGTERM || sig == SIGINT) {
+        local_daily_cycle_is_active = 0;
+        is_at_work = 0;
+    }
+    if (sig == SIGUSR1) {
+        is_at_work = 0; /* Richiesta di pausa */
     }
 }

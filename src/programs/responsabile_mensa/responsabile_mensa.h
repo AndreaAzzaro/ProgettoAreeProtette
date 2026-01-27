@@ -1,72 +1,90 @@
 /**
  * @file responsabile_mensa.h
- * @brief Header Master del Responsabile Mensa.
+ * @brief Header principale per il modulo Responsabile Mensa (Master).
  * 
- * Questo file funge da Facade (Punto di accesso unico) che aggrega 
- * i prototipi degli altri sotto-moduli (setup_ipc, setup_population, simulation_engine).
+ * Questo header funge da Facade (Punto di accesso unico) che aggrega 
+ * i prototipi dei vari sotto-moduli del Master:
+ * - setup_ipc: Gestione risorse condivise.
+ * - setup_population: Calcolo e spawn dei figli.
+ * - simulation_engine: Core loop temporale.
  */
 
 #ifndef RESPONSABILE_MENSA_H
 #define RESPONSABILE_MENSA_H
 
+/* Includes del progetto */
 #include "common.h"
 #include "setup_ipc.h"
 #include "setup_population.h"
 #include "simulation_engine.h"
+#include "config.h"
+#include "menu.h"
+
 /* ==========================================================================
- *                          PROTOTIPI FACADE (Infrastruttura)
+ *                          PROTOTIPI FACADE (Core Infrastructure)
  * ========================================================================= */
 
-/** @brief Carica i parametri dal file config.conf. Definizione in config.h */
-SimulationConfiguration load_simulation_configuration(void);
-
-/** @brief Carica i piatti dal file menu.conf. Definizione in menu.h */
-SimulationMenu load_simulation_menu(void);
+/** 
+ * @brief Inizializza tutte le risorse IPC necessarie per la simulazione.
+ * @param shared_memory_ptr Puntatore alla memoria condivisa principale.
+ */
+void initialize_ipc_sources(MainSharedMemory *shared_memory_ptr);
 
 /** 
- * @brief Alloca e inizializza le risorse IPC iniziali (SHM, Sem, Code). 
- * Definizione in setup_ipc.h 
+ * @brief Prepara la barriera di sincronizzazione iniziale per lo startup di tutti i processi.
+ * @param shm_ptr Puntatore alla memoria condivisa.
  */
-struct MainSharedMemory* initialize_simulation_shared_memory(int group_pool_size);
-void initialize_simulation_start_barriers(MainSharedMemory *shared_memory_ptr);
-void initialize_daily_cycle_barriers(MainSharedMemory *shared_memory_ptr);
-void initialize_global_simulation_mutexes(MainSharedMemory *shared_memory_ptr);
-void initialize_distribution_stations(MainSharedMemory *shared_memory_ptr);
-void initialize_dining_area_seats_semaphores(MainSharedMemory *shared_memory_ptr);
-void initialize_ticket_validation_semaphores(MainSharedMemory *shared_memory_ptr);
-void initialize_cashier_checkout_message_queue(MainSharedMemory *shared_memory_ptr);
-void initialize_ipc_sources(MainSharedMemory *shared_memory_ptr);
-void setup_worker_distribution(MainSharedMemory *shm_ptr);
 void setup_prework_barrier(MainSharedMemory *shm_ptr);
+
+/** 
+ * @brief Gestisce l'attesa del Master sulla barriera di startup e l'apertura del cancello.
+ * @param shm_ptr Puntatore alla memoria condivisa.
+ */
 void synchronize_prework_barrier(MainSharedMemory *shm_ptr);
+
+/** 
+ * @brief Configura le barriere giornaliere (Morning/Evening) in base alla popolazione corrente.
+ * @param shm_ptr Puntatore alla memoria condivisa.
+ */
 void setup_daily_barriers(MainSharedMemory *shm_ptr);
-void setup_group_barriers(MainSharedMemory *shm_ptr);
+
+/** 
+ * @brief Avvia ufficialmente il ciclo di simulazione delegando al simulation_engine.
+ * @param shm_ptr Puntatore alla memoria condivisa.
+ */
 void start_simulation(MainSharedMemory *shm_ptr);
 
 /* ==========================================================================
  *                          PROTOTIPI FACADE (Popolazione)
  * ========================================================================= */
 
-/** @brief Calcola matematicamente la distribuzione dei lavoratori. Definizione in setup_population.h */
-void calculate_worker_distribution(int total_workers, int *average_times_array, int *distribution_results_array, int stations_count);
-
-/** @brief Esegue il lancio dei processi operatori. Definizione in setup_population.h */
+/** 
+ * @brief Esegue lo spawn degli operatori (Distributori e Cassieri).
+ * @param shared_memory_ptr Puntatore alla memoria condivisa.
+ */
 void launch_simulation_operators(MainSharedMemory *shared_memory_ptr);
 
-/** @brief Esegue lo spawn dei processi utente. Definizione in setup_population.h */
+/** 
+ * @brief Esegue lo spawn iniziale degli utenti.
+ * @param shared_memory_ptr Puntatore alla memoria condivisa.
+ */
 void launch_simulation_users(MainSharedMemory *shared_memory_ptr);
 
 /* ==========================================================================
  *                          PROTOTIPI FACADE (Motore)
  * ========================================================================= */
 
-/** @brief Gestisce il loop dei giorni di simulazione. Definizione in simulation_engine.h */
+/** 
+ * @brief Avvia il loop dei giorni della simulazione. 
+ * @param shm Puntatore alla memoria condivisa.
+ */
 void run_simulation_loop(MainSharedMemory *shm);
 
-/** @brief Gestisce le operazioni di inizio giornata. Definizione in simulation_engine.h */
-void handle_new_day(MainSharedMemory *shm);
+/** 
+ * @brief Termina la simulazione in modo pulito, inviando segnali ai figli e rimuovendo IPC.
+ * @param shm Puntatore alla memoria condivisa.
+ * @param exit_code Codice di uscita da restituire al SO.
+ */
+void terminate_simulation_gracefully(MainSharedMemory *shm, int exit_code);
 
-/** @brief Gestisce il ciclo di rifornimento dei piatti. Definizione in simulation_engine.h */
-void handle_refill_cycle(MainSharedMemory *shm);
-
-#endif
+#endif /* RESPONSABILE_MENSA_H */

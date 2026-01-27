@@ -1,12 +1,20 @@
 /**
  * @file operatore.h
- * @brief Definizioni per il processo Operatore di distribuzione cibo.
+ * @brief Header per il processo Operatore (Distributore pasti).
+ * 
+ * Gestisce l'interazione con le stazioni di distribuzione (Primi, Secondi, Bar).
+ * Coordina lavoro, pause e sincronizzazione giornate.
+ * 
+ * @see operatore.c per l'implementazione.
  */
 
 #ifndef OPERATORE_H
 #define OPERATORE_H
 
+/* Includes */
+#include <sys/types.h>
 #include "common.h"
+#include "config.h"  /* Per FoodDistributionStation */
 
 /**
  * @struct StatoOperatore
@@ -33,18 +41,25 @@ typedef struct {
 void init_operatore(StatoOperatore *operatore, int argc, char *argv[]);
 
 /**
- * @brief Configura gli handler per i segnali asincroni.
+ * @brief Configura gli handler per i segnali asincroni (SIGUSR1, SIGUSR2, SIGTERM).
  */
 void setup_operatore_signals(void);
 
 /**
- * @brief Esegue il ciclo di vita principale dell'operatore (Settimana -> Giorno -> Lavoro).
+ * @brief Esegue il ciclo di vita principale dell'operatore.
+ * 
+ * Implementa 3 loop annidati:
+ * 1. Loop Settimanale (Durata simulazione)
+ * 2. Loop Giornaliero (Mattina -> Sera)
+ * 3. Loop Turno (Postazione -> Servizio -> Pausa)
  * 
  * @param operatore Puntatore allo stato dell'operatore.
  */
 void run_operatore_simulation(StatoOperatore *operatore);
 
-/* --- Funzioni di Fase (Dettagli del ciclo di vita) --- */
+/* ==========================================================================
+ *                       SEZIONE: FUNZIONI DI FASE
+ * ========================================================================== */
 
 /**
  * @brief Prepara i riferimenti alla stazione e i tempi medi di servizio.

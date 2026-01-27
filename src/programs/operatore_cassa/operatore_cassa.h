@@ -1,11 +1,18 @@
 /**
  * @file operatore_cassa.h
- * @brief Definizioni per il processo Operatore di Cassa (Cassiere).
+ * @brief Header per il processo Operatore di Cassa (Cassiere).
+ * 
+ * Gestisce l'incasso dei pagamenti, il calcolo dei totali giornalieri
+ * e la sincronizzazione con gli utenti in uscita.
+ * 
+ * @see operatore_cassa.c per l'implementazione.
  */
 
 #ifndef OPERATORE_CASSA_H
 #define OPERATORE_CASSA_H
 
+/* Includes */
+#include <sys/types.h>
 #include "common.h"
 
 /**
@@ -32,16 +39,25 @@ typedef struct {
 void init_cassiere(StatoCassiere *cassiere, int argc, char *argv[]);
 
 /**
- * @brief Configura gli handler per i segnali asincroni.
+ * @brief Configura gli handler per i segnali asincroni (SIGUSR1, SIGUSR2, SIGTERM).
  */
 void setup_cassiere_signals(void);
 
 /**
- * @brief Esegue il ciclo di vita principale del cassiere (Settimana -> Giorno -> Lavoro).
+ * @brief Esegue il ciclo di vita principale del cassiere.
+ * 
+ * Implementa 3 loop annidati:
+ * 1. Loop Settimanale (Durata simulazione)
+ * 2. Loop Giornaliero (Mattina -> Sera)
+ * 3. Loop Turno (Postazione -> Cassa -> Pausa)
+ * 
+ * @param cassiere Puntatore allo stato del cassiere.
  */
 void run_cassiere_simulation(StatoCassiere *cassiere);
 
-/* --- Funzioni di Fase (Dettagli del ciclo di vita) --- */
+/* ==========================================================================
+ *                       SEZIONE: FUNZIONI DI FASE
+ * ========================================================================== */
 
 /**
  * @brief Implementa il ciclo di ricezione pagamenti (Loop 3).

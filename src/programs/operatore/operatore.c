@@ -1,13 +1,23 @@
 /**
  * @file operatore.c
- * @brief Processo Operatore di distribuzione piatti.
+ * @brief Implementazione del processo Operatore di distribuzione piatti.
+ * 
+ * Ciclo di vita a 3 Loop annidati:
+ * 1. Loop Settimanale: Attivo finché shm->is_simulation_running è true.
+ * 2. Loop Giornaliero: Sincronizzato via Barriere (Morning -> Work -> Evening).
+ * 3. Loop Lavoro: Acquisisce postazione -> Serve Clienti -> Decide Pausa (Atomica).
+ * 
+ * @see operatore.h per le strutture dati.
  */
 
+/* Includes di sistema */
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
 #include <errno.h>
+
+/* Includes del progetto */
 #include "operatore.h"
 #include "sem.h"
 #include "shm.h"
@@ -15,11 +25,21 @@
 #include "queue.h"
 #include "message.h"
 
+/* ==========================================================================
+ *                        VARIABILI GLOBALI (SEGNALI)
+ * ========================================================================== */
+
 /* Flag atomica per la gestione del ciclo giornaliero tramite segnali */
 static volatile sig_atomic_t local_daily_cycle_is_active = 0;
 /* Flag per identificare se l'operatore occupa una postazione (Loop 3) */
 static volatile sig_atomic_t is_at_work = 0;
 
+/* Prototypes locali */
+static void handle_operatore_signals(int sig);
+
+/* ==========================================================================
+ *                             SEZIONE: MAIN
+ * ========================================================================== */
 
 int main(int argc, char *argv[]) {
     StatoOperatore operatore;
@@ -40,8 +60,12 @@ int main(int argc, char *argv[]) {
     /* 5. Cleanup */
     detach_shared_memory_segment(operatore.shm_ptr);
     printf("[OPERATORE] PID %d: Terminazione pulita.\n", getpid());
-    return 0;
+    return EXIT_SUCCESS;
 }
+
+/* ==========================================================================
+ *                    SEZIONE: IMPLEMENTAZIONE LOGICA
+ * ========================================================================== */
 
 void init_operatore(StatoOperatore *operatore, int argc, char *argv[]) {
     if (argc < 3) {
@@ -81,31 +105,30 @@ void run_operatore_simulation(StatoOperatore *operatore) {
             /* Acquisizione Postazione (Interrompibile) */
             int res = reserve_sem(stazione_ptr->semaphore_set_id, STATION_SEM_AVAILABLE_POSTS);
             
-            if (res == -1) {
-                /* Se interrotti da segnale, il loop while ricontrollerà la condizione di uscita */
-                continue; 
+            if (res != -1) {
+                is_at_work = 1; /* Turno iniziato */
+                printf("[OPERATORE] PID %d: Postazione acquisita.\n", getpid());
+
+                /* Tracciamento Operatore Attivo (Una volta al giorno) */
+                if (!already_counted_active_today) {
+                    reserve_sem(operatore->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
+                    operatore->shm_ptr->statistics.operators_statistics.daily_active_operators++;
+                    already_counted_active_today = true;
+                    release_sem(operatore->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
+                }
+
+                /* LOOP 3: Ciclo di Servizio */
+                fase_lavoro_stazione(operatore, stazione_ptr, avg_service_time);
+
+                /* Decisione Atomica Pausa/Fine Giorno */
+                fase_decisione_pausa_atomica(operatore, stazione_ptr);
+                
+                /* Logica per gestione durata pausa (Simulazione) */
+                if (local_daily_cycle_is_active && !is_at_work) {
+                    esegui_pausa_operatore(operatore);
+                }
             }
-
-            is_at_work = 1; /* Turno iniziato */
-            printf("[OPERATORE] PID %d: Postazione acquisita.\n", getpid());
-
-            /* Tracciamento Operatore Attivo (Una volta al giorno) */
-            if (!already_counted_active_today) {
-                reserve_sem(operatore->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
-                operatore->shm_ptr->statistics.operators_statistics.daily_active_operators++;
-                already_counted_active_today = true;
-                release_sem(operatore->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
-            }
-
-            /* LOOP 3: Ciclo di Servizio */
-            fase_lavoro_stazione(operatore, stazione_ptr, avg_service_time);
-
-            /* Decisione Atomica Pausa/Fine Giorno */
-            fase_decisione_pausa_atomica(operatore, stazione_ptr);
-            /* Logica per gestione durata pausa (Simulazione) */
-            if (local_daily_cycle_is_active && !is_at_work) {
-                esegui_pausa_operatore(operatore);
-            }
+            /* Se res == -1 (interrotto da segnale), il loop ricontrolla local_daily_cycle_is_active */
         }
 
         /* [FINE GIORNATA] Sincronizzazione Serale */
@@ -113,9 +136,6 @@ void run_operatore_simulation(StatoOperatore *operatore) {
     }
 }
 
-/**
- * @brief Prepara i riferimenti alla stazione e i tempi medi di servizio.
- */
 void prepare_station_context(StatoOperatore *operatore, FoodDistributionStation **stazione_ptr, int *avg_service_time) {
     if (operatore->station_type == 0) {
         *stazione_ptr = &operatore->shm_ptr->first_course_station;
@@ -129,33 +149,29 @@ void prepare_station_context(StatoOperatore *operatore, FoodDistributionStation 
     }
 }
 
-/**
- * @brief Implementa il ciclo di ricezione e servizio ordini (Loop 3).
- */
 void fase_lavoro_stazione(StatoOperatore *operatore, FoodDistributionStation *stazione_ptr, int avg_service_time) {
     while (local_daily_cycle_is_active && is_at_work) {
         /* Check Cancello Refill */
         if (wait_for_zero(stazione_ptr->semaphore_set_id, STATION_SEM_REFILL_GATE) != -1) {
             
             SimulationMessage msg;
-            /* Ricezione Ordine - Correzione Polling: controllo esito esplicito */
+            /* Ricezione Ordine - Controllo esito esplicito */
             ssize_t result = receive_message_from_queue(stazione_ptr->message_queue_id, &msg, sizeof(StationPayload), MSG_TYPE_ORDER, 0);
             
             if (result == -1) {
-                /* Se l'errore non è un'interruzione (EINTR), usciamo dal turno per evitare busy loop */
+                /* Se l'errore non è un'interruzione (EINTR), usciamo dal turno */
                 if (errno != EINTR) {
                     is_at_work = 0;
                 }
-                continue;
-            }
-                
-            StationPayload *payload = (StationPayload *)msg.message_text;
+            } else {
+                StationPayload *payload = (StationPayload *)msg.message_text;
                 
                 /* Verifica Disponibilità Porzioni */
                 reserve_sem(operatore->shm_ptr->semaphore_mutex_id, MUTEX_SHARED_DATA);
                 bool available = false;
+                
                 if (operatore->station_type == 2) {
-                    available = true;
+                    available = true; /* Caffè/Dessert sempre disponibili (?) o non decrementano */
                 } else if (stazione_ptr->portions[payload->dish_index] > 0) {
                     stazione_ptr->portions[payload->dish_index]--;
                     available = true;
@@ -187,13 +203,11 @@ void fase_lavoro_stazione(StatoOperatore *operatore, FoodDistributionStation *st
                 /* Risposta all'Utente */
                 msg.message_type = payload->user_pid;
                 send_message_to_queue(stazione_ptr->message_queue_id, &msg, sizeof(StationPayload), 0);
+            }
         }
     }
 }
 
-/**
- * @brief Gestisce il rilascio della postazione e la decisione atomica della pausa.
- */
 void fase_decisione_pausa_atomica(StatoOperatore *operatore, FoodDistributionStation *stazione_ptr) {
     reserve_sem(operatore->shm_ptr->semaphore_mutex_id, MUTEX_SHARED_DATA);
     
@@ -221,9 +235,6 @@ void fase_decisione_pausa_atomica(StatoOperatore *operatore, FoodDistributionSta
     release_sem(operatore->shm_ptr->semaphore_mutex_id, MUTEX_SHARED_DATA);
 }
 
-/**
- * @brief Simula il periodo di riposo dell'operatore.
- */
 void esegui_pausa_operatore(StatoOperatore *operatore) {
     printf("[OPERATORE] PID %d: Inizio simulazione riposo.\n", getpid());
     int break_mins = generate_random_integer(5, 30);
@@ -247,9 +258,6 @@ static void handle_operatore_signals(int sig) {
     }
 }
 
-/**
- * @brief Configura gli handler per i segnali asincroni.
- */
 void setup_operatore_signals(void) {
     struct sigaction sa;
     sa.sa_handler = handle_operatore_signals;

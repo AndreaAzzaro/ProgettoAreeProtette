@@ -1,18 +1,39 @@
+/**
+ * @file utils.c
+ * @brief Implementazione delle utility generali per la simulazione.
+ * 
+ * Fornisce:
+ * - Gestione errori critici
+ * - Generazione numeri casuali e probabilità
+ * - Simulazione del passaggio del tempo
+ * 
+ * @see utils.h per la documentazione delle funzioni pubbliche.
+ */
+
+/* Includes di sistema */
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
 #include <errno.h>
-#include "../../include/utils.h"
+
+/* Includes del progetto */
+#include "utils.h"
 
 /* ==========================================================================
- *                          FUNZIONI PUBBLICHE
- * ========================================================================= */
+ *                         SEZIONE: GESTIONE ERRORI
+ * ========================================================================== */
 
+/** Termina il processo con messaggio di errore. */
 void display_critical_error(const char *error_message) {
     perror(error_message);
     exit(EXIT_FAILURE);
 }
 
+/* ==========================================================================
+ *                       SEZIONE: GENERAZIONE CASUALE
+ * ========================================================================== */
+
+/** Genera un intero casuale nell'intervallo [min, max]. */
 int generate_random_integer(int minimum_value, int maximum_value) {
     int random_result = minimum_value;
     
@@ -24,6 +45,10 @@ int generate_random_integer(int minimum_value, int maximum_value) {
     return random_result;
 }
 
+/**
+ * Calcola un valore variato casualmente attorno alla media.
+ * Implementa il requisito AVG ± variation% della consegna.
+ */
 int calculate_varied_time(int average_value, int variation_percentage) {
     /* Calcoliamo il delta basato sul valore medio e la percentuale */
     double delta = (average_value * variation_percentage) / 100.0;
@@ -37,6 +62,7 @@ int calculate_varied_time(int average_value, int variation_percentage) {
     return generate_random_integer(minimum, maximum);
 }
 
+/** Valuta se un evento casuale si verifica data una probabilità %. */
 bool evaluate_probability_event(int success_percentage_rate) {
     bool event_occurred = false;
     
@@ -50,6 +76,14 @@ bool evaluate_probability_event(int success_percentage_rate) {
     return event_occurred;
 }
 
+/* ==========================================================================
+ *                        SEZIONE: GESTIONE TEMPO
+ * ========================================================================== */
+
+/**
+ * Simula il passaggio del tempo convertendo unità simulate in nanosleep.
+ * Gestisce automaticamente le interruzioni da segnale (EINTR).
+ */
 void simulate_time_passage(int units_to_wait, long nanoseconds_per_tick) {
     if (units_to_wait <= 0) return;
 

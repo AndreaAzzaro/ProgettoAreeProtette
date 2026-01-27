@@ -22,6 +22,8 @@ TARGETS = responsabile_mensa operatore utente operatore_cassa add_users communic
 .PHONY: all clean dirs
 
 all: dirs $(addprefix $(BIN_DIR)/, $(TARGETS))
+	@rm -f statistics_report.csv
+	@echo "Sistema compilato. Statistiche resettate."
 
 # Creazione directory necessarie
 dirs:
