@@ -27,19 +27,20 @@ SimulationMenu load_simulation_menu(void);
  * @brief Alloca e inizializza le risorse IPC iniziali (SHM, Sem, Code). 
  * Definizione in setup_ipc.h 
  */
-MainSharedMemory* initialize_simulation_shared_memory(void);
+struct MainSharedMemory* initialize_simulation_shared_memory(int group_pool_size);
 void initialize_simulation_start_barriers(MainSharedMemory *shared_memory_ptr);
 void initialize_daily_cycle_barriers(MainSharedMemory *shared_memory_ptr);
 void initialize_global_simulation_mutexes(MainSharedMemory *shared_memory_ptr);
-void initialize_food_distribution_station_semaphores(MainSharedMemory *shared_memory_ptr);
+void initialize_distribution_stations(MainSharedMemory *shared_memory_ptr);
 void initialize_dining_area_seats_semaphores(MainSharedMemory *shared_memory_ptr);
 void initialize_ticket_validation_semaphores(MainSharedMemory *shared_memory_ptr);
-void initialize_food_distribution_order_queues(MainSharedMemory *shared_memory_ptr);
 void initialize_cashier_checkout_message_queue(MainSharedMemory *shared_memory_ptr);
 void initialize_ipc_sources(MainSharedMemory *shared_memory_ptr);
 void setup_worker_distribution(MainSharedMemory *shm_ptr);
 void setup_prework_barrier(MainSharedMemory *shm_ptr);
 void synchronize_prework_barrier(MainSharedMemory *shm_ptr);
+void setup_daily_barriers(MainSharedMemory *shm_ptr);
+void setup_group_barriers(MainSharedMemory *shm_ptr);
 void start_simulation(MainSharedMemory *shm_ptr);
 
 /* ==========================================================================
@@ -53,7 +54,7 @@ void calculate_worker_distribution(int total_workers, int *average_times_array, 
 void launch_simulation_operators(MainSharedMemory *shared_memory_ptr);
 
 /** @brief Esegue lo spawn dei processi utente. Definizione in setup_population.h */
-void launch_simulation_users(MainSharedMemory *shared_memory_ptr, int users_to_launch_count);
+void launch_simulation_users(MainSharedMemory *shared_memory_ptr);
 
 /* ==========================================================================
  *                          PROTOTIPI FACADE (Motore)

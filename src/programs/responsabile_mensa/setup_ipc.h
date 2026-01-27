@@ -13,11 +13,12 @@
 struct MainSharedMemory;
 
 /**
- * @brief Alloca e inizializza il segmento principale di memoria condivisa.
+ * @brief Alloca e inizializza il segmento principale di memoria condivisa con dimensione dinamica.
  * 
+ * @param group_pool_size Numero di slot per lo stato dei gruppi (Flexible Array Member).
  * @return struct MainSharedMemory* Puntatore all'area di memoria collegata.
  */
-struct MainSharedMemory* initialize_simulation_shared_memory(void);
+struct MainSharedMemory* initialize_simulation_shared_memory(int group_pool_size);
 
 /* ==========================================================================
  *                 INIZIALIZZAZIONE SEMAFORI (System V)
@@ -29,6 +30,13 @@ struct MainSharedMemory* initialize_simulation_shared_memory(void);
  * @param shared_memory_ptr Puntatore alla memoria condivisa principale.
  */
 void initialize_simulation_start_barriers(struct MainSharedMemory *shared_memory_ptr);
+
+/**
+ * @brief Inizializza il pool di semafori per la sincronizzazione dei gruppi.
+ * @param shm_ptr Puntatore alla memoria condivisa.
+ * @param pool_size Numero di slot da creare.
+ */
+void initialize_group_sync_pool(struct MainSharedMemory *shm_ptr, int pool_size);
 
 /**
  * @brief Inizializza le barriere di sincronizzazione per l'avvio e la fine della giornata.
@@ -46,11 +54,11 @@ void initialize_daily_cycle_barriers(struct MainSharedMemory *shared_memory_ptr)
 void initialize_global_simulation_mutexes(struct MainSharedMemory *shared_memory_ptr);
 
 /**
- * @brief Inizializza i semafori a conteggio per le postazioni delle stazioni di distribuzione.
+ * @brief Inizializza le risorse complete (Semafori e Code) per le stazioni di distribuzione cibo.
  * 
  * @param shared_memory_ptr Puntatore alla memoria condivisa principale.
  */
-void initialize_food_distribution_station_semaphores(struct MainSharedMemory *shared_memory_ptr);
+void initialize_distribution_stations(struct MainSharedMemory *shared_memory_ptr);
 
 /**
  * @brief Inizializza il semaforo a conteggio per gestire i posti a sedere nell'area refezione.
@@ -66,16 +74,6 @@ void initialize_dining_area_seats_semaphores(struct MainSharedMemory *shared_mem
  */
 void initialize_ticket_validation_semaphores(struct MainSharedMemory *shared_memory_ptr);
 
-/* ==========================================================================
- *                 INIZIALIZZAZIONE CODE DI MESSAGGI
- * ========================================================================== */
-
-/**
- * @brief Crea e inizializza le code di messaggi per gli ordini nelle stazioni di cibo.
- * 
- * @param shared_memory_ptr Puntatore alla memoria condivisa principale.
- */
-void initialize_food_distribution_order_queues(struct MainSharedMemory *shared_memory_ptr);
 
 /**
  * @brief Crea la coda di messaggi per la gestione dei pagamenti alla cassa.

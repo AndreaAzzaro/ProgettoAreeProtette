@@ -98,9 +98,9 @@ Nel momento in cui uno studente non rispettasse le sopra citate norme di comport
 convocato ed aver avuto modo di illustrare la propria posizione, potr`a essere oggetto delle seguenti sanzioni:
 
 - se lo studente avr`a nel frattempo superato l’esame di Sistemi Operativi anche successivamente alla data di
-  discussione del progetto, la verbalizzazione del voto verr`a annullata;
+discussione del progetto, la verbalizzazione del voto verr`a annullata;
 - se lo studente avr`a soltanto superato la discussione del progetto ma non l’esame, la valutazione del progetto
-  verr`a annullata e lo studente non potr`a accedere ad ulteriore discussione di progetto prima dei due appelli
+verr`a annullata e lo studente non potr`a accedere ad ulteriore discussione di progetto prima dei due appelli
   successivi alla data di evidenza di copiatura.
 
 ## 5 Descrizione del progetto: versione minima (voto max 24 su 30)
@@ -117,11 +117,11 @@ responsabile mensa, studente/utente.
   del valore indicato.
 - Processo operatorestazionesecondi: eroga i secondi piatti e i contorni. In particolare, dovranno essere
   implementate le funzionalit`a per garantire almeno la scelta tra 2 secondi piatti con relativi contorni ogni
-  giorno. Il tempo medio per erogare il servizio `e AVGSRVCMAINCOURSE secondi, e dovr`a essere usato per
+giorno. Il tempo medio per erogare il servizio `e AVGSRVCMAINCOURSE secondi, e dovr`a essere usato per
   generare un tempo casuale di erogazione nell’intorno±50% del valore indicato.
 - Processo operatorestazionecoffee: eroga i caff`e e il dolce. In particolare, dovranno essere implementate
-  le funzionalit`a per garantire almeno la scelta tra 4 tipi di caff`e (normale, macchiato, decaffeinato, ginseng). Il
-  tempo medio per erogare il servizio `e AVGSRVCCOFFEE secondi, e dovr`a essere usato per generare un tempo
+le funzionalit`a per garantire almeno la scelta tra 4 tipi di caff`e (normale, macchiato, decaffeinato, ginseng). Il
+tempo medio per erogare il servizio `e AVGSRVCCOFFEE secondi, e dovr`a essere usato per generare un tempo
   casuale di erogazione nell’intorno±80% del valore indicato.
 
 - Processo operatorecassa (cassiere): gestisce i pagamenti degli utenti. Il tempo medio per erogare il ser-
@@ -200,8 +200,8 @@ All’inizio di ogni giornata lavorativa, l’operatore:
 - compete con gli altri operatori per il posto presso la stazione a cui il responsabilemensa l’ha assegnato;
 - se ne trova uno, comincia il proprio turno che terminer`a alla fine della giornata lavorativa;
 - con un massimo di NOFPAUSE volte durante ciascuna giornata, l’operatore pu`o decidere (secondo un criterio
-  scelto dal programmatore) di interrompere il servizio per poi riprendere il proprio compito dopo la pausa.
-  Non tutti gli operatori possono andare in pausa contemporaneamente: non `e consentito agli operatori lasciare
+scelto dal programmatore) di interrompere il servizio per poi riprendere il proprio compito dopo la pausa.
+Non tutti gli operatori possono andare in pausa contemporaneamente: non `e consentito agli operatori lasciare
   la stazione non presidiata (almeno un operatore deve sempre essere attivo). In caso un operatore decida di
   mettersi in pausa: - termina di servire il cliente che stava servendo; - lascia libera la stazione occupata; - aggiorna le statistiche.
 
@@ -221,12 +221,12 @@ I processi di tipo utente si recano presso la mensa. Pi`u in dettaglio, ogni gio
 - Stabilisce il menu che vuole acquistare (secondo un criterio stabilito dal progettista); ad esempio legge il
   file di configurazione menu.txt in cui sono elencate diverse alternative, e contiene almeno due primi e due
   secondi, oltre a dolce e caff`e. Il file di configurazione deve rispettare una sintassi definita dal progettista, e la
-  composizione del menu potr`a essere modificata in sede di esame;
+composizione del menu potr`a essere modificata in sede di esame;
 - In base alla composizione del menu scelto –che deve includere almeno un primo, un secondo ed eventualmente
   il dolce-caff`e– si reca alle stazioni che forniscono i prodotti desiderati;
 - Attende il proprio turno e l’erogazione del piatto presso ciascuna stazione di distribuzione;
 - Al momento in cui l’utente sta per essere servito pu`o capitare che il piatto desiderato sia terminato: in questo
-  caso l’utente sceglier`a un altro piatto dello stesso tipo (primi o secondi). Se tutti i piatti di quel tipo sono
+caso l’utente sceglier`a un altro piatto dello stesso tipo (primi o secondi). Se tutti i piatti di quel tipo sono
   terminati, manger`a solo secondo o solo primo. Se tutti i piatti di entrambi i tipi sono terminati, desiste ed
   esce;
 - Dopo avere ottenuto i piatti scelti, passa in cassa e paga;
@@ -328,8 +328,8 @@ Figura 1: Schema del funzionamento della mensa.
 
 - Gli utenti possono decidere di pranzare insieme: per mangiare insieme devono andare a pagare solo dopo
   essersi riforniti di tutti i piatti che desiderano acquistare. Nell’arco della simulazione ciascun gruppo `e costi-
-  tuito (attraverso l’estrazione di un numero casuale) da un numero compreso tra uno e MAXUSERSPERGROUP
-  utenti. L’associazione tra utenti e gruppi `e determinata al momento della creazione dei processi da parte del
+tuito (attraverso l’estrazione di un numero casuale) da un numero compreso tra uno e MAXUSERSPERGROUP
+utenti. L’associazione tra utenti e gruppi `e determinata al momento della creazione dei processi da parte del
   responsabilemensa;
 - A differenza della versione minima, il tempo di refill dei primi e dei secondi `e AVGREFILLTIME, e dovr`a essere
   usato per generare un tempo casuale nell’intorno±20% del valore indicato.

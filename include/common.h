@@ -14,9 +14,29 @@
 #include "config.h"
 #include "statistics.h"
 #include "menu.h"
+#include "message.h"
+
+/** Percorso e ID per la generazione delle chiavi IPC tramite ftok() */
+#define IPC_KEY_PATH "config/config.conf"
+#define IPC_PROJECT_ID 'A'
 
 /** Numero di postazioni per la validazione automatica dei ticket all'ingresso */
-#define TICKET_VALIDATORS_COUNT 2
+#define TICKET_VALIDATORS_COUNT 4
+
+/** Numero massimo di utenti per gruppo di amici */
+#define MAX_USERS_PER_GROUP 8
+
+/* ==========================================================================
+ *                         SEZIONE: INDICI SEMAFORICI
+ * ========================================================================== */
+
+/** Offsets semaforici per ogni entry del pool di gruppo */
+typedef enum {
+    GROUP_SEM_PRE_CASHIER = 0,  /**< Barriera pre-cassa */
+    GROUP_SEM_TABLE_GATE = 1,   /**< Gate tavolo (Leader-Scout) */
+    GROUP_SEM_EXIT = 2,         /**< Barriera uscita pasto */
+    GROUP_SEMS_PER_ENTRY = 3    /**< Numero di semafori per ogni slot del pool */
+} GroupSemaphoreOffset;
 
 /**
  * @brief Indici per l'identificazione dei gruppi di processi.
@@ -52,6 +72,7 @@ typedef enum {
 typedef enum {
     MUTEX_SIMULATION_STATS = 0, /**< Protegge la struttura delle statistiche globali */
     MUTEX_SHARED_DATA,          /**< Protegge i campi comuni della memoria condivisa (es. giorno corrente) */
+    MUTEX_ADD_USERS_PERMISSION, /**< Permesso per i processi add_users di procedere */
     MUTEX_SEMAPHORE_COUNT       /**< Numero totale di semafori mutex */
 } MutexSemaphoreIndex;
 
@@ -61,8 +82,9 @@ typedef enum {
 typedef enum {
     STATION_SEM_AVAILABLE_POSTS = 0, /**< Semaforo a conteggio per i posti operatore disponibili */
     STATION_SEM_USER_QUEUE,          /**< Sincronizzazione per l'attesa degli utenti alla stazione */
-    STATION_SEM_REFILL_GATE,         /**< Cancello per bloccare servizo durante il rifornimento (0:Aperto, 1:Chiuso) */
+    STATION_SEM_REFILL_GATE,         /**< Cancello refill: 0=Aperto (wait_for_zero passa), >0=Chiuso (operatori bloccati) */
     STATION_SEM_REFILL_ACK,          /**< Sincronizzazione (Appello) per il risveglio post-rifornimento */
+    STATION_SEM_STOP_GATE,           /**< Cancello Communication Disorder: 0=Operativo, >0=Bloccato */
     STATION_SEM_COUNT                /**< Totale semafori per stazione */
 } StationSemaphoreIndex;
 
@@ -86,6 +108,22 @@ typedef struct {
     double total_income;                /**< Incasso totale accumulato nella simulazione */
 } CashierStation;
 
+/* ==========================================================================
+ *                         SEZIONE: STRUTTURE DATI
+ * ========================================================================== */
+
+/** Capacità massima del registry per il tracciamento dei processi utente */
+#define MAX_USERS_REGISTRY 4096
+
+/**
+ * @brief Informazioni di tracciamento per ogni processo utente.
+ * Usato dal Master per gestire la morte asincrona e le barriere di gruppo.
+ */
+typedef struct {
+    pid_t pid;                          /**< PID del processo */
+    int group_index;                    /**< Indice del gruppo di appartenenza */
+} UserProcessMetadata;
+
 /**
  * @brief Area dedicata al consumo dei pasti (Refezione).
  */
@@ -94,8 +132,22 @@ typedef struct {
 } DiningArea;
 
 /**
+ * @brief Stato dinamico di un gruppo di utenti durante la giornata.
+ */
+typedef struct {
+    int active_members;                 /**< Numero di membri del gruppo ancora in mensa */
+    pid_t group_leader_pid;             /**< PID del leader attuale (per coordinamento tavolo) */
+} GroupStatus;
+
+/* ==========================================================================
+ *                     SEZIONE: MEMORIA CONDIVISA PRINCIPALE
+ * ========================================================================== */
+
+/**
  * @brief Struttura principale della Memoria Condivisa.
+ * 
  * Contiene lo stato globale della simulazione accessibile a tutti i processi.
+ * Allocata dinamicamente per supportare il Flexible Array Member `group_statuses`.
  */
 struct MainSharedMemory {
     SimulationConfiguration configuration;    /**< Parametri di configurazione caricati dai file .conf */
@@ -105,8 +157,11 @@ struct MainSharedMemory {
     int shared_memory_id;               /**< ID della risorsa Shared Memory stessa */
     int semaphore_sync_id;              /**< ID Set Semafori Barriera (SyncBarrierIndex) */
     int semaphore_mutex_id;             /**< ID Set Semafori Mutex (MutexSemaphoreIndex) */
+    int group_sync_semaphore_id;        /**< ID Pool Semafori per sincronizzazione gruppi */
+    int group_pool_size;                /**< Numero totale di slot nel pool di sincronizzazione */
     int semaphore_ticket_id;            /**< ID Semaforo per la validazione ticket all'ingresso */
 
+    pid_t master_pid;                   /**< PID del processo Responsabile Mensa */
     pid_t process_group_pids[MAX_PROCESS_GROUPS]; /**< PGID dei vari gruppi di processi */
 
     FoodDistributionStation first_course_station;
@@ -116,13 +171,31 @@ struct MainSharedMemory {
     CashierStation register_station;
     DiningArea seat_area;
 
+    int control_queue_id;               /**< ID Coda per richieste add_users */
+    int current_total_users;           /**< Numero attuale di utenti nella simulazione */
+    int add_users_flag;                /**< Flag per segnalare richieste di aggiunta utenti */
+
     int current_simulation_day;         /**< Giorno attuale della simulazione */
     int simulation_minutes_passed;      /**< Minuti simulati trascorsi dall'inizio del giorno */
     int is_simulation_running;          /**< Flag globale (1: Attiva, 0: Arresto Totale) */
     int current_simulation_status;      /**< Stato attuale (Aperto, In Chiusura, Disorder) */
+
+    /** Registry per tracciamento PID -> Group (Proposta 2 Punto 2) */
+    UserProcessMetadata user_registry[MAX_USERS_REGISTRY];
+
+    /**
+     * @brief Stato dinamico dei gruppi.
+     * Flexible Array Member dedicato alla gestione elastica dei gruppi.
+     * Deve risiedere alla fine della struct per permettere l'allocazione dinamica della SHM.
+     */
+    GroupStatus group_statuses[]; 
 };
 
 typedef struct MainSharedMemory MainSharedMemory;
+
+/* ==========================================================================
+ *                         SEZIONE: PROTOTIPI FUNZIONI
+ * ========================================================================== */
 
 /**
  * @brief Collega il processo alla memoria condivisa della simulazione.

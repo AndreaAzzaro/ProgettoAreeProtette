@@ -1,19 +1,27 @@
 /**
  * @file shm.c
- * @brief Implementazione delle astrazioni per la memoria condivisa (System V IPC).
+ * @brief Implementazione wrapper per la memoria condivisa System V IPC.
+ * 
+ * Fornisce un'astrazione sopra shmget, shmat, shmdt e shmctl.
+ * 
+ * @see shm.h per la documentazione delle funzioni pubbliche.
  */
 
-#include <sys/ipc.h>
-#include <sys/shm.h>
+/* Includes di sistema */
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "../../include/shm.h"
+#include <sys/ipc.h>
+#include <sys/shm.h>
+
+/* Includes del progetto */
+#include "shm.h"
 
 /* ==========================================================================
- *                          FUNZIONI PUBBLICHE
- * ========================================================================= */
+ *                       SEZIONE: CREAZIONE E RIMOZIONE
+ * ========================================================================== */
 
+/** Crea o ottiene un segmento di memoria condivisa. */
 int create_shared_memory_segment(key_t key, size_t segment_size, int segment_flags) {
     int shared_memory_id = shmget(key, segment_size, segment_flags);
     if (shared_memory_id == -1) {
@@ -21,6 +29,12 @@ int create_shared_memory_segment(key_t key, size_t segment_size, int segment_fla
     }
     return shared_memory_id;
 }
+
+/* ==========================================================================
+ *                        SEZIONE: ATTACH E DETACH
+ * ========================================================================== */
+
+/** Collega il segmento allo spazio di indirizzamento del processo. */
 
 void *attach_shared_memory_segment(int shared_memory_id, bool is_read_only) {
     int connection_flags = 0;
@@ -39,6 +53,7 @@ void *attach_shared_memory_segment(int shared_memory_id, bool is_read_only) {
     return attached_address;
 }
 
+/** Scollega il segmento dallo spazio di indirizzamento. */
 int detach_shared_memory_segment(const void *shared_memory_address) {
     if (shmdt(shared_memory_address) == -1) {
         perror("IPC Error: shmdt failed in detach_shared_memory_segment");
@@ -47,6 +62,7 @@ int detach_shared_memory_segment(const void *shared_memory_address) {
     return 0;
 }
 
+/** Rimuove definitivamente il segmento dal sistema. */
 int remove_shared_memory_segment(int shared_memory_id) {
     if (shmctl(shared_memory_id, IPC_RMID, NULL) == -1) {
         perror("IPC Error: shmctl(IPC_RMID) failed in remove_shared_memory_segment");

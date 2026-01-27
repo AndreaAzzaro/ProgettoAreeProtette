@@ -1,0 +1,514 @@
+[DEBUG] Utente PID 107482: Inizializzazione completata. Pronto.
+[UTENTE] PID 107482: Inizio giornata 1.
+[UTENTE] PID 107482: In coda per validazione ticket...
+[UTENTE] PID 107482: Ticket validato.
+[UTENTE] PID 107482: In coda alla stazione Primi per il piatto 10.
+[UTENTE] PID 107482: Ricevuto piatto index 10 dalla stazione.
+[UTENTE] PID 107482: In coda alla stazione Secondi per il piatto 12.
+[UTENTE] PID 107482: Ricevuto piatto index 12 dalla stazione.
+[UTENTE] PID 107482: Attesa amici al meeting point...
+[UTENTE] PID 107482: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 107482: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 107482: Attesa tavolo dal leader...
+[UTENTE] PID 107482: Pasto terminato.
+[UTENTE] PID 107482: Coda Caffè/Dolce...
+[UTENTE] PID 107482: In coda alla stazione Caffè per il piatto 2.
+[UTENTE] PID 107482: Ricevuto piatto index 2 dalla stazione.
+[UTENTE] PID 107482: Uscita gruppo 1 completata.
+[UTENTE] PID 107482: Inizio giornata 1.
+[UTENTE] PID 107482: In coda per validazione ticket...
+[UTENTE] PID 107482: Ticket validato.
+[UTENTE] PID 107482: In coda alla stazione Primi per il piatto 14.
+[UTENTE] PID 107482: Ricevuto piatto index 14 dalla stazione.
+[UTENTE] PID 107482: In coda alla stazione Secondi per il piatto 17.
+[UTENTE] PID 107482: Ricevuto piatto index 17 dalla stazione.
+[UTENTE] PID 107482: Attesa amici al meeting point...
+[UTENTE] PID 107482: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 107482: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 107482: Attesa tavolo dal leader...
+[UTENTE] PID 107482: Pasto terminato.
+[UTENTE] PID 107482: Coda Caffè/Dolce...
+[UTENTE] PID 107482: In coda alla stazione Caffè per il piatto 3.
+[UTENTE] PID 107482: Ricevuto piatto index 3 dalla stazione.
+[UTENTE] PID 107482: Uscita gruppo 1 completata.
+[UTENTE] PID 107482: Terminazione pulita.
+[DEBUG] Utente PID 107480: Inizializzazione completata. Pronto.
+[UTENTE] PID 107480: Inizio giornata 1.
+[UTENTE] PID 107480: In coda alla stazione Primi per il piatto 18.
+[UTENTE] PID 107480: Ricevuto piatto index 18 dalla stazione.
+[UTENTE] PID 107480: In coda alla stazione Secondi per il piatto 18.
+[UTENTE] PID 107480: Ricevuto piatto index 18 dalla stazione.
+[UTENTE] PID 107480: Attesa amici al meeting point...
+[UTENTE] PID 107480: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 107480: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 107480: Attesa tavolo dal leader...
+[UTENTE] PID 107480: Pasto terminato.
+[UTENTE] PID 107480: Coda Caffè/Dolce...
+[UTENTE] PID 107480: In coda alla stazione Caffè per il piatto 1.
+[UTENTE] PID 107480: Ricevuto piatto index 1 dalla stazione.
+[UTENTE] PID 107480: Uscita gruppo 0 completata.
+[UTENTE] PID 107480: Inizio giornata 1.
+[UTENTE] PID 107480: In coda alla stazione Primi per il piatto 9.
+[UTENTE] PID 107480: Ricevuto piatto index 9 dalla stazione.
+[UTENTE] PID 107480: In coda alla stazione Secondi per il piatto 13.
+[UTENTE] PID 107480: Ricevuto piatto index 13 dalla stazione.
+[UTENTE] PID 107480: Attesa amici al meeting point...
+[UTENTE] PID 107480: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 107480: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 107480: Attesa tavolo dal leader...
+[UTENTE] PID 107480: Pasto terminato.
+[UTENTE] PID 107480: Coda Caffè/Dolce...
+[UTENTE] PID 107480: In coda alla stazione Caffè per il piatto 3.
+[UTENTE] PID 107480: Ricevuto piatto index 3 dalla stazione.
+[UTENTE] PID 107480: Uscita gruppo 0 completata.
+[UTENTE] PID 107480: Terminazione pulita.
+[DEBUG] Utente PID 107481: Inizializzazione completata. Pronto.
+[UTENTE] PID 107481: Inizio giornata 1.
+[UTENTE] PID 107481: In coda per validazione ticket...
+[UTENTE] PID 107481: Ticket validato.
+[UTENTE] PID 107481: In coda alla stazione Primi per il piatto 17.
+[UTENTE] PID 107481: Ricevuto piatto index 17 dalla stazione.
+[UTENTE] PID 107481: In coda alla stazione Secondi per il piatto 7.
+[UTENTE] PID 107481: Ricevuto piatto index 7 dalla stazione.
+[UTENTE] PID 107481: Attesa amici al meeting point...
+[UTENTE] PID 107481: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 107481: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 107481 (Leader): Prenoto tavolo per 2.
+[UTENTE] PID 107481: Pasto terminato.
+[UTENTE] PID 107481: Coda Caffè/Dolce...
+[UTENTE] PID 107481: In coda alla stazione Caffè per il piatto 3.
+[UTENTE] PID 107481: Ricevuto piatto index 3 dalla stazione.
+[UTENTE] PID 107481: Uscita gruppo 1 completata.
+[UTENTE] PID 107481: Inizio giornata 1.
+[UTENTE] PID 107481: In coda per validazione ticket...
+[UTENTE] PID 107481: Ticket validato.
+[UTENTE] PID 107481: In coda alla stazione Primi per il piatto 3.
+[UTENTE] PID 107481: Ricevuto piatto index 3 dalla stazione.
+[UTENTE] PID 107481: In coda alla stazione Secondi per il piatto 19.
+[UTENTE] PID 107481: Ricevuto piatto index 19 dalla stazione.
+[UTENTE] PID 107481: Attesa amici al meeting point...
+[UTENTE] PID 107481: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 107481: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 107481 (Leader): Prenoto tavolo per 2.
+[UTENTE] PID 107481: Pasto terminato.
+[UTENTE] PID 107481: Coda Caffè/Dolce...
+[UTENTE] PID 107481: In coda alla stazione Caffè per il piatto 3.
+[UTENTE] PID 107481: Ricevuto piatto index 3 dalla stazione.
+[UTENTE] PID 107481: Uscita gruppo 1 completata.
+[UTENTE] PID 107481: Terminazione pulita.
+[DEBUG] Utente PID 107479: Inizializzazione completata. Pronto.
+[UTENTE] PID 107479: Inizio giornata 1.
+[UTENTE] PID 107479: In coda per validazione ticket...
+[UTENTE] PID 107479: Ticket validato.
+[UTENTE] PID 107479: In coda alla stazione Primi per il piatto 13.
+[UTENTE] PID 107479: Ricevuto piatto index 13 dalla stazione.
+[UTENTE] PID 107479: In coda alla stazione Secondi per il piatto 8.
+[UTENTE] PID 107479: Ricevuto piatto index 8 dalla stazione.
+[UTENTE] PID 107479: Attesa amici al meeting point...
+[UTENTE] PID 107479: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 107479: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 107479: Attesa tavolo dal leader...
+[UTENTE] PID 107479: Pasto terminato.
+[UTENTE] PID 107479: Coda Caffè/Dolce...
+[UTENTE] PID 107479: In coda alla stazione Caffè per il piatto 1.
+[UTENTE] PID 107479: Ricevuto piatto index 1 dalla stazione.
+[UTENTE] PID 107479: Uscita gruppo 0 completata.
+[UTENTE] PID 107479: Inizio giornata 1.
+[UTENTE] PID 107479: In coda per validazione ticket...
+[UTENTE] PID 107479: Ticket validato.
+[UTENTE] PID 107479: In coda alla stazione Primi per il piatto 1.
+[UTENTE] PID 107479: Ricevuto piatto index 1 dalla stazione.
+[UTENTE] PID 107479: In coda alla stazione Secondi per il piatto 5.
+[UTENTE] PID 107479: Ricevuto piatto index 5 dalla stazione.
+[UTENTE] PID 107479: Attesa amici al meeting point...
+[UTENTE] PID 107479: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 107479: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 107479: Attesa tavolo dal leader...
+[UTENTE] PID 107479: Pasto terminato.
+[UTENTE] PID 107479: Coda Caffè/Dolce...
+[UTENTE] PID 107479: In coda alla stazione Caffè per il piatto 0.
+[UTENTE] PID 107479: Ricevuto piatto index 0 dalla stazione.
+[UTENTE] PID 107479: Uscita gruppo 0 completata.
+[UTENTE] PID 107479: Terminazione pulita.
+[DEBUG] Utente PID 107478: Inizializzazione completata. Pronto.
+[UTENTE] PID 107478: Inizio giornata 1.
+[UTENTE] PID 107478: In coda per validazione ticket...
+[UTENTE] PID 107478: Ticket validato.
+[UTENTE] PID 107478: In coda alla stazione Primi per il piatto 13.
+[UTENTE] PID 107478: Ricevuto piatto index 13 dalla stazione.
+[UTENTE] PID 107478: In coda alla stazione Secondi per il piatto 15.
+[UTENTE] PID 107478: Ricevuto piatto index 15 dalla stazione.
+[UTENTE] PID 107478: Attesa amici al meeting point...
+[UTENTE] PID 107478: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 107478: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 107478: Attesa tavolo dal leader...
+[UTENTE] PID 107478: Pasto terminato.
+[UTENTE] PID 107478: Coda Caffè/Dolce...
+[UTENTE] PID 107478: In coda alla stazione Caffè per il piatto 2.
+[UTENTE] PID 107478: Ricevuto piatto index 2 dalla stazione.
+[UTENTE] PID 107478: Uscita gruppo 0 completata.
+[UTENTE] PID 107478: Inizio giornata 1.
+[UTENTE] PID 107478: In coda per validazione ticket...
+[UTENTE] PID 107478: Ticket validato.
+[UTENTE] PID 107478: In coda alla stazione Primi per il piatto 11.
+[UTENTE] PID 107478: Ricevuto piatto index 11 dalla stazione.
+[UTENTE] PID 107478: In coda alla stazione Secondi per il piatto 17.
+[UTENTE] PID 107478: Ricevuto piatto index 17 dalla stazione.
+[UTENTE] PID 107478: Attesa amici al meeting point...
+[UTENTE] PID 107478: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 107478: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 107478: Attesa tavolo dal leader...
+[UTENTE] PID 107478: Pasto terminato.
+[UTENTE] PID 107478: Coda Caffè/Dolce...
+[UTENTE] PID 107478: In coda alla stazione Caffè per il piatto 1.
+[UTENTE] PID 107478: Ricevuto piatto index 1 dalla stazione.
+[UTENTE] PID 107478: Uscita gruppo 0 completata.
+[UTENTE] PID 107478: Terminazione pulita.
+[DEBUG] Utente PID 107477: Inizializzazione completata. Pronto.
+[UTENTE] PID 107477: Inizio giornata 1.
+[UTENTE] PID 107477: In coda per validazione ticket...
+[UTENTE] PID 107477: Ticket validato.
+[UTENTE] PID 107477: In coda alla stazione Primi per il piatto 13.
+[UTENTE] PID 107477: Ricevuto piatto index 13 dalla stazione.
+[UTENTE] PID 107477: In coda alla stazione Secondi per il piatto 6.
+[UTENTE] PID 107477: Ricevuto piatto index 6 dalla stazione.
+[UTENTE] PID 107477: Attesa amici al meeting point...
+[UTENTE] PID 107477: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 107477: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 107477: Attesa tavolo dal leader...
+[UTENTE] PID 107477: Pasto terminato.
+[UTENTE] PID 107477: Coda Caffè/Dolce...
+[UTENTE] PID 107477: In coda alla stazione Caffè per il piatto 0.
+[UTENTE] PID 107477: Ricevuto piatto index 0 dalla stazione.
+[UTENTE] PID 107477: Uscita gruppo 0 completata.
+[UTENTE] PID 107477: Inizio giornata 2.
+[UTENTE] PID 107477: In coda per validazione ticket...
+[UTENTE] PID 107477: Ticket validato.
+[UTENTE] PID 107477: In coda alla stazione Primi per il piatto 7.
+[UTENTE] PID 107477: Ricevuto piatto index 7 dalla stazione.
+[UTENTE] PID 107477: In coda alla stazione Secondi per il piatto 11.
+[UTENTE] PID 107477: Ricevuto piatto index 11 dalla stazione.
+[UTENTE] PID 107477: Attesa amici al meeting point...
+[UTENTE] PID 107477: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 107477: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 107477: Attesa tavolo dal leader...
+[UTENTE] PID 107477: Pasto terminato.
+[UTENTE] PID 107477: Coda Caffè/Dolce...
+[UTENTE] PID 107477: In coda alla stazione Caffè per il piatto 0.
+[UTENTE] PID 107477: Ricevuto piatto index 0 dalla stazione.
+[UTENTE] PID 107477: Uscita gruppo 0 completata.
+[UTENTE] PID 107477: Terminazione pulita.
+[DEBUG] Utente PID 107476: Inizializzazione completata. Pronto.
+[UTENTE] PID 107476: Inizio giornata 1.
+[UTENTE] PID 107476: In coda per validazione ticket...
+[UTENTE] PID 107476: Ticket validato.
+[UTENTE] PID 107476: In coda alla stazione Primi per il piatto 19.
+[UTENTE] PID 107476: Ricevuto piatto index 19 dalla stazione.
+[UTENTE] PID 107476: In coda alla stazione Secondi per il piatto 13.
+[UTENTE] PID 107476: Ricevuto piatto index 13 dalla stazione.
+[UTENTE] PID 107476: Attesa amici al meeting point...
+[UTENTE] PID 107476: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 107476: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 107476: Attesa tavolo dal leader...
+[UTENTE] PID 107476: Pasto terminato.
+[UTENTE] PID 107476: Coda Caffè/Dolce...
+[UTENTE] PID 107476: In coda alla stazione Caffè per il piatto 3.
+[UTENTE] PID 107476: Ricevuto piatto index 3 dalla stazione.
+[UTENTE] PID 107476: Uscita gruppo 0 completata.
+[UTENTE] PID 107476: Inizio giornata 2.
+[UTENTE] PID 107476: In coda per validazione ticket...
+[UTENTE] PID 107476: Ticket validato.
+[UTENTE] PID 107476: In coda alla stazione Primi per il piatto 13.
+[UTENTE] PID 107476: Ricevuto piatto index 13 dalla stazione.
+[UTENTE] PID 107476: In coda alla stazione Secondi per il piatto 13.
+[UTENTE] PID 107476: Ricevuto piatto index 13 dalla stazione.
+[UTENTE] PID 107476: Attesa amici al meeting point...
+[UTENTE] PID 107476: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 107476: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 107476: Attesa tavolo dal leader...
+[UTENTE] PID 107476: Pasto terminato.
+[UTENTE] PID 107476: Coda Caffè/Dolce...
+[UTENTE] PID 107476: In coda alla stazione Caffè per il piatto 3.
+[UTENTE] PID 107476: Ricevuto piatto index 3 dalla stazione.
+[UTENTE] PID 107476: Uscita gruppo 0 completata.
+[UTENTE] PID 107476: Terminazione pulita.
+[DEBUG] Utente PID 107475: Inizializzazione completata. Pronto.
+[UTENTE] PID 107475: Inizio giornata 1.
+[UTENTE] PID 107475: In coda alla stazione Primi per il piatto 1.
+[UTENTE] PID 107475: Ricevuto piatto index 1 dalla stazione.
+[UTENTE] PID 107475: In coda alla stazione Secondi per il piatto 2.
+[UTENTE] PID 107475: Ricevuto piatto index 2 dalla stazione.
+[UTENTE] PID 107475: Attesa amici al meeting point...
+[UTENTE] PID 107475: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 107475: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 107475: Attesa tavolo dal leader...
+[UTENTE] PID 107475: Pasto terminato.
+[UTENTE] PID 107475: Coda Caffè/Dolce...
+[UTENTE] PID 107475: In coda alla stazione Caffè per il piatto 2.
+[UTENTE] PID 107475: Ricevuto piatto index 2 dalla stazione.
+[UTENTE] PID 107475: Uscita gruppo 0 completata.
+[UTENTE] PID 107475: Inizio giornata 1.
+[UTENTE] PID 107475: In coda alla stazione Primi per il piatto 13.
+[UTENTE] PID 107475: Ricevuto piatto index 13 dalla stazione.
+[UTENTE] PID 107475: In coda alla stazione Secondi per il piatto 18.
+[UTENTE] PID 107475: Ricevuto piatto index 18 dalla stazione.
+[UTENTE] PID 107475: Attesa amici al meeting point...
+[UTENTE] PID 107475: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 107475: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 107475: Attesa tavolo dal leader...
+[UTENTE] PID 107475: Pasto terminato.
+[UTENTE] PID 107475: Coda Caffè/Dolce...
+[UTENTE] PID 107475: In coda alla stazione Caffè per il piatto 2.
+[UTENTE] PID 107475: Ricevuto piatto index 2 dalla stazione.
+[UTENTE] PID 107475: Uscita gruppo 0 completata.
+[UTENTE] PID 107475: Terminazione pulita.
+[DEBUG] Utente PID 107474: Inizializzazione completata. Pronto.
+[UTENTE] PID 107474: Inizio giornata 1.
+[UTENTE] PID 107474: In coda per validazione ticket...
+[UTENTE] PID 107474: Ticket validato.
+[UTENTE] PID 107474: In coda alla stazione Primi per il piatto 8.
+[UTENTE] PID 107474: Ricevuto piatto index 8 dalla stazione.
+[UTENTE] PID 107474: In coda alla stazione Secondi per il piatto 10.
+[UTENTE] PID 107474: Ricevuto piatto index 10 dalla stazione.
+[UTENTE] PID 107474: Attesa amici al meeting point...
+[UTENTE] PID 107474: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 107474: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 107474: Attesa tavolo dal leader...
+[UTENTE] PID 107474: Pasto terminato.
+[UTENTE] PID 107474: Coda Caffè/Dolce...
+[UTENTE] PID 107474: In coda alla stazione Caffè per il piatto 3.
+[UTENTE] PID 107474: Ricevuto piatto index 3 dalla stazione.
+[UTENTE] PID 107474: Uscita gruppo 0 completata.
+[UTENTE] PID 107474: Inizio giornata 1.
+[UTENTE] PID 107474: In coda per validazione ticket...
+[UTENTE] PID 107474: Ticket validato.
+[UTENTE] PID 107474: In coda alla stazione Primi per il piatto 19.
+[UTENTE] PID 107474: Ricevuto piatto index 19 dalla stazione.
+[UTENTE] PID 107474: In coda alla stazione Secondi per il piatto 11.
+[UTENTE] PID 107474: Ricevuto piatto index 11 dalla stazione.
+[UTENTE] PID 107474: Attesa amici al meeting point...
+[UTENTE] PID 107474: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 107474: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 107474: Attesa tavolo dal leader...
+[UTENTE] PID 107474: Pasto terminato.
+[UTENTE] PID 107474: Coda Caffè/Dolce...
+[UTENTE] PID 107474: In coda alla stazione Caffè per il piatto 1.
+[UTENTE] PID 107474: Ricevuto piatto index 1 dalla stazione.
+[UTENTE] PID 107474: Uscita gruppo 0 completata.
+[UTENTE] PID 107474: Terminazione pulita.
+[DEBUG] Utente PID 107473: Inizializzazione completata. Pronto.
+[UTENTE] PID 107473: Inizio giornata 1.
+[UTENTE] PID 107473: In coda per validazione ticket...
+[UTENTE] PID 107473: Ticket validato.
+[UTENTE] PID 107473: In coda alla stazione Primi per il piatto 7.
+[UTENTE] PID 107473: Ricevuto piatto index 7 dalla stazione.
+[UTENTE] PID 107473: In coda alla stazione Secondi per il piatto 16.
+[UTENTE] PID 107473: Ricevuto piatto index 16 dalla stazione.
+[UTENTE] PID 107473: Attesa amici al meeting point...
+[UTENTE] PID 107473: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 107473: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 107473 (Leader): Prenoto tavolo per 8.
+[UTENTE] PID 107473: Pasto terminato.
+[UTENTE] PID 107473: Coda Caffè/Dolce...
+[UTENTE] PID 107473: In coda alla stazione Caffè per il piatto 1.
+[UTENTE] PID 107473: Ricevuto piatto index 1 dalla stazione.
+[UTENTE] PID 107473: Uscita gruppo 0 completata.
+[UTENTE] PID 107473: Inizio giornata 1.
+[UTENTE] PID 107473: In coda per validazione ticket...
+[UTENTE] PID 107473: Ticket validato.
+[UTENTE] PID 107473: In coda alla stazione Primi per il piatto 16.
+[UTENTE] PID 107473: Ricevuto piatto index 16 dalla stazione.
+[UTENTE] PID 107473: In coda alla stazione Secondi per il piatto 19.
+[UTENTE] PID 107473: Ricevuto piatto index 19 dalla stazione.
+[UTENTE] PID 107473: Attesa amici al meeting point...
+[UTENTE] PID 107473: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 107473: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 107473 (Leader): Prenoto tavolo per 8.
+[UTENTE] PID 107473: Pasto terminato.
+[UTENTE] PID 107473: Coda Caffè/Dolce...
+[UTENTE] PID 107473: In coda alla stazione Caffè per il piatto 1.
+[UTENTE] PID 107473: Ricevuto piatto index 1 dalla stazione.
+[UTENTE] PID 107473: Uscita gruppo 0 completata.
+[UTENTE] PID 107473: Terminazione pulita.
+[CASSIERE] PID 107472: Inizializzazione completata. Pronto.
+[CASSIERE] PID 107472: Inizio giornata 1.
+[CASSIERE] PID 107472: Gestito Utente 107480. Incassato: 13.00 EUR.
+[CASSIERE] PID 107472: Gestito Utente 107473. Incassato: 6.50 EUR.
+[CASSIERE] PID 107472: Gestito Utente 107476. Incassato: 6.50 EUR.
+[CASSIERE] PID 107472: Gestito Utente 107477. Incassato: 6.50 EUR.
+[CASSIERE] PID 107472: Gestito Utente 107482. Incassato: 6.50 EUR.
+[CASSIERE] PID 107472: Inizio giornata 2.
+[CASSIERE] PID 107472: Gestito Utente 107482. Incassato: 6.50 EUR.
+[CASSIERE] PID 107472: Gestito Utente 107480. Incassato: 13.00 EUR.
+[CASSIERE] PID 107472: Gestito Utente 107474. Incassato: 6.50 EUR.
+[CASSIERE] PID 107472: Gestito Utente 107476. Incassato: 6.50 EUR.
+[CASSIERE] PID 107472: Gestito Utente 107477. Incassato: 6.50 EUR.
+[CASSIERE] PID 107472: Terminazione pulita.
+[OPERATORE] PID 107464: Initializzazione completata. Pronto.
+[OPERATORE] PID 107464: Inizio giornata 1.
+[OPERATORE] PID 107464: Postazione acquisita.
+[OPERATORE] PID 107464: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 107464: Inizio giornata 2.
+[OPERATORE] PID 107464: Postazione acquisita.
+[OPERATORE] PID 107464: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 107464: Terminazione pulita.
+[CASSIERE] PID 107471: Inizializzazione completata. Pronto.
+[CASSIERE] PID 107471: Inizio giornata 1.
+[CASSIERE] PID 107471: Gestito Utente 107475. Incassato: 13.00 EUR.
+[CASSIERE] PID 107471: Gestito Utente 107474. Incassato: 6.50 EUR.
+[CASSIERE] PID 107471: Gestito Utente 107479. Incassato: 6.50 EUR.
+[CASSIERE] PID 107471: Gestito Utente 107478. Incassato: 6.50 EUR.
+[CASSIERE] PID 107471: Gestito Utente 107481. Incassato: 6.50 EUR.
+[CASSIERE] PID 107471: Inizio giornata 2.
+[CASSIERE] PID 107471: Gestito Utente 107481. Incassato: 6.50 EUR.
+[CASSIERE] PID 107471: Gestito Utente 107475. Incassato: 13.00 EUR.
+[CASSIERE] PID 107471: Gestito Utente 107473. Incassato: 6.50 EUR.
+[CASSIERE] PID 107471: Gestito Utente 107478. Incassato: 6.50 EUR.
+[CASSIERE] PID 107471: Gestito Utente 107479. Incassato: 6.50 EUR.
+[CASSIERE] PID 107471: Terminazione pulita.
+[OPERATORE] PID 107463: Initializzazione completata. Pronto.
+[OPERATORE] PID 107463: Inizio giornata 1.
+[OPERATORE] PID 107463: Postazione acquisita.
+[OPERATORE] PID 107463: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 107463: Inizio giornata 2.
+[OPERATORE] PID 107463: Postazione acquisita.
+[OPERATORE] PID 107463: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 107463: Terminazione pulita.
+[OPERATORE] PID 107461: Initializzazione completata. Pronto.
+[OPERATORE] PID 107461: Inizio giornata 1.
+[OPERATORE] PID 107461: Postazione acquisita.
+[OPERATORE] PID 107461: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 107461: Inizio giornata 2.
+[OPERATORE] PID 107461: Postazione acquisita.
+[OPERATORE] PID 107461: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 107461: Terminazione pulita.
+[OPERATORE] PID 107468: Initializzazione completata. Pronto.
+[OPERATORE] PID 107468: Inizio giornata 1.
+[OPERATORE] PID 107468: Postazione acquisita.
+[OPERATORE] PID 107468: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 107468: Inizio giornata 2.
+[OPERATORE] PID 107468: Postazione acquisita.
+[OPERATORE] PID 107468: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 107468: Terminazione pulita.
+[OPERATORE] PID 107467: Initializzazione completata. Pronto.
+[OPERATORE] PID 107467: Inizio giornata 1.
+[OPERATORE] PID 107467: Postazione acquisita.
+[OPERATORE] PID 107467: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 107467: Inizio giornata 2.
+[OPERATORE] PID 107467: Postazione acquisita.
+[OPERATORE] PID 107467: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 107467: Terminazione pulita.
+[OPERATORE] PID 107465: Initializzazione completata. Pronto.
+[OPERATORE] PID 107465: Inizio giornata 1.
+[OPERATORE] PID 107465: Postazione acquisita.
+[OPERATORE] PID 107465: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 107465: Inizio giornata 2.
+[OPERATORE] PID 107465: Postazione acquisita.
+[OPERATORE] PID 107465: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 107465: Terminazione pulita.
+[OPERATORE] PID 107469: Initializzazione completata. Pronto.
+[OPERATORE] PID 107469: Inizio giornata 1.
+[OPERATORE] PID 107469: Postazione acquisita.
+[OPERATORE] PID 107469: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 107469: Inizio giornata 2.
+[OPERATORE] PID 107469: Postazione acquisita.
+[OPERATORE] PID 107469: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 107469: Terminazione pulita.
+[OPERATORE] PID 107470: Initializzazione completata. Pronto.
+[OPERATORE] PID 107470: Inizio giornata 1.
+[OPERATORE] PID 107470: Postazione acquisita.
+[OPERATORE] PID 107470: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 107470: Inizio giornata 2.
+[OPERATORE] PID 107470: Postazione acquisita.
+[OPERATORE] PID 107470: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 107470: Terminazione pulita.
+[OPERATORE] PID 107466: Initializzazione completata. Pronto.
+[OPERATORE] PID 107466: Inizio giornata 1.
+[OPERATORE] PID 107466: Postazione acquisita.
+[OPERATORE] PID 107466: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 107466: Inizio giornata 2.
+[OPERATORE] PID 107466: Postazione acquisita.
+[OPERATORE] PID 107466: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 107466: Terminazione pulita.
+[OPERATORE] PID 107462: Initializzazione completata. Pronto.
+[OPERATORE] PID 107462: Inizio giornata 1.
+[OPERATORE] PID 107462: Postazione acquisita.
+[OPERATORE] PID 107462: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 107462: Inizio giornata 2.
+[OPERATORE] PID 107462: Postazione acquisita.
+[OPERATORE] PID 107462: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 107462: Terminazione pulita.
+[MASTER] Responsabile Mensa in avvio...
+[CONFIG] Parametri caricati correttamente.
+[MENU] Configurazione menu caricata correttamente.
+[MASTER] Lancio di 2 gruppi di utenti...
+[MASTER] In attesa dei figli per il via libera globale...
+[MASTER] Barriera superata! Avvio simulazione.
+[MASTER] Engine caricato. In attesa del comando di inizio ciclo...
+[MASTER] Tutti i processi pronti per il giorno 1.
+[MASTER] Stazioni rifornite per inizio giornata.
+[MASTER] Giorno 1: Cancello aperto. Inizio attività.
+[MASTER] Avvio ciclo di rifornimento stazioni...
+[MASTER] Rifornimento completato.
+[MASTER] Notifica di fine ciclo inviata a tutti i gruppi (Segnale: 12)
+
+============================================================
+        REPORT GIORNALIERO - GIORNO 1
+============================================================
+Utenti serviti oggi:       10
+  - Con Ticket:            8
+  - Senza Ticket:          2
+Utenti non serviti:        0
+Incasso giornaliero:       78.00 EUR
+------------------------------------------------------------
+Dettaglio Piatti Serviti:
+  - Primi Piatti:          10
+  - Secondi Piatti:        10
+  - Caffè e Dessert:       10
+------------------------------------------------------------
+Tempi Medi di Attesa:
+  - Area Primi:            0.10 min
+  - Area Secondi:          0.10 min
+  - Cassa:                 0.10 min
+============================================================
+
+[STATISTICS] Statistiche giorno 1 salvate in statistics_report.txt
+[MASTER] Giorno concluso correttamente.
+[MASTER] Tutti i processi pronti per il giorno 2.
+[MASTER] Stazioni rifornite per inizio giornata.
+[MASTER] Giorno 2: Cancello aperto. Inizio attività.
+[MASTER] Avvio ciclo di rifornimento stazioni...
+[MASTER] Rifornimento completato.
+[MASTER] Avvio ciclo di rifornimento stazioni...
+[MASTER] Rifornimento completato.
+[MASTER] Avvio ciclo di rifornimento stazioni...
+[MASTER] Rifornimento completato.
+[MASTER] Notifica di fine ciclo inviata a tutti i gruppi (Segnale: 15)
+
+--- SIMULAZIONE COMPLETATA ---
+[INFO] Simulazione Arrestata Manualmente (Giorno 2).
+
+============================================================
+        REPORT GIORNALIERO - GIORNO 2
+============================================================
+Utenti serviti oggi:       10
+  - Con Ticket:            8
+  - Senza Ticket:          2
+Utenti non serviti:        0
+Incasso giornaliero:       78.00 EUR
+------------------------------------------------------------
+Dettaglio Piatti Serviti:
+  - Primi Piatti:          10
+  - Secondi Piatti:        10
+  - Caffè e Dessert:       10
+------------------------------------------------------------
+Tempi Medi di Attesa:
+  - Area Primi:            0.10 min
+  - Area Secondi:          0.10 min
+  - Cassa:                 0.10 min
+============================================================
+
+[MASTER] Engine terminato.
+[MASTER] Fine simulazione rilevata. Notifica ai figli...
+
+[SYSTEM] Terminazione simulazione in corso...

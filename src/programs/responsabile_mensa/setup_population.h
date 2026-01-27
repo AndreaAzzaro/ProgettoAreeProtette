@@ -27,6 +27,28 @@ void launch_simulation_operators(struct MainSharedMemory *shared_memory_ptr);
  * @param shared_memory_ptr Puntatore alla memoria condivisa.
  * @param users_to_launch_count Numero di utenti da creare in questa chiamata.
  */
-void launch_simulation_users(struct MainSharedMemory *shared_memory_ptr);
+void launch_simulation_users(MainSharedMemory *shared_memory_ptr);
+
+/**
+ * @brief Calcola il numero di gruppi necessari per la popolazione iniziale.
+ * @param shm_ptr Puntatore alla memoria condivisa.
+ * @return Numero di gruppi calcolati.
+ */
+int calculate_initial_groups_count(MainSharedMemory *shm_ptr);
+
+/**
+ * @brief Imposta la distribuzione degli operatori nelle varie stazioni.
+ * @param shm_ptr Puntatore alla memoria condivisa.
+ */
+void setup_worker_distribution(MainSharedMemory *shm_ptr);
+
+/**
+ * @brief Inizializza i semafori dei posti operatore per tutte le stazioni.
+ * 
+ * Deve essere chiamata DOPO setup_worker_distribution() per avere i conteggi corretti.
+ * 
+ * @param shm_ptr Puntatore alla memoria condivisa.
+ */
+void initialize_station_operator_semaphores(MainSharedMemory *shm_ptr);
 
 #endif

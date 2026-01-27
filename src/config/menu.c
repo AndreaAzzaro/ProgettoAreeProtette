@@ -1,11 +1,24 @@
+/**
+ * @file menu.c
+ * @brief Implementazione del parser per il file di configurazione del menu.
+ * 
+ * Legge il file `config/menu.conf` e popola la struttura SimulationMenu.
+ * Formato file: una riga per piatto con "CATEGORIA NOME" (es. "P Spaghetti").
+ * 
+ * @see menu.h per la documentazione delle strutture.
+ */
+
+/* Includes di sistema */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../../include/menu.h"
+
+/* Includes del progetto */
+#include "menu.h"
 
 /* ==========================================================================
- *                          TIPI E MAPPING INTERNI
- * ========================================================================= */
+ *                          SEZIONE: TIPI E MAPPING
+ * ========================================================================== */
 
 /**
  * @brief Identificatori interni per la risoluzione della chiave nel file.
@@ -34,12 +47,12 @@ static const MenuCategoryKeyMap menu_category_mapping_table[] = {
     {"C", CATEGORY_KEY_SIDE},
     {"D", CATEGORY_KEY_DESSERT},
     {"B", CATEGORY_KEY_BEVERAGE},
-    {NULL, CATEGORY_KEY_UNKNOWN}
+    {NULL, CATEGORY_KEY_UNKNOWN}  /* Terminatore */
 };
 
 /* ==========================================================================
- *                          FUNZIONI PRIVATE
- * ========================================================================= */
+ *                          SEZIONE: FUNZIONI PRIVATE
+ * ========================================================================== */
 
 /**
  * @brief Risolve il flag testuale del file nella categoria corrispondente.
@@ -57,9 +70,13 @@ static MenuCategoryKey resolve_menu_category_key(const char *key_string) {
 }
 
 /* ==========================================================================
- *                          FUNZIONI PUBBLICHE
- * ========================================================================= */
+ *                          SEZIONE: FUNZIONI PUBBLICHE
+ * ========================================================================== */
 
+/**
+ * Carica il menu dal file di configurazione.
+ * Fallback: cerca "config/menu.conf" se MENU_CONFIGURATION_PATH fallisce.
+ */
 SimulationMenu load_simulation_menu() {
     SimulationMenu menu_data;
     memset(&menu_data, 0, sizeof(SimulationMenu));
@@ -129,6 +146,10 @@ SimulationMenu load_simulation_menu() {
     return menu_data;
 }
 
+/**
+ * Risolve l'ID di un piatto nel suo nome leggibile.
+ * Ritorna "Sconosciuto" se l'indice non è valido.
+ */
 const char* get_dish_name_by_id(SimulationMenu *menu_ptr, MenuDishCategory category, int dish_index) {
     const char* result = "Sconosciuto";
 

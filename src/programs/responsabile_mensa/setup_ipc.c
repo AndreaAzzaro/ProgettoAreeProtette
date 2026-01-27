@@ -6,6 +6,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
 #include "common.h"
 #include "sem.h"
 #include "shm.h"
@@ -13,15 +16,31 @@
 #include "utils.h"
 #include "setup_ipc.h"
 
-struct MainSharedMemory* initialize_simulation_shared_memory(void) {
+struct MainSharedMemory* initialize_simulation_shared_memory(int group_pool_size) {
     int shmid;
     struct MainSharedMemory *shm_ptr;
-    size_t shm_size = sizeof(struct MainSharedMemory);
+    /* Somma la parte fissa della struct alla parte variabile (Flexible Array Member) */
+    size_t shm_size = sizeof(struct MainSharedMemory) + (group_pool_size * sizeof(GroupStatus));
 
-    shmid = create_shared_memory_segment(IPC_PRIVATE, shm_size, IPC_CREAT | 0666);
-    if (shmid == -1) {
-        perror("[ERROR] Creazione memoria condivisa fallita");
+    key_t key = ftok(IPC_KEY_PATH, IPC_PROJECT_ID);
+    if (key == -1) {
+        perror("[ERROR] ftok fallita per la memoria condivisa");
         exit(EXIT_FAILURE);
+    }
+
+    shmid = create_shared_memory_segment(key, shm_size, IPC_CREAT | IPC_EXCL | 0666);
+    if (shmid == -1) {
+        if (errno == EEXIST) {
+            /* Se esiste già, lo rimuoviamo (presumibilmente rimasuglio di un crash precedente) */
+            int old_shmid = shmget(key, 0, 0);
+            if (old_shmid != -1) shmctl(old_shmid, IPC_RMID, NULL);
+            shmid = create_shared_memory_segment(key, shm_size, IPC_CREAT | 0666);
+        }
+        
+        if (shmid == -1) {
+            perror("[ERROR] Creazione memoria condivisa fallita");
+            exit(EXIT_FAILURE);
+        }
     }
 
     shm_ptr = (struct MainSharedMemory *)attach_shared_memory_segment(shmid, false);
@@ -33,7 +52,9 @@ struct MainSharedMemory* initialize_simulation_shared_memory(void) {
     /* Pulizia iniziale della memoria */
     memset(shm_ptr, 0, shm_size);
     shm_ptr->shared_memory_id = shmid;
+    shm_ptr->group_pool_size = group_pool_size;
     shm_ptr->is_simulation_running = 1;
+    shm_ptr->master_pid = getpid();
 
     return shm_ptr;
 }
@@ -68,6 +89,7 @@ void initialize_global_simulation_mutexes(struct MainSharedMemory *shared_memory
     
     init_sem_val(semid, MUTEX_SIMULATION_STATS, 1);
     init_sem_val(semid, MUTEX_SHARED_DATA, 1);
+    init_sem_val(semid, MUTEX_ADD_USERS_PERMISSION, 0); /* Chiama V() il Direttore, P() add_users */
     
     shared_memory_ptr->semaphore_mutex_id = semid;
 }
@@ -79,6 +101,13 @@ static void init_station_resource(FoodDistributionStation *station) {
         exit(EXIT_FAILURE);
     }
 
+    /* Ottimizzazione code per carichi elevati (es. 500 utenti) */
+    struct msqid_ds ds;
+    if (msgctl(station->message_queue_id, IPC_STAT, &ds) != -1) {
+        ds.msg_qbytes = 65536; /* 64KB */
+        msgctl(station->message_queue_id, IPC_SET, &ds);
+    }
+
     station->semaphore_set_id = create_sem_set(IPC_PRIVATE, STATION_SEM_COUNT, IPC_CREAT | 0666);
     if (station->semaphore_set_id == -1) {
         perror("[ERROR] Creazione set semafori stazione fallita");
@@ -86,13 +115,13 @@ static void init_station_resource(FoodDistributionStation *station) {
     }
 
     /* Inizializzazione semafori stazione */
-    init_sem_val(station->semaphore_set_id, STATION_SEM_AVAILABLE_POSTS, 0); /* Verrà impostato dal numero di operatori */
+    init_sem_val(station->semaphore_set_id, STATION_SEM_AVAILABLE_POSTS, 0); 
     init_sem_val(station->semaphore_set_id, STATION_SEM_USER_QUEUE, 0);
-    init_sem_val(station->semaphore_set_id, STATION_SEM_REFILL_GATE, 0); /* Aperto di default */
+    init_sem_val(station->semaphore_set_id, STATION_SEM_REFILL_GATE, 0); 
     init_sem_val(station->semaphore_set_id, STATION_SEM_REFILL_ACK, 0);
 }
 
-void initialize_food_distribution_station_semaphores(struct MainSharedMemory *shared_memory_ptr) {
+void initialize_distribution_stations(struct MainSharedMemory *shared_memory_ptr) {
     init_station_resource(&shared_memory_ptr->first_course_station);
     init_station_resource(&shared_memory_ptr->second_course_station);
     init_station_resource(&shared_memory_ptr->coffee_dessert_station);
@@ -121,18 +150,88 @@ void initialize_ticket_validation_semaphores(struct MainSharedMemory *shared_mem
     shared_memory_ptr->semaphore_ticket_id = semid;
 }
 
-void initialize_food_distribution_order_queues(struct MainSharedMemory *shared_memory_ptr) {
-    /* Già fatto in init_station_resource() per ogni stazione */
-}
 
 void initialize_cashier_checkout_message_queue(struct MainSharedMemory *shared_memory_ptr) {
+    /* Creazione set semafori per la stazione Cassa */
+    shared_memory_ptr->register_station.semaphore_set_id = create_sem_set(IPC_PRIVATE, STATION_SEM_COUNT, IPC_CREAT | 0666);
+    if (shared_memory_ptr->register_station.semaphore_set_id == -1) {
+        perror("[ERROR] Creazione set semafori cassa fallita");
+        exit(EXIT_FAILURE);
+    }
+
+    /* Inizializzazione: posti disponibili verrà impostato dopo la distribuzione operatori */
+    init_sem_val(shared_memory_ptr->register_station.semaphore_set_id, STATION_SEM_AVAILABLE_POSTS, 0);
+    init_sem_val(shared_memory_ptr->register_station.semaphore_set_id, STATION_SEM_USER_QUEUE, 0);
+    init_sem_val(shared_memory_ptr->register_station.semaphore_set_id, STATION_SEM_REFILL_GATE, 0);
+    init_sem_val(shared_memory_ptr->register_station.semaphore_set_id, STATION_SEM_REFILL_ACK, 0);
+    init_sem_val(shared_memory_ptr->register_station.semaphore_set_id, STATION_SEM_STOP_GATE, 0); /* 0=Cassa attiva */
+
+    /* Creazione coda messaggi per la Cassa */
     shared_memory_ptr->register_station.message_queue_id = create_message_queue(IPC_PRIVATE, IPC_CREAT | 0666);
     if (shared_memory_ptr->register_station.message_queue_id == -1) {
         perror("[ERROR] Creazione coda messaggi cassa fallita");
         exit(EXIT_FAILURE);
     }
+
+    /* Ottimizzazione cassa */
+    struct msqid_ds ds;
+    if (msgctl(shared_memory_ptr->register_station.message_queue_id, IPC_STAT, &ds) != -1) {
+        ds.msg_qbytes = 65536;
+        msgctl(shared_memory_ptr->register_station.message_queue_id, IPC_SET, &ds);
+    }
+}
+
+void initialize_control_structures(struct MainSharedMemory *shm_ptr) {
+    /* Inizializza il contatore utenti con il valore di configurazione */
+    shm_ptr->current_total_users = shm_ptr->configuration.quantities.number_of_initial_users;
+    shm_ptr->add_users_flag = 0;
     
-    /* La cassa non ha un set di semafori dedicato complesso come le stazioni, 
-     * ma per coerenza potremmo inizializzarne uno se necessario. 
+    /* Crea la coda di controllo per add_users */
+    shm_ptr->control_queue_id = create_message_queue(IPC_PRIVATE, IPC_CREAT | 0666);
+    if (shm_ptr->control_queue_id == -1) {
+        perror("[ERROR] Creazione coda di controllo fallita");
+        exit(EXIT_FAILURE);
+    }
+
+    /* Ottimizzazione controllo */
+    struct msqid_ds ds;
+    if (msgctl(shm_ptr->control_queue_id, IPC_STAT, &ds) != -1) {
+        ds.msg_qbytes = 16384; /* Controllo meno pesante */
+        msgctl(shm_ptr->control_queue_id, IPC_SET, &ds);
+    }
+}
+
+void initialize_group_sync_pool(struct MainSharedMemory *shm_ptr, int pool_size) {
+    int total_sems = pool_size * GROUP_SEMS_PER_ENTRY;
+    int semid = create_sem_set(IPC_PRIVATE, total_sems, IPC_CREAT | 0666);
+    
+    if (semid == -1) {
+        perror("[ERROR] Creazione pool semafori gruppi fallita");
+        exit(EXIT_FAILURE);
+    }
+
+    /* Inizializzazione: 
+     * - PRE_CASHIER e EXIT a 0 
+     * - TABLE_GATE a 1 (chiuso)
      */
+    for (int i = 0; i < pool_size; i++) {
+        int base = i * GROUP_SEMS_PER_ENTRY;
+        init_sem_val(semid, base + GROUP_SEM_PRE_CASHIER, 0);
+        init_sem_val(semid, base + GROUP_SEM_TABLE_GATE, 1);
+        init_sem_val(semid, base + GROUP_SEM_EXIT, 0);
+    }
+
+    shm_ptr->group_sync_semaphore_id = semid;
+    shm_ptr->group_pool_size = pool_size;
+}
+
+void initialize_ipc_sources(struct MainSharedMemory *shm_ptr) {
+    initialize_simulation_start_barriers(shm_ptr);
+    initialize_daily_cycle_barriers(shm_ptr);
+    initialize_global_simulation_mutexes(shm_ptr);
+    initialize_distribution_stations(shm_ptr);
+    initialize_dining_area_seats_semaphores(shm_ptr);
+    initialize_ticket_validation_semaphores(shm_ptr);
+    initialize_cashier_checkout_message_queue(shm_ptr);
+    initialize_control_structures(shm_ptr);
 }

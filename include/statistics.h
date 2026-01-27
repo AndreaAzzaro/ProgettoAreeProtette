@@ -1,6 +1,14 @@
 /**
  * @file statistics.h
  * @brief Definizioni per la raccolta e visualizzazione delle statistiche di simulazione.
+ * 
+ * Questo modulo definisce le strutture dati per tracciare:
+ * - Piatti serviti e avanzati (giornalieri e totali)
+ * - Tempi di attesa medi per stazione
+ * - Flussi clienti (serviti, non serviti, con/senza ticket)
+ * - Performance operatori e incassi
+ * 
+ * @see collect_simulation_statistics() per la raccolta dati.
  */
 
 #ifndef STATISTICS_H
@@ -8,6 +16,10 @@
 
 /** Forward declaration per evitare dipendenze circolari con common.h */
 struct MainSharedMemory;
+
+/* ==========================================================================
+ *                           SEZIONE: ENUMERAZIONI
+ * ========================================================================== */
 
 /**
  * @brief Identificatori per le cause di terminazione della simulazione.
@@ -19,67 +31,104 @@ typedef enum {
     TERMINATION_REASON_SIGNAL            /**< Terminazione manuale via segnale (es. SIGINT) */
 } TerminationReason;
 
+/* ==========================================================================
+ *                         SEZIONE: STRUTTURE PIATTI
+ * ========================================================================== */
+
 /**
  * @brief Conteggio dei piatti serviti o avanzati.
  */
 typedef struct {
-    int first_course_count;
-    int second_course_count;
-    int coffee_dessert_count; 
-    int total_plates_count;          
+    int first_course_count;           /**< Numero di primi piatti */
+    int second_course_count;          /**< Numero di secondi piatti */
+    int coffee_dessert_count;         /**< Numero di caffè/dolci */
+    int total_plates_count;           /**< Totale piatti (somma dei precedenti) */
 } StatisticsPlateCounts;
 
 /**
  * @brief Medie giornaliere dei piatti.
  */
 typedef struct {
-    double average_daily_first_courses;
-    double average_daily_second_courses;
-    double average_daily_coffee_dessert;
-    double average_daily_total;
+    double average_daily_first_courses;   /**< Media primi/giorno */
+    double average_daily_second_courses;  /**< Media secondi/giorno */
+    double average_daily_coffee_dessert;  /**< Media caffè-dolci/giorno */
+    double average_daily_total;           /**< Media totale piatti/giorno */
 } StatisticsPlateAverages;
+
+/* ==========================================================================
+ *                       SEZIONE: STRUTTURE TEMPI ATTESA
+ * ========================================================================== */
+
+/**
+ * @brief Accumulatori per il calcolo preciso dei tempi di attesa.
+ * 
+ * Ogni stazione ha una somma dei tempi e un contatore di campioni
+ * per permettere il calcolo della media alla fine della giornata.
+ */
+typedef struct {
+    double sum_wait_first;    /**< Somma tempi attesa stazione Primi */
+    int count_first;          /**< Numero campioni Primi */
+    double sum_wait_second;   /**< Somma tempi attesa stazione Secondi */
+    int count_second;         /**< Numero campioni Secondi */
+    double sum_wait_coffee;   /**< Somma tempi attesa stazione Caffè */
+    int count_coffee;         /**< Numero campioni Caffè */
+    double sum_wait_cashier;  /**< Somma tempi attesa Cassa */
+    int count_cashier;        /**< Numero campioni Cassa */
+} WaitTimeAccumulator;
 
 /**
  * @brief Tempi di attesa medi espressi in minuti simulati.
  */
 typedef struct {
-    double average_wait_first_course;
-    double average_wait_second_course;
-    double average_wait_coffee_dessert;
-    double average_wait_cash_desk;
-    double average_wait_global;      
+    double average_wait_first_course;   /**< Tempo medio attesa Primi */
+    double average_wait_second_course;  /**< Tempo medio attesa Secondi */
+    double average_wait_coffee_dessert; /**< Tempo medio attesa Caffè/Dolce */
+    double average_wait_cash_desk;      /**< Tempo medio attesa Cassa */
+    double average_wait_global;         /**< Tempo medio globale (tutte le stazioni) */
 } StatisticsWaitTimes;
+
+/* ==========================================================================
+ *                    SEZIONE: STRUTTURE CLIENTI E OPERATORI
+ * ========================================================================== */
 
 /**
  * @brief Statistiche relative ai flussi dei clienti (Utenti).
  */
 typedef struct {
-    int total_clients_served;
-    int total_clients_not_served;
-    double average_daily_clients_served;     
-    double average_daily_clients_not_served; 
-    int total_clients_with_ticket;       /**< Numero totale di utenti serviti con ticket */
-    int total_clients_without_ticket;    /**< Numero totale di utenti serviti senza ticket */
+    int total_clients_served;             /**< Totale clienti serviti nella simulazione */
+    int total_clients_not_served;         /**< Totale clienti che hanno rinunciato */
+    double average_daily_clients_served;  /**< Media clienti serviti/giorno */
+    double average_daily_clients_not_served; /**< Media rinunce/giorno */
+    int total_clients_with_ticket;        /**< Clienti serviti con ticket (sconto) */
+    int total_clients_without_ticket;     /**< Clienti serviti senza ticket */
 } StatisticsClientData;
 
 /**
  * @brief Performance e attività degli operatori della mensa.
  */
 typedef struct {
-    int total_active_simulations;    
-    int daily_active_operators;        
-    int total_breaks_taken;        
-    double average_daily_breaks; 
+    int total_active_simulations;   /**< Totale operatori attivati nella simulazione */
+    int daily_active_operators;     /**< Operatori attivi nel giorno corrente */
+    int total_breaks_taken;         /**< Totale pause effettuate */
+    double average_daily_breaks;    /**< Media pause/giorno */
 } StatisticsOperatorData;
+
+/* ==========================================================================
+ *                         SEZIONE: STRUTTURE INCASSI
+ * ========================================================================== */
 
 /**
  * @brief Analisi dei flussi finanziari della simulazione.
  */
 typedef struct {
-    double accumulated_total_income;
-    double current_daily_income;
-    double average_daily_income;
+    double accumulated_total_income;  /**< Incasso totale accumulato */
+    double current_daily_income;      /**< Incasso del giorno corrente */
+    double average_daily_income;      /**< Media incasso/giorno */
 } StatisticsIncomeData;
+
+/* ==========================================================================
+ *                      SEZIONE: STRUTTURA AGGREGATA
+ * ========================================================================== */
 
 /**
  * @brief Struttura aggregata delle Statistiche di Simulazione.
@@ -94,6 +143,7 @@ typedef struct {
     StatisticsPlateAverages average_daily_leftover_plates; 
     StatisticsWaitTimes total_average_wait_times;  
     StatisticsWaitTimes daily_average_wait_times;  
+    WaitTimeAccumulator daily_wait_accumulators;  /**< Accumulatori per calcolo medie del giorno corrente */
     
     StatisticsClientData clients_statistics;
     StatisticsOperatorData operators_statistics;
@@ -101,6 +151,10 @@ typedef struct {
 
     TerminationReason reason_for_termination; /**< Causa della fine della simulazione */
 } SimulationStatistics;
+
+/* ==========================================================================
+ *                         SEZIONE: FUNZIONI PUBBLICHE
+ * ========================================================================== */
 
 /**
  * @brief Legge e calcola le statistiche attuali dalla memoria condivisa.
@@ -118,4 +172,17 @@ SimulationStatistics collect_simulation_statistics(struct MainSharedMemory *shar
  */
 void display_daily_statistics_report(SimulationStatistics statistics, int simulation_day);
 
-#endif
+/**
+ * @brief Salva le statistiche giornaliere in un file CSV.
+ * 
+ * Se il file non esiste, viene creato con l'header. Se esiste, i dati vengono
+ * appesi in coda.
+ * 
+ * @param statistics Struttura contenente i dati da salvare.
+ * @param simulation_day Indice del giorno corrente (partendo da 0).
+ * @param filepath Percorso del file CSV di destinazione.
+ * @return int 0 se successo, -1 se errore.
+ */
+int save_statistics_to_csv(SimulationStatistics statistics, int simulation_day, const char *filepath);
+
+#endif /* STATISTICS_H */

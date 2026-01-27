@@ -1,12 +1,21 @@
 /**
  * @file utils.h
- * @brief Funzioni di utilità generale, generazione casuale e gestione del tempo.
+ * @brief Funzioni di utilità generale per la simulazione.
+ * 
+ * Questo modulo fornisce:
+ * - Gestione errori critici
+ * - Generazione numeri casuali
+ * - Simulazione del passaggio del tempo
  */
 
 #ifndef UTILS_H
 #define UTILS_H
 
 #include <stdbool.h>
+
+/* ==========================================================================
+ *                         SEZIONE: GESTIONE ERRORI
+ * ========================================================================== */
 
 /**
  * @brief Gestisce un errore critico stampando un messaggio e terminando il processo.
@@ -15,12 +24,16 @@
  */
 void display_critical_error(const char *error_message);
 
+/* ==========================================================================
+ *                       SEZIONE: GENERAZIONE CASUALE
+ * ========================================================================== */
+
 /**
- * @brief Genera un numero intero casuale all'interno di un intervallo specificato.
+ * @brief Genera un numero intero casuale all'interno di un intervallo.
  * 
  * @param minimum_value Valore minimo (incluso).
  * @param maximum_value Valore massimo (incluso).
- * @return int Il numero casuale generato.
+ * @return int Il numero casuale generato nell'intervallo [min, max].
  */
 int generate_random_integer(int minimum_value, int maximum_value);
 
@@ -44,6 +57,10 @@ int calculate_varied_time(int average_value, int variation_percentage);
  */
 bool evaluate_probability_event(int success_percentage_rate);
 
+/* ==========================================================================
+ *                        SEZIONE: GESTIONE TEMPO
+ * ========================================================================== */
+
 /**
  * @brief Simula il trascorrere del tempo in base ai parametri della simulazione.
  * 
@@ -55,4 +72,4 @@ bool evaluate_probability_event(int success_percentage_rate);
  */
 void simulate_time_passage(int units_to_wait, long nanoseconds_per_tick);
 
-#endif
+#endif /* UTILS_H */

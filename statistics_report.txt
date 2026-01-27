@@ -1,0 +1,645 @@
+--- Giorno 1 ---
+Clienti Serviti: 89
+  - Con Ticket: 42
+  - Senza Ticket: 47
+Clienti Non Serviti: 406
+Incasso Giornaliero: 558.50 EUR
+Piatti Serviti:
+  - Primi: 48
+  - Secondi: 59
+  - Caffe/Dessert: 89
+Tempi Attesa Medi:
+  - Primi: 0.27 min
+  - Secondi: 0.23 min
+  - Cassa: 0.10 min
+
+--- Giorno 1 ---
+Clienti Serviti: 10
+  - Con Ticket: 8
+  - Senza Ticket: 2
+Clienti Non Serviti: 0
+Incasso Giornaliero: 78.00 EUR
+Piatti Serviti:
+  - Primi: 10
+  - Secondi: 10
+  - Caffe/Dessert: 10
+Tempi Attesa Medi:
+  - Primi: 0.10 min
+  - Secondi: 0.10 min
+  - Cassa: 0.10 min
+
+--- Giorno 1 ---
+Clienti Serviti: 10
+  - Con Ticket: 8
+  - Senza Ticket: 2
+Clienti Non Serviti: 0
+Incasso Giornaliero: 78.00 EUR
+Piatti Serviti:
+  - Primi: 10
+  - Secondi: 10
+  - Caffe/Dessert: 10
+Tempi Attesa Medi:
+  - Primi: 0.10 min
+  - Secondi: 0.10 min
+  - Cassa: 0.10 min
+
+--- Giorno 1 ---
+Clienti Serviti: 20
+  - Con Ticket: 16
+  - Senza Ticket: 4
+Clienti Non Serviti: 0
+Incasso Giornaliero: 156.00 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 20
+Tempi Attesa Medi:
+  - Primi: 0.10 min
+  - Secondi: 0.10 min
+  - Cassa: 0.10 min
+
+--- Giorno 2 ---
+Clienti Serviti: 20
+  - Con Ticket: 16
+  - Senza Ticket: 4
+Clienti Non Serviti: 0
+Incasso Giornaliero: 156.00 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 20
+Tempi Attesa Medi:
+  - Primi: 0.10 min
+  - Secondi: 0.10 min
+  - Cassa: 0.10 min
+
+--- Giorno 1 ---
+Clienti Serviti: 0
+  - Con Ticket: 0
+  - Senza Ticket: 0
+Clienti Non Serviti: 0
+Incasso Giornaliero: 269.00 EUR
+Piatti Serviti:
+  - Primi: 31
+  - Secondi: 35
+  - Caffe/Dessert: 0
+Tempi Attesa Medi:
+  - Primi: 0.20 min
+  - Secondi: 0.20 min
+  - Cassa: 0.20 min
+
+--- Giorno 2 ---
+Clienti Serviti: 3
+  - Con Ticket: 2
+  - Senza Ticket: 1
+Clienti Non Serviti: 1694
+Incasso Giornaliero: 6.00 EUR
+Piatti Serviti:
+  - Primi: 4
+  - Secondi: 4
+  - Caffe/Dessert: 0
+Tempi Attesa Medi:
+  - Primi: 0.20 min
+  - Secondi: 0.00 min
+  - Cassa: 0.00 min
+
+--- Giorno 1 ---
+Clienti Serviti: 20
+  - Con Ticket: 16
+  - Senza Ticket: 4
+Clienti Non Serviti: 0
+Incasso Giornaliero: 156.00 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 20
+Tempi Attesa Medi:
+  - Primi: 0.10 min
+  - Secondi: 0.10 min
+  - Cassa: 0.10 min
+
+--- Giorno 2 ---
+Clienti Serviti: 20
+  - Con Ticket: 16
+  - Senza Ticket: 4
+Clienti Non Serviti: 0
+Incasso Giornaliero: 156.00 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 20
+Tempi Attesa Medi:
+  - Primi: 0.10 min
+  - Secondi: 0.10 min
+  - Cassa: 0.10 min
+
+--- Giorno 1 ---
+Clienti Serviti: 20
+  - Con Ticket: 16
+  - Senza Ticket: 4
+Clienti Non Serviti: 0
+Incasso Giornaliero: 156.00 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 20
+Tempi Attesa Medi:
+  - Primi: 0.10 min
+  - Secondi: 0.10 min
+  - Cassa: 0.10 min
+
+--- Giorno 2 ---
+Clienti Serviti: 20
+  - Con Ticket: 16
+  - Senza Ticket: 4
+Clienti Non Serviti: 0
+Incasso Giornaliero: 156.00 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 20
+Tempi Attesa Medi:
+  - Primi: 0.10 min
+  - Secondi: 0.10 min
+  - Cassa: 0.10 min
+
+--- Giorno 1 ---
+Clienti Serviti: 20
+  - Con Ticket: 16
+  - Senza Ticket: 4
+Clienti Non Serviti: 0
+Incasso Giornaliero: 156.00 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 20
+Tempi Attesa Medi:
+  - Primi: 0.10 min
+  - Secondi: 0.10 min
+  - Cassa: 0.10 min
+
+--- Giorno 2 ---
+Clienti Serviti: 20
+  - Con Ticket: 16
+  - Senza Ticket: 4
+Clienti Non Serviti: 0
+Incasso Giornaliero: 156.00 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 20
+Tempi Attesa Medi:
+  - Primi: 0.10 min
+  - Secondi: 0.10 min
+  - Cassa: 0.10 min
+
+--- Giorno 1 ---
+Clienti Serviti: 20
+  - Con Ticket: 16
+  - Senza Ticket: 4
+Clienti Non Serviti: 0
+Incasso Giornaliero: 156.00 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 20
+Tempi Attesa Medi:
+  - Primi: 0.10 min
+  - Secondi: 0.10 min
+  - Cassa: 0.10 min
+
+--- Giorno 2 ---
+Clienti Serviti: 20
+  - Con Ticket: 16
+  - Senza Ticket: 4
+Clienti Non Serviti: 0
+Incasso Giornaliero: 156.00 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 20
+Tempi Attesa Medi:
+  - Primi: 0.10 min
+  - Secondi: 0.10 min
+  - Cassa: 0.10 min
+
+--- Giorno 1 ---
+Clienti Serviti: 20
+  - Con Ticket: 16
+  - Senza Ticket: 4
+Clienti Non Serviti: 0
+Incasso Giornaliero: 156.00 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 20
+Tempi Attesa Medi:
+  - Primi: 0.10 min
+  - Secondi: 0.10 min
+  - Cassa: 0.10 min
+
+--- Giorno 2 ---
+Clienti Serviti: 20
+  - Con Ticket: 16
+  - Senza Ticket: 4
+Clienti Non Serviti: 0
+Incasso Giornaliero: 156.00 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 20
+Tempi Attesa Medi:
+  - Primi: 0.10 min
+  - Secondi: 0.10 min
+  - Cassa: 0.10 min
+
+--- Giorno 1 ---
+Clienti Serviti: 20
+  - Con Ticket: 16
+  - Senza Ticket: 4
+Clienti Non Serviti: 0
+Incasso Giornaliero: 156.00 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 20
+Tempi Attesa Medi:
+  - Primi: 0.10 min
+  - Secondi: 0.10 min
+  - Cassa: 0.10 min
+
+--- Giorno 2 ---
+Clienti Serviti: 20
+  - Con Ticket: 16
+  - Senza Ticket: 4
+Clienti Non Serviti: 0
+Incasso Giornaliero: 156.00 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 20
+Tempi Attesa Medi:
+  - Primi: 0.10 min
+  - Secondi: 0.10 min
+  - Cassa: 0.10 min
+
+--- Giorno 1 ---
+Clienti Serviti: 20
+  - Con Ticket: 16
+  - Senza Ticket: 4
+Clienti Non Serviti: 0
+Incasso Giornaliero: 156.00 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 20
+Tempi Attesa Medi:
+  - Primi: 0.10 min
+  - Secondi: 0.10 min
+  - Cassa: 0.10 min
+
+--- Giorno 2 ---
+Clienti Serviti: 20
+  - Con Ticket: 16
+  - Senza Ticket: 4
+Clienti Non Serviti: 0
+Incasso Giornaliero: 156.00 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 20
+Tempi Attesa Medi:
+  - Primi: 0.10 min
+  - Secondi: 0.10 min
+  - Cassa: 0.10 min
+
+--- Giorno 1 ---
+Clienti Serviti: 20
+  - Con Ticket: 16
+  - Senza Ticket: 4
+Clienti Non Serviti: 0
+Incasso Giornaliero: 156.00 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 20
+Tempi Attesa Medi:
+  - Primi: 0.10 min
+  - Secondi: 0.10 min
+  - Cassa: 0.10 min
+
+--- Giorno 1 ---
+Clienti Serviti: 20
+  - Con Ticket: 16
+  - Senza Ticket: 4
+Clienti Non Serviti: 0
+Incasso Giornaliero: 156.00 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 20
+Tempi Attesa Medi:
+  - Primi: 0.10 min
+  - Secondi: 0.10 min
+  - Cassa: 0.10 min
+
+--- Giorno 2 ---
+Clienti Serviti: 30
+  - Con Ticket: 24
+  - Senza Ticket: 6
+Clienti Non Serviti: 0
+Incasso Giornaliero: 227.00 EUR
+Piatti Serviti:
+  - Primi: 30
+  - Secondi: 28
+  - Caffe/Dessert: 30
+Tempi Attesa Medi:
+  - Primi: 0.10 min
+  - Secondi: 0.10 min
+  - Cassa: 0.10 min
+
+--- Giorno 1 ---
+Clienti Serviti: 20
+  - Con Ticket: 16
+  - Senza Ticket: 4
+Clienti Non Serviti: 0
+Incasso Giornaliero: 156.00 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 20
+Tempi Attesa Medi:
+  - Primi: 0.10 min
+  - Secondi: 0.10 min
+  - Cassa: 0.10 min
+
+--- Giorno 2 ---
+Clienti Serviti: 0
+  - Con Ticket: 0
+  - Senza Ticket: 0
+Clienti Non Serviti: 0
+Incasso Giornaliero: 19.50 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 0
+Tempi Attesa Medi:
+  - Primi: 0.10 min
+  - Secondi: 0.10 min
+  - Cassa: 0.00 min
+
+--- Giorno 1 ---
+Clienti Serviti: 20
+  - Con Ticket: 16
+  - Senza Ticket: 4
+Clienti Non Serviti: 0
+Incasso Giornaliero: 156.00 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 20
+Tempi Attesa Medi:
+  - Primi: 0.10 min
+  - Secondi: 0.10 min
+  - Cassa: 0.10 min
+
+--- Giorno 2 ---
+Clienti Serviti: 20
+  - Con Ticket: 16
+  - Senza Ticket: 4
+Clienti Non Serviti: 0
+Incasso Giornaliero: 156.00 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 20
+Tempi Attesa Medi:
+  - Primi: 0.10 min
+  - Secondi: 0.10 min
+  - Cassa: 0.10 min
+
+--- Giorno 1 ---
+Clienti Serviti: 20
+  - Con Ticket: 16
+  - Senza Ticket: 4
+Clienti Non Serviti: 0
+Incasso Giornaliero: 156.00 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 20
+Tempi Attesa Medi:
+  - Primi: 0.02 min
+  - Secondi: 0.02 min
+  - Cassa: 0.02 min
+
+--- Giorno 2 ---
+Clienti Serviti: 20
+  - Con Ticket: 16
+  - Senza Ticket: 4
+Clienti Non Serviti: 0
+Incasso Giornaliero: 156.00 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 20
+Tempi Attesa Medi:
+  - Primi: 0.02 min
+  - Secondi: 0.02 min
+  - Cassa: 0.02 min
+
+--- Giorno 1 ---
+Clienti Serviti: 20
+  - Con Ticket: 16
+  - Senza Ticket: 4
+Clienti Non Serviti: 0
+Incasso Giornaliero: 156.00 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 20
+Tempi Attesa Medi:
+  - Primi: 0.02 min
+  - Secondi: 0.02 min
+  - Cassa: 0.02 min
+
+--- Giorno 2 ---
+Clienti Serviti: 20
+  - Con Ticket: 16
+  - Senza Ticket: 4
+Clienti Non Serviti: 0
+Incasso Giornaliero: 156.00 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 20
+Tempi Attesa Medi:
+  - Primi: 0.02 min
+  - Secondi: 0.02 min
+  - Cassa: 0.02 min
+
+--- Giorno 1 ---
+Clienti Serviti: 20
+  - Con Ticket: 16
+  - Senza Ticket: 4
+Clienti Non Serviti: 0
+Incasso Giornaliero: 156.00 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 20
+Tempi Attesa Medi:
+  - Primi: 0.02 min
+  - Secondi: 0.02 min
+  - Cassa: 0.02 min
+
+--- Giorno 1 ---
+Clienti Serviti: 20
+  - Con Ticket: 16
+  - Senza Ticket: 4
+Clienti Non Serviti: 0
+Incasso Giornaliero: 156.00 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 20
+Tempi Attesa Medi:
+  - Primi: 0.10 min
+  - Secondi: 0.10 min
+  - Cassa: 0.10 min
+
+--- Giorno 2 ---
+Clienti Serviti: 20
+  - Con Ticket: 16
+  - Senza Ticket: 4
+Clienti Non Serviti: 0
+Incasso Giornaliero: 156.00 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 20
+Tempi Attesa Medi:
+  - Primi: 0.10 min
+  - Secondi: 0.10 min
+  - Cassa: 0.10 min
+
+--- Giorno 1 ---
+Clienti Serviti: 20
+  - Con Ticket: 16
+  - Senza Ticket: 4
+Clienti Non Serviti: 0
+Incasso Giornaliero: 156.00 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 20
+Tempi Attesa Medi:
+  - Primi: 0.10 min
+  - Secondi: 0.10 min
+  - Cassa: 0.10 min
+
+--- Giorno 2 ---
+Clienti Serviti: 20
+  - Con Ticket: 16
+  - Senza Ticket: 4
+Clienti Non Serviti: 0
+Incasso Giornaliero: 156.00 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 20
+Tempi Attesa Medi:
+  - Primi: 0.10 min
+  - Secondi: 0.10 min
+  - Cassa: 0.10 min
+
+--- Giorno 1 ---
+Clienti Serviti: 20
+  - Con Ticket: 16
+  - Senza Ticket: 4
+Clienti Non Serviti: 0
+Incasso Giornaliero: 156.00 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 20
+Tempi Attesa Medi:
+  - Primi: 0.10 min
+  - Secondi: 0.10 min
+  - Cassa: 0.10 min
+
+--- Giorno 2 ---
+Clienti Serviti: 20
+  - Con Ticket: 16
+  - Senza Ticket: 4
+Clienti Non Serviti: 0
+Incasso Giornaliero: 156.00 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 20
+Tempi Attesa Medi:
+  - Primi: 0.10 min
+  - Secondi: 0.10 min
+  - Cassa: 0.10 min
+
+--- Giorno 1 ---
+Clienti Serviti: 20
+  - Con Ticket: 16
+  - Senza Ticket: 4
+Clienti Non Serviti: 0
+Incasso Giornaliero: 156.00 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 20
+Tempi Attesa Medi:
+  - Primi: 0.10 min
+  - Secondi: 0.10 min
+  - Cassa: 0.10 min
+
+--- Giorno 2 ---
+Clienti Serviti: 20
+  - Con Ticket: 16
+  - Senza Ticket: 4
+Clienti Non Serviti: 0
+Incasso Giornaliero: 156.00 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 20
+Tempi Attesa Medi:
+  - Primi: 0.10 min
+  - Secondi: 0.10 min
+  - Cassa: 0.10 min
+
+--- Giorno 1 ---
+Clienti Serviti: 20
+  - Con Ticket: 16
+  - Senza Ticket: 4
+Clienti Non Serviti: 0
+Incasso Giornaliero: 156.00 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 20
+Tempi Attesa Medi:
+  - Primi: 0.10 min
+  - Secondi: 0.10 min
+  - Cassa: 0.10 min
+
+--- Giorno 2 ---
+Clienti Serviti: 20
+  - Con Ticket: 16
+  - Senza Ticket: 4
+Clienti Non Serviti: 0
+Incasso Giornaliero: 156.00 EUR
+Piatti Serviti:
+  - Primi: 20
+  - Secondi: 20
+  - Caffe/Dessert: 20
+Tempi Attesa Medi:
+  - Primi: 0.10 min
+  - Secondi: 0.10 min
+  - Cassa: 0.10 min
+

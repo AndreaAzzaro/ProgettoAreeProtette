@@ -1,11 +1,34 @@
-#include "../../include/config.h"
+/**
+ * @file config.c
+ * @brief Implementazione del parser per il file di configurazione.
+ * 
+ * Legge il file `config/config.conf` e popola la struttura SimulationConfiguration.
+ * Utilizza una tabella di lookup per mappare le chiavi stringa agli enum interni.
+ * 
+ * @see config.h per la documentazione delle strutture.
+ */
+
+/* Includes di sistema */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+/* Includes del progetto */
+#include "config.h"
+
+/* ==========================================================================
+ *                          SEZIONE: COSTANTI LOCALI
+ * ========================================================================== */
+
 /** Path predefinito per il file di configurazione */
 #define CONFIGURATION_FILE_PATH "config/config.conf"
+
+/** Lunghezza massima di una riga nel file di configurazione */
 #define MAX_LINE_LENGTH 256
+
+/* ==========================================================================
+ *                        SEZIONE: TIPI PRIVATI (ENUM)
+ * ========================================================================== */
 
 /**
  * @brief Identificatori univoci per le chiavi di configurazione.
@@ -53,12 +76,16 @@ typedef enum {
     KEY_QUEUE_PATIENCE_THRESHOLD
 } ConfigurationKey;
 
+/* ==========================================================================
+ *                      SEZIONE: TABELLA DI LOOKUP
+ * ========================================================================== */
+
 /**
  * @brief Associazione tra stringa nel file e identificatore Enum.
  */
 typedef struct {
-    const char *string_key;
-    ConfigurationKey enum_identifier;
+    const char *string_key;        /**< Chiave come appare nel file .conf */
+    ConfigurationKey enum_identifier; /**< Identificatore interno */
 } ConfigurationKeyMap;
 
 /** Tabella di lookup per la risoluzione delle chiavi */
@@ -97,8 +124,12 @@ static const ConfigurationKeyMap configuration_mapping_table[] = {
     {"AVG_REFILL_SECONDI", KEY_REFILL_AMOUNT_SECONDI},
     {"QUEUE_PATIENCE_THRESHOLD", KEY_QUEUE_PATIENCE_THRESHOLD},
     
-    {NULL, KEY_UNKNOWN}
+    {NULL, KEY_UNKNOWN}  /* Terminatore */
 };
+
+/* ==========================================================================
+ *                       SEZIONE: FUNZIONI PRIVATE
+ * ========================================================================== */
 
 /**
  * @brief Risolve una stringa di testo nell'identificatore di configurazione corrispondente.
@@ -115,6 +146,14 @@ static ConfigurationKey resolve_configuration_key(const char *key_string) {
     return found_key;
 }
 
+/* ==========================================================================
+ *                       SEZIONE: FUNZIONI PUBBLICHE
+ * ========================================================================== */
+
+/**
+ * Carica la configurazione dal file.
+ * Fallback: cerca "config.conf" nella directory corrente se il path principale fallisce.
+ */
 SimulationConfiguration load_simulation_configuration() {
     SimulationConfiguration configuration;
     memset(&configuration, 0, sizeof(SimulationConfiguration));

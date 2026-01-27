@@ -14,6 +14,10 @@
 #include <sys/msg.h>    
 #include <stddef.h>
 
+/* ==========================================================================
+ *                        SEZIONE: COSTANTI E STRUTTURE
+ * ========================================================================== */
+
 /** Dimensione massima del buffer di testo per i messaggi della simulazione */
 #define MAX_MESSAGE_TEXT_SIZE 256
 
@@ -28,10 +32,14 @@ typedef struct {
     char message_text[MAX_MESSAGE_TEXT_SIZE];    /**< Payload del messaggio */
 } SimulationMessage;
 
+/* ==========================================================================
+ *                         SEZIONE: FUNZIONI PUBBLICHE
+ * ========================================================================== */
+
 /**
  * @brief Crea o ottiene un identificatore per una coda di messaggi.
  * 
- * @param key Chiave IPC (solitamente generata tramite ftok).
+ * @param key Chiave IPC (solitamente generata tramite ftok o IPC_PRIVATE).
  * @param message_flags Permessi e flag di creazione (es. IPC_CREAT | 0666).
  * @return int L'identificatore della coda (msqid) o -1 in caso di errore.
  */
@@ -81,4 +89,12 @@ int remove_message_queue(int message_queue_id);
  */
 int get_message_queue_statistics(int message_queue_id, struct msqid_ds *statistics_buffer);
 
-#endif
+/**
+ * @brief Restituisce il numero di messaggi attualmente presenti nella coda.
+ * 
+ * @param message_queue_id ID della coda da interrogare.
+ * @return int Numero di messaggi (msg_qnum) o -1 in caso di errore.
+ */
+int get_message_queue_length(int message_queue_id);
+
+#endif /* QUEUE_H */

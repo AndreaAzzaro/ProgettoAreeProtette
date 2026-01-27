@@ -1,0 +1,1260 @@
+[DEBUG] Utente PID 132847: Inizializzazione completata. Pronto.
+[UTENTE] PID 132847: Inizio giornata 1.
+[UTENTE] PID 132847: In coda per validazione ticket...
+[UTENTE] PID 132847: Ticket validato.
+[UTENTE] PID 132847: In coda alla stazione Primi per il piatto 13.
+[UTENTE] PID 132847: Ricevuto piatto index 13 dalla stazione.
+[UTENTE] PID 132847: In coda alla stazione Secondi per il piatto 15.
+[UTENTE] PID 132847: Ricevuto piatto index 15 dalla stazione.
+[UTENTE] PID 132847: Attesa amici al meeting point...
+[UTENTE] PID 132847: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132847: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132847: Attesa tavolo dal leader...
+[UTENTE] PID 132847: Pasto terminato.
+[UTENTE] PID 132847: Coda Caffè/Dolce...
+[UTENTE] PID 132847: In coda alla stazione Caffè per il piatto 1.
+[UTENTE] PID 132847: Ricevuto piatto index 1 dalla stazione.
+[UTENTE] PID 132847: Uscita gruppo 0 completata.
+[UTENTE] PID 132847: Inizio giornata 2.
+[UTENTE] PID 132847: In coda per validazione ticket...
+[UTENTE] PID 132847: Ticket validato.
+[UTENTE] PID 132847: In coda alla stazione Primi per il piatto 9.
+[UTENTE] PID 132847: Ricevuto piatto index 9 dalla stazione.
+[UTENTE] PID 132847: In coda alla stazione Secondi per il piatto 1.
+[UTENTE] PID 132847: Ricevuto piatto index 1 dalla stazione.
+[UTENTE] PID 132847: Attesa amici al meeting point...
+[UTENTE] PID 132847: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132847: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132847: Attesa tavolo dal leader...
+[UTENTE] PID 132847: Pasto terminato.
+[UTENTE] PID 132847: Coda Caffè/Dolce...
+[UTENTE] PID 132847: In coda alla stazione Caffè per il piatto 1.
+[UTENTE] PID 132847: Ricevuto piatto index 1 dalla stazione.
+[UTENTE] PID 132847: Uscita gruppo 0 completata.
+[UTENTE] PID 132847: Inizio giornata 3.
+[UTENTE] PID 132847: In coda per validazione ticket...
+[UTENTE] PID 132847: Ticket validato.
+[UTENTE] PID 132847: In coda alla stazione Primi per il piatto 6.
+[UTENTE] PID 132847: Ricevuto piatto index 6 dalla stazione.
+[UTENTE] PID 132847: In coda alla stazione Secondi per il piatto 15.
+[UTENTE] PID 132847: Ricevuto piatto index 15 dalla stazione.
+[UTENTE] PID 132847: Attesa amici al meeting point...
+[UTENTE] PID 132847: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132847: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132847: Attesa tavolo dal leader...
+[UTENTE] PID 132847: Pasto terminato.
+[UTENTE] PID 132847: Coda Caffè/Dolce...
+[UTENTE] PID 132847: In coda alla stazione Caffè per il piatto 1.
+[UTENTE] PID 132847: Ricevuto piatto index 1 dalla stazione.
+[UTENTE] PID 132847: Uscita gruppo 0 completata.
+[UTENTE] PID 132847: Terminazione pulita.
+[DEBUG] Utente PID 132846: Inizializzazione completata. Pronto.
+[UTENTE] PID 132846: Inizio giornata 1.
+[UTENTE] PID 132846: In coda per validazione ticket...
+[UTENTE] PID 132846: Ticket validato.
+[UTENTE] PID 132846: In coda alla stazione Primi per il piatto 15.
+[UTENTE] PID 132846: Ricevuto piatto index 15 dalla stazione.
+[UTENTE] PID 132846: In coda alla stazione Secondi per il piatto 18.
+[UTENTE] PID 132846: Ricevuto piatto index 18 dalla stazione.
+[UTENTE] PID 132846: Attesa amici al meeting point...
+[UTENTE] PID 132846: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132846: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132846 (Leader): Prenoto tavolo per 8.
+[UTENTE] PID 132846: Pasto terminato.
+[UTENTE] PID 132846: Coda Caffè/Dolce...
+[UTENTE] PID 132846: In coda alla stazione Caffè per il piatto 0.
+[UTENTE] PID 132846: Ricevuto piatto index 0 dalla stazione.
+[UTENTE] PID 132846: Uscita gruppo 0 completata.
+[UTENTE] PID 132846: Inizio giornata 2.
+[UTENTE] PID 132846: In coda per validazione ticket...
+[UTENTE] PID 132846: Ticket validato.
+[UTENTE] PID 132846: In coda alla stazione Primi per il piatto 14.
+[UTENTE] PID 132846: Ricevuto piatto index 14 dalla stazione.
+[UTENTE] PID 132846: In coda alla stazione Secondi per il piatto 1.
+[UTENTE] PID 132846: Ricevuto piatto index 1 dalla stazione.
+[UTENTE] PID 132846: Attesa amici al meeting point...
+[UTENTE] PID 132846: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132846: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132846 (Leader): Prenoto tavolo per 8.
+[UTENTE] PID 132846: Pasto terminato.
+[UTENTE] PID 132846: Coda Caffè/Dolce...
+[UTENTE] PID 132846: In coda alla stazione Caffè per il piatto 2.
+[UTENTE] PID 132846: Ricevuto piatto index 2 dalla stazione.
+[UTENTE] PID 132846: Uscita gruppo 0 completata.
+[UTENTE] PID 132846: Inizio giornata 3.
+[UTENTE] PID 132846: In coda per validazione ticket...
+[UTENTE] PID 132846: Ticket validato.
+[UTENTE] PID 132846: In coda alla stazione Primi per il piatto 19.
+[UTENTE] PID 132846: Ricevuto piatto index 19 dalla stazione.
+[UTENTE] PID 132846: In coda alla stazione Secondi per il piatto 10.
+[UTENTE] PID 132846: Ricevuto piatto index 10 dalla stazione.
+[UTENTE] PID 132846: Attesa amici al meeting point...
+[UTENTE] PID 132846: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132846: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132846 (Leader): Prenoto tavolo per 8.
+[UTENTE] PID 132846: Pasto terminato.
+[UTENTE] PID 132846: Coda Caffè/Dolce...
+[UTENTE] PID 132846: In coda alla stazione Caffè per il piatto 3.
+[UTENTE] PID 132846: Ricevuto piatto index 3 dalla stazione.
+[UTENTE] PID 132846: Uscita gruppo 0 completata.
+[UTENTE] PID 132846: Terminazione pulita.
+[CASSIERE] PID 132845: Inizializzazione completata. Pronto.
+[CASSIERE] PID 132845: Inizio giornata 1.
+[CASSIERE] PID 132845: Gestito Utente 132850. Incassato: 13.00 EUR.
+[CASSIERE] PID 132845: Gestito Utente 132848. Incassato: 6.50 EUR.
+[CASSIERE] PID 132845: Gestito Utente 132851. Incassato: 6.50 EUR.
+[CASSIERE] PID 132845: Gestito Utente 132852. Incassato: 6.50 EUR.
+[CASSIERE] PID 132845: Gestito Utente 132860. Incassato: 13.00 EUR.
+[CASSIERE] PID 132845: Gestito Utente 132856. Incassato: 6.50 EUR.
+[CASSIERE] PID 132845: Gestito Utente 132859. Incassato: 6.50 EUR.
+[CASSIERE] PID 132845: Gestito Utente 132857. Incassato: 6.50 EUR.
+[CASSIERE] PID 132845: Gestito Utente 132863. Incassato: 6.50 EUR.
+[CASSIERE] PID 132845: Gestito Utente 132864. Incassato: 6.50 EUR.
+[CASSIERE] PID 132845: Inizio giornata 2.
+[CASSIERE] PID 132845: Gestito Utente 132861. Incassato: 6.50 EUR.
+[CASSIERE] PID 132845: Gestito Utente 132864. Incassato: 6.50 EUR.
+[CASSIERE] PID 132845: Gestito Utente 132847. Incassato: 6.50 EUR.
+[CASSIERE] PID 132845: Gestito Utente 132860. Incassato: 13.00 EUR.
+[CASSIERE] PID 132845: Gestito Utente 132854. Incassato: 6.50 EUR.
+[CASSIERE] PID 132845: Gestito Utente 132852. Incassato: 6.50 EUR.
+[CASSIERE] PID 132845: Gestito Utente 132857. Incassato: 6.50 EUR.
+[CASSIERE] PID 132845: Gestito Utente 132853. Incassato: 6.50 EUR.
+[CASSIERE] PID 132845: Gestito Utente 132859. Incassato: 6.50 EUR.
+[CASSIERE] PID 132845: Inizio giornata 3.
+[CASSIERE] PID 132845: Gestito Utente 132865. Incassato: 13.00 EUR.
+[CASSIERE] PID 132845: Gestito Utente 132864. Incassato: 6.50 EUR.
+[CASSIERE] PID 132845: Gestito Utente 132847. Incassato: 6.50 EUR.
+[CASSIERE] PID 132845: Gestito Utente 132850. Incassato: 13.00 EUR.
+[CASSIERE] PID 132845: Gestito Utente 132846. Incassato: 6.50 EUR.
+[CASSIERE] PID 132845: Gestito Utente 132853. Incassato: 6.50 EUR.
+[CASSIERE] PID 132845: Gestito Utente 132849. Incassato: 6.50 EUR.
+[CASSIERE] PID 132845: Gestito Utente 132855. Incassato: 13.00 EUR.
+[CASSIERE] PID 132845: Gestito Utente 132858. Incassato: 6.50 EUR.
+[CASSIERE] PID 132845: Gestito Utente 132859. Incassato: 6.50 EUR.
+[CASSIERE] PID 132845: Terminazione pulita.
+[CASSIERE] PID 132844: Inizializzazione completata. Pronto.
+[CASSIERE] PID 132844: Inizio giornata 1.
+[CASSIERE] PID 132844: Gestito Utente 132846. Incassato: 6.50 EUR.
+[CASSIERE] PID 132844: Gestito Utente 132849. Incassato: 6.50 EUR.
+[CASSIERE] PID 132844: Gestito Utente 132847. Incassato: 6.50 EUR.
+[CASSIERE] PID 132844: Gestito Utente 132853. Incassato: 6.50 EUR.
+[CASSIERE] PID 132844: Gestito Utente 132855. Incassato: 13.00 EUR.
+[CASSIERE] PID 132844: Gestito Utente 132858. Incassato: 6.50 EUR.
+[CASSIERE] PID 132844: Gestito Utente 132854. Incassato: 6.50 EUR.
+[CASSIERE] PID 132844: Gestito Utente 132862. Incassato: 6.50 EUR.
+[CASSIERE] PID 132844: Gestito Utente 132861. Incassato: 6.50 EUR.
+[CASSIERE] PID 132844: Gestito Utente 132865. Incassato: 13.00 EUR.
+[CASSIERE] PID 132844: Inizio giornata 2.
+[CASSIERE] PID 132844: Gestito Utente 132862. Incassato: 6.50 EUR.
+[CASSIERE] PID 132844: Gestito Utente 132863. Incassato: 6.50 EUR.
+[CASSIERE] PID 132844: Gestito Utente 132865. Incassato: 13.00 EUR.
+[CASSIERE] PID 132844: Gestito Utente 132846. Incassato: 6.50 EUR.
+[CASSIERE] PID 132844: Gestito Utente 132850. Incassato: 13.00 EUR.
+[CASSIERE] PID 132844: Gestito Utente 132855. Incassato: 13.00 EUR.
+[CASSIERE] PID 132844: Gestito Utente 132851. Incassato: 6.50 EUR.
+[CASSIERE] PID 132844: Gestito Utente 132856. Incassato: 6.50 EUR.
+[CASSIERE] PID 132844: Gestito Utente 132848. Incassato: 6.50 EUR.
+[CASSIERE] PID 132844: Gestito Utente 132858. Incassato: 6.50 EUR.
+[CASSIERE] PID 132844: Gestito Utente 132849. Incassato: 6.50 EUR.
+[CASSIERE] PID 132844: Inizio giornata 3.
+[CASSIERE] PID 132844: Gestito Utente 132863. Incassato: 6.50 EUR.
+[CASSIERE] PID 132844: Gestito Utente 132848. Incassato: 6.50 EUR.
+[CASSIERE] PID 132844: Gestito Utente 132861. Incassato: 6.50 EUR.
+[CASSIERE] PID 132844: Gestito Utente 132862. Incassato: 6.50 EUR.
+[CASSIERE] PID 132844: Gestito Utente 132852. Incassato: 6.50 EUR.
+[CASSIERE] PID 132844: Gestito Utente 132851. Incassato: 6.50 EUR.
+[CASSIERE] PID 132844: Gestito Utente 132860. Incassato: 13.00 EUR.
+[CASSIERE] PID 132844: Gestito Utente 132857. Incassato: 6.50 EUR.
+[CASSIERE] PID 132844: Gestito Utente 132856. Incassato: 6.50 EUR.
+[CASSIERE] PID 132844: Gestito Utente 132854. Incassato: 6.50 EUR.
+[CASSIERE] PID 132844: Terminazione pulita.
+[OPERATORE] PID 132837: Initializzazione completata. Pronto.
+[OPERATORE] PID 132837: Inizio giornata 1.
+[OPERATORE] PID 132837: Postazione acquisita.
+[OPERATORE] PID 132837: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 132837: Inizio giornata 2.
+[OPERATORE] PID 132837: Postazione acquisita.
+[OPERATORE] PID 132837: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 132837: Inizio giornata 3.
+[OPERATORE] PID 132837: Postazione acquisita.
+[OPERATORE] PID 132837: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 132837: Terminazione pulita.
+[OPERATORE] PID 132835: Initializzazione completata. Pronto.
+[OPERATORE] PID 132835: Inizio giornata 1.
+[OPERATORE] PID 132835: Postazione acquisita.
+[OPERATORE] PID 132835: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 132835: Inizio giornata 2.
+[OPERATORE] PID 132835: Postazione acquisita.
+[OPERATORE] PID 132835: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 132835: Inizio giornata 3.
+[OPERATORE] PID 132835: Postazione acquisita.
+[OPERATORE] PID 132835: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 132835: Terminazione pulita.
+[MASTER] Responsabile Mensa in avvio...
+[CONFIG] Parametri caricati correttamente.
+[MENU] Configurazione menu caricata correttamente.
+[MASTER] SHMID: 30
+[MASTER] Lancio di 4 gruppi di utenti...
+[MASTER] In attesa dei figli per il via libera globale...
+[MASTER] Barriera superata! Avvio simulazione.
+[MASTER] Engine caricato. In attesa del comando di inizio ciclo...
+[MASTER] Tutti i processi pronti per il giorno 1.
+[MASTER] Stazioni rifornite per inizio giornata.
+[MASTER] Giorno 1: Cancello aperto. Inizio attività.
+[MASTER] Avvio ciclo di rifornimento stazioni...
+[MASTER] Rifornimento completato.
+[MASTER] Notifica di fine ciclo inviata a tutti i gruppi (Segnale: 12)
+
+============================================================
+        REPORT GIORNALIERO - GIORNO 1
+============================================================
+Utenti serviti oggi:       20
+  - Con Ticket:            16
+  - Senza Ticket:          4
+Utenti non serviti:        0
+Incasso giornaliero:       156.00 EUR
+------------------------------------------------------------
+Dettaglio Piatti Serviti:
+  - Primi Piatti:          20
+  - Secondi Piatti:        20
+  - Caffè e Dessert:       20
+------------------------------------------------------------
+Tempi Medi di Attesa:
+  - Area Primi:            0.10 min
+  - Area Secondi:          0.10 min
+  - Cassa:                 0.10 min
+============================================================
+
+[STATISTICS] Statistiche giorno 1 salvate in statistics_report.txt
+[MASTER] Giorno concluso correttamente.
+[MASTER] Tutti i processi pronti per il giorno 2.
+[MASTER] Stazioni rifornite per inizio giornata.
+[MASTER] Giorno 2: Cancello aperto. Inizio attività.
+[MASTER] Avvio ciclo di rifornimento stazioni...
+[MASTER] Rifornimento completato.
+[MASTER] Avvio ciclo di rifornimento stazioni...
+[MASTER] Rifornimento completato.
+[MASTER] Avvio ciclo di rifornimento stazioni...
+[MASTER] Rifornimento completato.
+[MASTER] Notifica di fine ciclo inviata a tutti i gruppi (Segnale: 12)
+
+============================================================
+        REPORT GIORNALIERO - GIORNO 2
+============================================================
+Utenti serviti oggi:       20
+  - Con Ticket:            16
+  - Senza Ticket:          4
+Utenti non serviti:        0
+Incasso giornaliero:       156.00 EUR
+------------------------------------------------------------
+Dettaglio Piatti Serviti:
+  - Primi Piatti:          20
+  - Secondi Piatti:        20
+  - Caffè e Dessert:       20
+------------------------------------------------------------
+Tempi Medi di Attesa:
+  - Area Primi:            0.10 min
+  - Area Secondi:          0.10 min
+  - Cassa:                 0.10 min
+============================================================
+
+[STATISTICS] Statistiche giorno 2 salvate in statistics_report.txt
+[MASTER] Giorno concluso correttamente.
+[MASTER] Tutti i processi pronti per il giorno 3.
+[MASTER] Stazioni rifornite per inizio giornata.
+[MASTER] Giorno 3: Cancello aperto. Inizio attività.
+[MASTER] Avvio ciclo di rifornimento stazioni...
+[MASTER] Rifornimento completato.
+[MASTER] Notifica di fine ciclo inviata a tutti i gruppi (Segnale: 15)
+
+--- SIMULAZIONE COMPLETATA ---
+[INFO] Simulazione Arrestata (Giorno 3).
+
+============================================================
+        REPORT GIORNALIERO - GIORNO 3
+============================================================
+Utenti serviti oggi:       20
+  - Con Ticket:            16
+  - Senza Ticket:          4
+Utenti non serviti:        0
+Incasso giornaliero:       156.00 EUR
+------------------------------------------------------------
+Dettaglio Piatti Serviti:
+  - Primi Piatti:          20
+  - Secondi Piatti:        20
+  - Caffè e Dessert:       20
+------------------------------------------------------------
+Tempi Medi di Attesa:
+  - Area Primi:            0.10 min
+  - Area Secondi:          0.10 min
+  - Cassa:                 0.10 min
+============================================================
+
+[MASTER] Engine terminato.
+[MASTER] Fine simulazione rilevata. Notifica ai figli...
+
+[SYSTEM] Terminazione simul[OPERATORE] PID 132839: Initializzazione completata. Pronto.
+[OPERATORE] PID 132839: Inizio giornata 1.
+[OPERATORE] PID 132839: Postazione acquisita.
+[OPERATORE] PID 132839: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 132839: Inizio giornata 2.
+[OPERATORE] PID 132839: Postazione acquisita.
+[OPERATORE] PID 132839: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 132839: Inizio giornata 3.
+[OPERATORE] PID 132839: Postazione acquisita.
+[OPERATORE] PID 132839: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 132839: Terminazione pulita.
+[OPERATORE] PID 132842: Initializzazione completata. Pronto.
+[OPERATORE] PID 132842: Inizio giornata 1.
+[OPERATORE] PID 132842: Postazione acquisita.
+[OPERATORE] PID 132842: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 132842: Inizio giornata 2.
+[OPERATORE] PID 132842: Postazione acquisita.
+[OPERATORE] PID 132842: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 132842: Inizio giornata 3.
+[OPERATORE] PID 132842: Postazione acquisita.
+[OPERATORE] PID 132842: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 132842: Terminazione pulita.
+[OPERATORE] PID 132836: Initializzazione completata. Pronto.
+[OPERATORE] PID 132836: Inizio giornata 1.
+[OPERATORE] PID 132836: Postazione acquisita.
+[OPERATORE] PID 132836: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 132836: Inizio giornata 2.
+[OPERATORE] PID 132836: Postazione acquisita.
+[OPERATORE] PID 132836: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 132836: Inizio giornata 3.
+[OPERATORE] PID 132836: Postazione acquisita.
+[OPERATORE] PID 132836: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 132836: Terminazione pulita.
+[OPERATORE] PID 132840: Initializzazione completata. Pronto.
+[OPERATORE] PID 132840: Inizio giornata 1.
+[OPERATORE] PID 132840: Postazione acquisita.
+[OPERATORE] PID 132840: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 132840: Inizio giornata 2.
+[OPERATORE] PID 132840: Postazione acquisita.
+[OPERATORE] PID 132840: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 132840: Inizio giornata 3.
+[OPERATORE] PID 132840: Postazione acquisita.
+[OPERATORE] PID 132840: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 132840: Terminazione pulita.
+[OPERATORE] PID 132834: Initializzazione completata. Pronto.
+[OPERATORE] PID 132834: Inizio giornata 1.
+[OPERATORE] PID 132834: Postazione acquisita.
+[OPERATORE] PID 132834: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 132834: Inizio giornata 2.
+[OPERATORE] PID 132834: Postazione acquisita.
+[OPERATORE] PID 132834: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 132834: Inizio giornata 3.
+[OPERATORE] PID 132834: Postazione acquisita.
+[OPERATORE] PID 132834: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 132834: Terminazione pulita.
+[OPERATORE] PID 132841: Initializzazione completata. Pronto.
+[OPERATORE] PID 132841: Inizio giornata 1.
+[OPERATORE] PID 132841: Postazione acquisita.
+[OPERATORE] PID 132841: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 132841: Inizio giornata 2.
+[OPERATORE] PID 132841: Postazione acquisita.
+[OPERATORE] PID 132841: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 132841: Inizio giornata 3.
+[OPERATORE] PID 132841: Postazione acquisita.
+[OPERATORE] PID 132841: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 132841: Terminazione pulita.
+[OPERATORE] PID 132843: Initializzazione completata. Pronto.
+[OPERATORE] PID 132843: Inizio giornata 1.
+[OPERATORE] PID 132843: Postazione acquisita.
+[OPERATORE] PID 132843: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 132843: Inizio giornata 2.
+[OPERATORE] PID 132843: Postazione acquisita.
+[OPERATORE] PID 132843: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 132843: Inizio giornata 3.
+[OPERATORE] PID 132843: Postazione acquisita.
+[OPERATORE] PID 132843: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 132843: Terminazione pulita.
+[DEBUG] Utente PID 132863: Inizializzazione completata. Pronto.
+[UTENTE] PID 132863: Inizio giornata 1.
+[UTENTE] PID 132863: In coda per validazione ticket...
+[UTENTE] PID 132863: Ticket validato.
+[UTENTE] PID 132863: In coda alla stazione Primi per il piatto 11.
+[UTENTE] PID 132863: Ricevuto piatto index 11 dalla stazione.
+[UTENTE] PID 132863: In coda alla stazione Secondi per il piatto 4.
+[UTENTE] PID 132863: Ricevuto piatto index 4 dalla stazione.
+[UTENTE] PID 132863: Attesa amici al meeting point...
+[UTENTE] PID 132863: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132863: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132863 (Leader): Prenoto tavolo per 3.
+[UTENTE] PID 132863: Pasto terminato.
+[UTENTE] PID 132863: Coda Caffè/Dolce...
+[UTENTE] PID 132863: In coda alla stazione Caffè per il piatto 1.
+[UTENTE] PID 132863: Ricevuto piatto index 1 dalla stazione.
+[UTENTE] PID 132863: Uscita gruppo 3 completata.
+[UTENTE] PID 132863: Inizio giornata 2.
+[UTENTE] PID 132863: In coda per validazione ticket...
+[UTENTE] PID 132863: Ticket validato.
+[UTENTE] PID 132863: In coda alla stazione Primi per il piatto 2.
+[UTENTE] PID 132863: Ricevuto piatto index 2 dalla stazione.
+[UTENTE] PID 132863: In coda alla stazione Secondi per il piatto 0.
+[UTENTE] PID 132863: Ricevuto piatto index 0 dalla stazione.
+[UTENTE] PID 132863: Attesa amici al meeting point...
+[UTENTE] PID 132863: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132863: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132863 (Leader): Prenoto tavolo per 3.
+[UTENTE] PID 132863: Pasto terminato.
+[UTENTE] PID 132863: Coda Caffè/Dolce...
+[UTENTE] PID 132863: In coda alla stazione Caffè per il piatto 3.
+[UTENTE] PID 132863: Ricevuto piatto index 3 dalla stazione.
+[UTENTE] PID 132863: Uscita gruppo 3 completata.
+[UTENTE] PID 132863: Inizio giornata 3.
+[UTENTE] PID 132863: In coda per validazione ticket...
+[UTENTE] PID 132863: Ticket validato.
+[UTENTE] PID 132863: In coda alla stazione Primi per il piatto 12.
+[UTENTE] PID 132863: Ricevuto piatto index 12 dalla stazione.
+[UTENTE] PID 132863: In coda alla stazione Secondi per il piatto 2.
+[UTENTE] PID 132863: Ricevuto piatto index 2 dalla stazione.
+[UTENTE] PID 132863: Attesa amici al meeting point...
+[UTENTE] PID 132863: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132863: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132863 (Leader): Prenoto tavolo per 3.
+[UTENTE] PID 132863: Pasto terminato.
+[UTENTE] PID 132863: Coda Caffè/Dolce...
+[UTENTE] PID 132863: In coda alla stazione Caffè per il piatto 0.
+[UTENTE] PID 132863: Ricevuto piatto index 0 dalla stazione.
+[UTENTE] PID 132863: Uscita gruppo 3 completata.
+[UTENTE] PID 132863: Terminazione pulita.
+[DEBUG] Utente PID 132860: Inizializzazione completata. Pronto.
+[UTENTE] PID 132860: Inizio giornata 1.
+[UTENTE] PID 132860: In coda alla stazione Primi per il piatto 1.
+[UTENTE] PID 132860: Ricevuto piatto index 1 dalla stazione.
+[UTENTE] PID 132860: In coda alla stazione Secondi per il piatto 1.
+[UTENTE] PID 132860: Ricevuto piatto index 1 dalla stazione.
+[UTENTE] PID 132860: Attesa amici al meeting point...
+[UTENTE] PID 132860: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132860: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132860: Attesa tavolo dal leader...
+[UTENTE] PID 132860: Pasto terminato.
+[UTENTE] PID 132860: Coda Caffè/Dolce...
+[UTENTE] PID 132860: In coda alla stazione Caffè per il piatto 2.
+[UTENTE] PID 132860: Ricevuto piatto index 2 dalla stazione.
+[UTENTE] PID 132860: Uscita gruppo 1 completata.
+[UTENTE] PID 132860: Inizio giornata 2.
+[UTENTE] PID 132860: In coda alla stazione Primi per il piatto 16.
+[UTENTE] PID 132860: Ricevuto piatto index 16 dalla stazione.
+[UTENTE] PID 132860: In coda alla stazione Secondi per il piatto 0.
+[UTENTE] PID 132860: Ricevuto piatto index 0 dalla stazione.
+[UTENTE] PID 132860: Attesa amici al meeting point...
+[UTENTE] PID 132860: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132860: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132860: Attesa tavolo dal leader...
+[UTENTE] PID 132860: Pasto terminato.
+[UTENTE] PID 132860: Coda Caffè/Dolce...
+[UTENTE] PID 132860: In coda alla stazione Caffè per il piatto 2.
+[UTENTE] PID 132860: Ricevuto piatto index 2 dalla stazione.
+[UTENTE] PID 132860: Uscita gruppo 1 completata.
+[UTENTE] PID 132860: Inizio giornata 3.
+[UTENTE] PID 132860: In coda alla stazione Primi per il piatto 0.
+[UTENTE] PID 132860: Ricevuto piatto index 0 dalla stazione.
+[UTENTE] PID 132860: In coda alla stazione Secondi per il piatto 1.
+[UTENTE] PID 132860: Ricevuto piatto index 1 dalla stazione.
+[UTENTE] PID 132860: Attesa amici al meeting point...
+[UTENTE] PID 132860: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132860: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132860: Attesa tavolo dal leader...
+[UTENTE] PID 132860: Pasto terminato.
+[UTENTE] PID 132860: Coda Caffè/Dolce...
+[UTENTE] PID 132860: In coda alla stazione Caffè per il piatto 2.
+[UTENTE] PID 132860: Ricevuto piatto index 2 dalla stazione.
+[UTENTE] PID 132860: Uscita gruppo 1 completata.
+[UTENTE] PID 132860: Terminazione pulita.
+[DEBUG] Utente PID 132861: Inizializzazione completata. Pronto.
+[UTENTE] PID 132861: Inizio giornata 1.
+[UTENTE] PID 132861: In coda per validazione ticket...
+[UTENTE] PID 132861: Ticket validato.
+[UTENTE] PID 132861: In coda alla stazione Primi per il piatto 7.
+[UTENTE] PID 132861: Ricevuto piatto index 7 dalla stazione.
+[UTENTE] PID 132861: In coda alla stazione Secondi per il piatto 9.
+[UTENTE] PID 132861: Ricevuto piatto index 9 dalla stazione.
+[UTENTE] PID 132861: Attesa amici al meeting point...
+[UTENTE] PID 132861: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132861: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132861 (Leader): Prenoto tavolo per 2.
+[UTENTE] PID 132861: Pasto terminato.
+[UTENTE] PID 132861: Coda Caffè/Dolce...
+[UTENTE] PID 132861: In coda alla stazione Caffè per il piatto 3.
+[UTENTE] PID 132861: Ricevuto piatto index 3 dalla stazione.
+[UTENTE] PID 132861: Uscita gruppo 2 completata.
+[UTENTE] PID 132861: Inizio giornata 2.
+[UTENTE] PID 132861: In coda per validazione ticket...
+[UTENTE] PID 132861: Ticket validato.
+[UTENTE] PID 132861: In coda alla stazione Primi per il piatto 19.
+[UTENTE] PID 132861: Ricevuto piatto index 19 dalla stazione.
+[UTENTE] PID 132861: In coda alla stazione Secondi per il piatto 18.
+[UTENTE] PID 132861: Ricevuto piatto index 18 dalla stazione.
+[UTENTE] PID 132861: Attesa amici al meeting point...
+[UTENTE] PID 132861: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132861: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132861 (Leader): Prenoto tavolo per 2.
+[UTENTE] PID 132861: Pasto terminato.
+[UTENTE] PID 132861: Coda Caffè/Dolce...
+[UTENTE] PID 132861: In coda alla stazione Caffè per il piatto 3.
+[UTENTE] PID 132861: Ricevuto piatto index 3 dalla stazione.
+[UTENTE] PID 132861: Uscita gruppo 2 completata.
+[UTENTE] PID 132861: Inizio giornata 3.
+[UTENTE] PID 132861: In coda per validazione ticket...
+[UTENTE] PID 132861: Ticket validato.
+[UTENTE] PID 132861: In coda alla stazione Primi per il piatto 15.
+[UTENTE] PID 132861: Ricevuto piatto index 15 dalla stazione.
+[UTENTE] PID 132861: In coda alla stazione Secondi per il piatto 4.
+[UTENTE] PID 132861: Ricevuto piatto index 4 dalla stazione.
+[UTENTE] PID 132861: Attesa amici al meeting point...
+[UTENTE] PID 132861: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132861: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132861 (Leader): Prenoto tavolo per 2.
+[UTENTE] PID 132861: Pasto terminato.
+[UTENTE] PID 132861: Coda Caffè/Dolce...
+[UTENTE] PID 132861: In coda alla stazione Caffè per il piatto 3.
+[UTENTE] PID 132861: Ricevuto piatto index 3 dalla stazione.
+[UTENTE] PID 132861: Uscita gruppo 2 completata.
+[UTENTE] PID 132861: Terminazione pulita.
+[DEBUG] Utente PID 132862: Inizializzazione completata. Pronto.
+[UTENTE] PID 132862: Inizio giornata 1.
+[UTENTE] PID 132862: In coda per validazione ticket...
+[UTENTE] PID 132862: Ticket validato.
+[UTENTE] PID 132862: In coda alla stazione Primi per il piatto 11.
+[UTENTE] PID 132862: Ricevuto piatto index 11 dalla stazione.
+[UTENTE] PID 132862: In coda alla stazione Secondi per il piatto 14.
+[UTENTE] PID 132862: Ricevuto piatto index 14 dalla stazione.
+[UTENTE] PID 132862: Attesa amici al meeting point...
+[UTENTE] PID 132862: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132862: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132862: Attesa tavolo dal leader...
+[UTENTE] PID 132862: Pasto terminato.
+[UTENTE] PID 132862: Coda Caffè/Dolce...
+[UTENTE] PID 132862: In coda alla stazione Caffè per il piatto 3.
+[UTENTE] PID 132862: Ricevuto piatto index 3 dalla stazione.
+[UTENTE] PID 132862: Uscita gruppo 2 completata.
+[UTENTE] PID 132862: Inizio giornata 2.
+[UTENTE] PID 132862: In coda per validazione ticket...
+[UTENTE] PID 132862: Ticket validato.
+[UTENTE] PID 132862: In coda alla stazione Primi per il piatto 12.
+[UTENTE] PID 132862: Ricevuto piatto index 12 dalla stazione.
+[UTENTE] PID 132862: In coda alla stazione Secondi per il piatto 14.
+[UTENTE] PID 132862: Ricevuto piatto index 14 dalla stazione.
+[UTENTE] PID 132862: Attesa amici al meeting point...
+[UTENTE] PID 132862: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132862: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132862: Attesa tavolo dal leader...
+[UTENTE] PID 132862: Pasto terminato.
+[UTENTE] PID 132862: Coda Caffè/Dolce...
+[UTENTE] PID 132862: In coda alla stazione Caffè per il piatto 1.
+[UTENTE] PID 132862: Ricevuto piatto index 1 dalla stazione.
+[UTENTE] PID 132862: Uscita gruppo 2 completata.
+[UTENTE] PID 132862: Inizio giornata 3.
+[UTENTE] PID 132862: In coda per validazione ticket...
+[UTENTE] PID 132862: Ticket validato.
+[UTENTE] PID 132862: In coda alla stazione Primi per il piatto 5.
+[UTENTE] PID 132862: Ricevuto piatto index 5 dalla stazione.
+[UTENTE] PID 132862: In coda alla stazione Secondi per il piatto 5.
+[UTENTE] PID 132862: Ricevuto piatto index 5 dalla stazione.
+[UTENTE] PID 132862: Attesa amici al meeting point...
+[UTENTE] PID 132862: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132862: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132862: Attesa tavolo dal leader...
+[UTENTE] PID 132862: Pasto terminato.
+[UTENTE] PID 132862: Coda Caffè/Dolce...
+[UTENTE] PID 132862: In coda alla stazione Caffè per il piatto 1.
+[UTENTE] PID 132862: Ricevuto piatto index 1 dalla stazione.
+[UTENTE] PID 132862: Uscita gruppo 2 completata.
+[UTENTE] PID 132862: Terminazione pulita.
+[DEBUG] Utente PID 132864: Inizializzazione completata. Pronto.
+[UTENTE] PID 132864: Inizio giornata 1.
+[UTENTE] PID 132864: In coda per validazione ticket...
+[UTENTE] PID 132864: Ticket validato.
+[UTENTE] PID 132864: In coda alla stazione Primi per il piatto 1.
+[UTENTE] PID 132864: Ricevuto piatto index 1 dalla stazione.
+[UTENTE] PID 132864: In coda alla stazione Secondi per il piatto 16.
+[UTENTE] PID 132864: Ricevuto piatto index 16 dalla stazione.
+[UTENTE] PID 132864: Attesa amici al meeting point...
+[UTENTE] PID 132864: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132864: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132864: Attesa tavolo dal leader...
+[UTENTE] PID 132864: Pasto terminato.
+[UTENTE] PID 132864: Coda Caffè/Dolce...
+[UTENTE] PID 132864: In coda alla stazione Caffè per il piatto 1.
+[UTENTE] PID 132864: Ricevuto piatto index 1 dalla stazione.
+[UTENTE] PID 132864: Uscita gruppo 3 completata.
+[UTENTE] PID 132864: Inizio giornata 2.
+[UTENTE] PID 132864: In coda per validazione ticket...
+[UTENTE] PID 132864: Ticket validato.
+[UTENTE] PID 132864: In coda alla stazione Primi per il piatto 17.
+[UTENTE] PID 132864: Ricevuto piatto index 17 dalla stazione.
+[UTENTE] PID 132864: In coda alla stazione Secondi per il piatto 15.
+[UTENTE] PID 132864: Ricevuto piatto index 15 dalla stazione.
+[UTENTE] PID 132864: Attesa amici al meeting point...
+[UTENTE] PID 132864: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132864: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132864: Attesa tavolo dal leader...
+[UTENTE] PID 132864: Pasto terminato.
+[UTENTE] PID 132864: Coda Caffè/Dolce...
+[UTENTE] PID 132864: In coda alla stazione Caffè per il piatto 1.
+[UTENTE] PID 132864: Ricevuto piatto index 1 dalla stazione.
+[UTENTE] PID 132864: Uscita gruppo 3 completata.
+[UTENTE] PID 132864: Inizio giornata 3.
+[UTENTE] PID 132864: In coda per validazione ticket...
+[UTENTE] PID 132864: Ticket validato.
+[UTENTE] PID 132864: In coda alla stazione Primi per il piatto 12.
+[UTENTE] PID 132864: Ricevuto piatto index 12 dalla stazione.
+[UTENTE] PID 132864: In coda alla stazione Secondi per il piatto 7.
+[UTENTE] PID 132864: Ricevuto piatto index 7 dalla stazione.
+[UTENTE] PID 132864: Attesa amici al meeting point...
+[UTENTE] PID 132864: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132864: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132864: Attesa tavolo dal leader...
+[UTENTE] PID 132864: Pasto terminato.
+[UTENTE] PID 132864: Coda Caffè/Dolce...
+[UTENTE] PID 132864: In coda alla stazione Caffè per il piatto 3.
+[UTENTE] PID 132864: Ricevuto piatto index 3 dalla stazione.
+[UTENTE] PID 132864: Uscita gruppo 3 completata.
+[UTENTE] PID 132864: Terminazione pulita.
+[DEBUG] Utente PID 132856: Inizializzazione completata. Pronto.
+[UTENTE] PID 132856: Inizio giornata 1.
+[UTENTE] PID 132856: In coda per validazione ticket...
+[UTENTE] PID 132856: Ticket validato.
+[UTENTE] PID 132856: In coda alla stazione Primi per il piatto 12.
+[UTENTE] PID 132856: Ricevuto piatto index 12 dalla stazione.
+[UTENTE] PID 132856: In coda alla stazione Secondi per il piatto 3.
+[UTENTE] PID 132856: Ricevuto piatto index 3 dalla stazione.
+[UTENTE] PID 132856: Attesa amici al meeting point...
+[UTENTE] PID 132856: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132856: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132856: Attesa tavolo dal leader...
+[UTENTE] PID 132856: Pasto terminato.
+[UTENTE] PID 132856: Coda Caffè/Dolce...
+[UTENTE] PID 132856: In coda alla stazione Caffè per il piatto 2.
+[UTENTE] PID 132856: Ricevuto piatto index 2 dalla stazione.
+[UTENTE] PID 132856: Uscita gruppo 1 completata.
+[UTENTE] PID 132856: Inizio giornata 2.
+[UTENTE] PID 132856: In coda per validazione ticket...
+[UTENTE] PID 132856: Ticket validato.
+[UTENTE] PID 132856: In coda alla stazione Primi per il piatto 6.
+[UTENTE] PID 132856: Ricevuto piatto index 6 dalla stazione.
+[UTENTE] PID 132856: In coda alla stazione Secondi per il piatto 11.
+[UTENTE] PID 132856: Ricevuto piatto index 11 dalla stazione.
+[UTENTE] PID 132856: Attesa amici al meeting point...
+[UTENTE] PID 132856: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132856: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132856: Attesa tavolo dal leader...
+[UTENTE] PID 132856: Pasto terminato.
+[UTENTE] PID 132856: Coda Caffè/Dolce...
+[UTENTE] PID 132856: In coda alla stazione Caffè per il piatto 3.
+[UTENTE] PID 132856: Ricevuto piatto index 3 dalla stazione.
+[UTENTE] PID 132856: Uscita gruppo 1 completata.
+[UTENTE] PID 132856: Inizio giornata 3.
+[UTENTE] PID 132856: In coda per validazione ticket...
+[UTENTE] PID 132856: Ticket validato.
+[UTENTE] PID 132856: In coda alla stazione Primi per il piatto 18.
+[UTENTE] PID 132856: Ricevuto piatto index 18 dalla stazione.
+[UTENTE] PID 132856: In coda alla stazione Secondi per il piatto 7.
+[UTENTE] PID 132856: Ricevuto piatto index 7 dalla stazione.
+[UTENTE] PID 132856: Attesa amici al meeting point...
+[UTENTE] PID 132856: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132856: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132856: Attesa tavolo dal leader...
+[UTENTE] PID 132856: Pasto terminato.
+[UTENTE] PID 132856: Coda Caffè/Dolce...
+[UTENTE] PID 132856: In coda alla stazione Caffè per il piatto 3.
+[UTENTE] PID 132856: Ricevuto piatto index 3 dalla stazione.
+[UTENTE] PID 132856: Uscita gruppo 1 completata.
+[UTENTE] PID 132856: Terminazione pulita.
+[OPERATORE] PID 132838: Initializzazione completata. Pronto.
+[OPERATORE] PID 132838: Inizio giornata 1.
+[OPERATORE] PID 132838: Postazione acquisita.
+[OPERATORE] PID 132838: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 132838: Inizio giornata 2.
+[OPERATORE] PID 132838: Postazione acquisita.
+[OPERATORE] PID 132838: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 132838: Inizio giornata 3.
+[OPERATORE] PID 132838: Postazione acquisita.
+[OPERATORE] PID 132838: Fine giornata, postazione rilasciata.
+[OPERATORE] PID 132838: Terminazione pulita.
+[DEBUG] Utente PID 132853: Inizializzazione completata. Pronto.
+[UTENTE] PID 132853: Inizio giornata 1.
+[UTENTE] PID 132853: In coda per validazione ticket...
+[UTENTE] PID 132853: Ticket validato.
+[UTENTE] PID 132853: In coda alla stazione Primi per il piatto 17.
+[UTENTE] PID 132853: Ricevuto piatto index 17 dalla stazione.
+[UTENTE] PID 132853: In coda alla stazione Secondi per il piatto 18.
+[UTENTE] PID 132853: Ricevuto piatto index 18 dalla stazione.
+[UTENTE] PID 132853: Attesa amici al meeting point...
+[UTENTE] PID 132853: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132853: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132853: Attesa tavolo dal leader...
+[UTENTE] PID 132853: Pasto terminato.
+[UTENTE] PID 132853: Coda Caffè/Dolce...
+[UTENTE] PID 132853: In coda alla stazione Caffè per il piatto 0.
+[UTENTE] PID 132853: Ricevuto piatto index 0 dalla stazione.
+[UTENTE] PID 132853: Uscita gruppo 0 completata.
+[UTENTE] PID 132853: Inizio giornata 2.
+[UTENTE] PID 132853: In coda per validazione ticket...
+[UTENTE] PID 132853: Ticket validato.
+[UTENTE] PID 132853: In coda alla stazione Primi per il piatto 3.
+[UTENTE] PID 132853: Ricevuto piatto index 3 dalla stazione.
+[UTENTE] PID 132853: In coda alla stazione Secondi per il piatto 15.
+[UTENTE] PID 132853: Ricevuto piatto index 15 dalla stazione.
+[UTENTE] PID 132853: Attesa amici al meeting point...
+[UTENTE] PID 132853: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132853: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132853: Attesa tavolo dal leader...
+[UTENTE] PID 132853: Pasto terminato.
+[UTENTE] PID 132853: Coda Caffè/Dolce...
+[UTENTE] PID 132853: In coda alla stazione Caffè per il piatto 3.
+[UTENTE] PID 132853: Ricevuto piatto index 3 dalla stazione.
+[UTENTE] PID 132853: Uscita gruppo 0 completata.
+[UTENTE] PID 132853: Inizio giornata 3.
+[UTENTE] PID 132853: In coda per validazione ticket...
+[UTENTE] PID 132853: Ticket validato.
+[UTENTE] PID 132853: In coda alla stazione Primi per il piatto 15.
+[UTENTE] PID 132853: Ricevuto piatto index 15 dalla stazione.
+[UTENTE] PID 132853: In coda alla stazione Secondi per il piatto 12.
+[UTENTE] PID 132853: Ricevuto piatto index 12 dalla stazione.
+[UTENTE] PID 132853: Attesa amici al meeting point...
+[UTENTE] PID 132853: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132853: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132853: Attesa tavolo dal leader...
+[UTENTE] PID 132853: Pasto terminato.
+[UTENTE] PID 132853: Coda Caffè/Dolce...
+[UTENTE] PID 132853: In coda alla stazione Caffè per il piatto 1.
+[UTENTE] PID 132853: Ricevuto piatto index 1 dalla stazione.
+[UTENTE] PID 132853: Uscita gruppo 0 completata.
+[UTENTE] PID 132853: Terminazione pulita.
+[DEBUG] Utente PID 132865: Inizializzazione completata. Pronto.
+[UTENTE] PID 132865: Inizio giornata 1.
+[UTENTE] PID 132865: In coda alla stazione Primi per il piatto 13.
+[UTENTE] PID 132865: Ricevuto piatto index 13 dalla stazione.
+[UTENTE] PID 132865: In coda alla stazione Secondi per il piatto 14.
+[UTENTE] PID 132865: Ricevuto piatto index 14 dalla stazione.
+[UTENTE] PID 132865: Attesa amici al meeting point...
+[UTENTE] PID 132865: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132865: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132865: Attesa tavolo dal leader...
+[UTENTE] PID 132865: Pasto terminato.
+[UTENTE] PID 132865: Coda Caffè/Dolce...
+[UTENTE] PID 132865: In coda alla stazione Caffè per il piatto 0.
+[UTENTE] PID 132865: Ricevuto piatto index 0 dalla stazione.
+[UTENTE] PID 132865: Uscita gruppo 3 completata.
+[UTENTE] PID 132865: Inizio giornata 2.
+[UTENTE] PID 132865: In coda alla stazione Primi per il piatto 7.
+[UTENTE] PID 132865: Ricevuto piatto index 7 dalla stazione.
+[UTENTE] PID 132865: In coda alla stazione Secondi per il piatto 11.
+[UTENTE] PID 132865: Ricevuto piatto index 11 dalla stazione.
+[UTENTE] PID 132865: Attesa amici al meeting point...
+[UTENTE] PID 132865: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132865: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132865: Attesa tavolo dal leader...
+[UTENTE] PID 132865: Pasto terminato.
+[UTENTE] PID 132865: Coda Caffè/Dolce...
+[UTENTE] PID 132865: In coda alla stazione Caffè per il piatto 0.
+[UTENTE] PID 132865: Ricevuto piatto index 0 dalla stazione.
+[UTENTE] PID 132865: Uscita gruppo 3 completata.
+[UTENTE] PID 132865: Inizio giornata 3.
+[UTENTE] PID 132865: In coda alla stazione Primi per il piatto 4.
+[UTENTE] PID 132865: Ricevuto piatto index 4 dalla stazione.
+[UTENTE] PID 132865: In coda alla stazione Secondi per il piatto 3.
+[UTENTE] PID 132865: Ricevuto piatto index 3 dalla stazione.
+[UTENTE] PID 132865: Attesa amici al meeting point...
+[UTENTE] PID 132865: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132865: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132865: Attesa tavolo dal leader...
+[UTENTE] PID 132865: Pasto terminato.
+[UTENTE] PID 132865: Coda Caffè/Dolce...
+[UTENTE] PID 132865: In coda alla stazione Caffè per il piatto 1.
+[UTENTE] PID 132865: Ricevuto piatto index 1 dalla stazione.
+[UTENTE] PID 132865: Uscita gruppo 3 completata.
+[UTENTE] PID 132865: Terminazione pulita.
+[DEBUG] Utente PID 132858: Inizializzazione completata. Pronto.
+[UTENTE] PID 132858: Inizio giornata 1.
+[UTENTE] PID 132858: In coda per validazione ticket...
+[UTENTE] PID 132858: Ticket validato.
+[UTENTE] PID 132858: In coda alla stazione Primi per il piatto 5.
+[UTENTE] PID 132858: Ricevuto piatto index 5 dalla stazione.
+[UTENTE] PID 132858: In coda alla stazione Secondi per il piatto 12.
+[UTENTE] PID 132858: Ricevuto piatto index 12 dalla stazione.
+[UTENTE] PID 132858: Attesa amici al meeting point...
+[UTENTE] PID 132858: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132858: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132858: Attesa tavolo dal leader...
+[UTENTE] PID 132858: Pasto terminato.
+[UTENTE] PID 132858: Coda Caffè/Dolce...
+[UTENTE] PID 132858: In coda alla stazione Caffè per il piatto 2.
+[UTENTE] PID 132858: Ricevuto piatto index 2 dalla stazione.
+[UTENTE] PID 132858: Uscita gruppo 1 completata.
+[UTENTE] PID 132858: Inizio giornata 2.
+[UTENTE] PID 132858: In coda per validazione ticket...
+[UTENTE] PID 132858: Ticket validato.
+[UTENTE] PID 132858: In coda alla stazione Primi per il piatto 11.
+[UTENTE] PID 132858: Ricevuto piatto index 11 dalla stazione.
+[UTENTE] PID 132858: In coda alla stazione Secondi per il piatto 16.
+[UTENTE] PID 132858: Ricevuto piatto index 16 dalla stazione.
+[UTENTE] PID 132858: Attesa amici al meeting point...
+[UTENTE] PID 132858: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132858: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132858: Attesa tavolo dal leader...
+[UTENTE] PID 132858: Pasto terminato.
+[UTENTE] PID 132858: Coda Caffè/Dolce...
+[UTENTE] PID 132858: In coda alla stazione Caffè per il piatto 0.
+[UTENTE] PID 132858: Ricevuto piatto index 0 dalla stazione.
+[UTENTE] PID 132858: Uscita gruppo 1 completata.
+[UTENTE] PID 132858: Inizio giornata 3.
+[UTENTE] PID 132858: In coda per validazione ticket...
+[UTENTE] PID 132858: Ticket validato.
+[UTENTE] PID 132858: In coda alla stazione Primi per il piatto 5.
+[UTENTE] PID 132858: Ricevuto piatto index 5 dalla stazione.
+[UTENTE] PID 132858: In coda alla stazione Secondi per il piatto 3.
+[UTENTE] PID 132858: Ricevuto piatto index 3 dalla stazione.
+[UTENTE] PID 132858: Attesa amici al meeting point...
+[UTENTE] PID 132858: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132858: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132858: Attesa tavolo dal leader...
+[UTENTE] PID 132858: Pasto terminato.
+[UTENTE] PID 132858: Coda Caffè/Dolce...
+[UTENTE] PID 132858: In coda alla stazione Caffè per il piatto 3.
+[UTENTE] PID 132858: Ricevuto piatto index 3 dalla stazione.
+[UTENTE] PID 132858: Uscita gruppo 1 completata.
+[UTENTE] PID 132858: Terminazione pulita.
+[DEBUG] Utente PID 132857: Inizializzazione completata. Pronto.
+[UTENTE] PID 132857: Inizio giornata 1.
+[UTENTE] PID 132857: In coda per validazione ticket...
+[UTENTE] PID 132857: Ticket validato.
+[UTENTE] PID 132857: In coda alla stazione Primi per il piatto 11.
+[UTENTE] PID 132857: Ricevuto piatto index 11 dalla stazione.
+[UTENTE] PID 132857: In coda alla stazione Secondi per il piatto 0.
+[UTENTE] PID 132857: Ricevuto piatto index 0 dalla stazione.
+[UTENTE] PID 132857: Attesa amici al meeting point...
+[UTENTE] PID 132857: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132857: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132857: Attesa tavolo dal leader...
+[UTENTE] PID 132857: Pasto terminato.
+[UTENTE] PID 132857: Coda Caffè/Dolce...
+[UTENTE] PID 132857: In coda alla stazione Caffè per il piatto 3.
+[UTENTE] PID 132857: Ricevuto piatto index 3 dalla stazione.
+[UTENTE] PID 132857: Uscita gruppo 1 completata.
+[UTENTE] PID 132857: Inizio giornata 2.
+[UTENTE] PID 132857: In coda per validazione ticket...
+[UTENTE] PID 132857: Ticket validato.
+[UTENTE] PID 132857: In coda alla stazione Primi per il piatto 10.
+[UTENTE] PID 132857: Ricevuto piatto index 10 dalla stazione.
+[UTENTE] PID 132857: In coda alla stazione Secondi per il piatto 10.
+[UTENTE] PID 132857: Ricevuto piatto index 10 dalla stazione.
+[UTENTE] PID 132857: Attesa amici al meeting point...
+[UTENTE] PID 132857: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132857: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132857: Attesa tavolo dal leader...
+[UTENTE] PID 132857: Pasto terminato.
+[UTENTE] PID 132857: Coda Caffè/Dolce...
+[UTENTE] PID 132857: In coda alla stazione Caffè per il piatto 2.
+[UTENTE] PID 132857: Ricevuto piatto index 2 dalla stazione.
+[UTENTE] PID 132857: Uscita gruppo 1 completata.
+[UTENTE] PID 132857: Inizio giornata 3.
+[UTENTE] PID 132857: In coda per validazione ticket...
+[UTENTE] PID 132857: Ticket validato.
+[UTENTE] PID 132857: In coda alla stazione Primi per il piatto 0.
+[UTENTE] PID 132857: Ricevuto piatto index 0 dalla stazione.
+[UTENTE] PID 132857: In coda alla stazione Secondi per il piatto 12.
+[UTENTE] PID 132857: Ricevuto piatto index 12 dalla stazione.
+[UTENTE] PID 132857: Attesa amici al meeting point...
+[UTENTE] PID 132857: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132857: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132857: Attesa tavolo dal leader...
+[UTENTE] PID 132857: Pasto terminato.
+[UTENTE] PID 132857: Coda Caffè/Dolce...
+[UTENTE] PID 132857: In coda alla stazione Caffè per il piatto 2.
+[UTENTE] PID 132857: Ricevuto piatto index 2 dalla stazione.
+[UTENTE] PID 132857: Uscita gruppo 1 completata.
+[UTENTE] PID 132857: Terminazione pulita.
+[DEBUG] Utente PID 132859: Inizializzazione completata. Pronto.
+[UTENTE] PID 132859: Inizio giornata 1.
+[UTENTE] PID 132859: In coda per validazione ticket...
+[UTENTE] PID 132859: Ticket validato.
+[UTENTE] PID 132859: In coda alla stazione Primi per il piatto 19.
+[UTENTE] PID 132859: Ricevuto piatto index 19 dalla stazione.
+[UTENTE] PID 132859: In coda alla stazione Secondi per il piatto 0.
+[UTENTE] PID 132859: Ricevuto piatto index 0 dalla stazione.
+[UTENTE] PID 132859: Attesa amici al meeting point...
+[UTENTE] PID 132859: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132859: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132859: Attesa tavolo dal leader...
+[UTENTE] PID 132859: Pasto terminato.
+[UTENTE] PID 132859: Coda Caffè/Dolce...
+[UTENTE] PID 132859: In coda alla stazione Caffè per il piatto 3.
+[UTENTE] PID 132859: Ricevuto piatto index 3 dalla stazione.
+[UTENTE] PID 132859: Uscita gruppo 1 completata.
+[UTENTE] PID 132859: Inizio giornata 2.
+[UTENTE] PID 132859: In coda per validazione ticket...
+[UTENTE] PID 132859: Ticket validato.
+[UTENTE] PID 132859: In coda alla stazione Primi per il piatto 7.
+[UTENTE] PID 132859: Ricevuto piatto index 7 dalla stazione.
+[UTENTE] PID 132859: In coda alla stazione Secondi per il piatto 12.
+[UTENTE] PID 132859: Ricevuto piatto index 12 dalla stazione.
+[UTENTE] PID 132859: Attesa amici al meeting point...
+[UTENTE] PID 132859: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132859: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132859: Attesa tavolo dal leader...
+[UTENTE] PID 132859: Pasto terminato.
+[UTENTE] PID 132859: Coda Caffè/Dolce...
+[UTENTE] PID 132859: In coda alla stazione Caffè per il piatto 1.
+[UTENTE] PID 132859: Ricevuto piatto index 1 dalla stazione.
+[UTENTE] PID 132859: Uscita gruppo 1 completata.
+[UTENTE] PID 132859: Inizio giornata 3.
+[UTENTE] PID 132859: In coda per validazione ticket...
+[UTENTE] PID 132859: Ticket validato.
+[UTENTE] PID 132859: In coda alla stazione Primi per il piatto 11.
+[UTENTE] PID 132859: Ricevuto piatto index 11 dalla stazione.
+[UTENTE] PID 132859: In coda alla stazione Secondi per il piatto 16.
+[UTENTE] PID 132859: Ricevuto piatto index 16 dalla stazione.
+[UTENTE] PID 132859: Attesa amici al meeting point...
+[UTENTE] PID 132859: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132859: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132859: Attesa tavolo dal leader...
+[UTENTE] PID 132859: Pasto terminato.
+[UTENTE] PID 132859: Coda Caffè/Dolce...
+[UTENTE] PID 132859: In coda alla stazione Caffè per il piatto 0.
+[UTENTE] PID 132859: Ricevuto piatto index 0 dalla stazione.
+[UTENTE] PID 132859: Uscita gruppo 1 completata.
+[UTENTE] PID 132859: Terminazione pulita.
+[DEBUG] Utente PID 132851: Inizializzazione completata. Pronto.
+[UTENTE] PID 132851: Inizio giornata 1.
+[UTENTE] PID 132851: In coda per validazione ticket...
+[UTENTE] PID 132851: Ticket validato.
+[UTENTE] PID 132851: In coda alla stazione Primi per il piatto 4.
+[UTENTE] PID 132851: Ricevuto piatto index 4 dalla stazione.
+[UTENTE] PID 132851: In coda alla stazione Secondi per il piatto 8.
+[UTENTE] PID 132851: Ricevuto piatto index 8 dalla stazione.
+[UTENTE] PID 132851: Attesa amici al meeting point...
+[UTENTE] PID 132851: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132851: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132851: Attesa tavolo dal leader...
+[UTENTE] PID 132851: Pasto terminato.
+[UTENTE] PID 132851: Coda Caffè/Dolce...
+[UTENTE] PID 132851: In coda alla stazione Caffè per il piatto 3.
+[UTENTE] PID 132851: Ricevuto piatto index 3 dalla stazione.
+[UTENTE] PID 132851: Uscita gruppo 0 completata.
+[UTENTE] PID 132851: Inizio giornata 2.
+[UTENTE] PID 132851: In coda per validazione ticket...
+[UTENTE] PID 132851: Ticket validato.
+[UTENTE] PID 132851: In coda alla stazione Primi per il piatto 6.
+[UTENTE] PID 132851: Ricevuto piatto index 6 dalla stazione.
+[UTENTE] PID 132851: In coda alla stazione Secondi per il piatto 4.
+[UTENTE] PID 132851: Ricevuto piatto index 4 dalla stazione.
+[UTENTE] PID 132851: Attesa amici al meeting point...
+[UTENTE] PID 132851: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132851: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132851: Attesa tavolo dal leader...
+[UTENTE] PID 132851: Pasto terminato.
+[UTENTE] PID 132851: Coda Caffè/Dolce...
+[UTENTE] PID 132851: In coda alla stazione Caffè per il piatto 0.
+[UTENTE] PID 132851: Ricevuto piatto index 0 dalla stazione.
+[UTENTE] PID 132851: Uscita gruppo 0 completata.
+[UTENTE] PID 132851: Inizio giornata 3.
+[UTENTE] PID 132851: In coda per validazione ticket...
+[UTENTE] PID 132851: Ticket validato.
+[UTENTE] PID 132851: In coda alla stazione Primi per il piatto 9.
+[UTENTE] PID 132851: Ricevuto piatto index 9 dalla stazione.
+[UTENTE] PID 132851: In coda alla stazione Secondi per il piatto 8.
+[UTENTE] PID 132851: Ricevuto piatto index 8 dalla stazione.
+[UTENTE] PID 132851: Attesa amici al meeting point...
+[UTENTE] PID 132851: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132851: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132851: Attesa tavolo dal leader...
+[UTENTE] PID 132851: Pasto terminato.
+[UTENTE] PID 132851: Coda Caffè/Dolce...
+[UTENTE] PID 132851: In coda alla stazione Caffè per il piatto 2.
+[UTENTE] PID 132851: Ricevuto piatto index 2 dalla stazione.
+[UTENTE] PID 132851: Uscita gruppo 0 completata.
+[UTENTE] PID 132851: Terminazione pulita.
+[DEBUG] Utente PID 132855: Inizializzazione completata. Pronto.
+[UTENTE] PID 132855: Inizio giornata 1.
+[UTENTE] PID 132855: In coda alla stazione Primi per il piatto 13.
+[UTENTE] PID 132855: Ricevuto piatto index 13 dalla stazione.
+[UTENTE] PID 132855: In coda alla stazione Secondi per il piatto 17.
+[UTENTE] PID 132855: Ricevuto piatto index 17 dalla stazione.
+[UTENTE] PID 132855: Attesa amici al meeting point...
+[UTENTE] PID 132855: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132855: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132855: Attesa tavolo dal leader...
+[UTENTE] PID 132855: Pasto terminato.
+[UTENTE] PID 132855: Coda Caffè/Dolce...
+[UTENTE] PID 132855: In coda alla stazione Caffè per il piatto 2.
+[UTENTE] PID 132855: Ricevuto piatto index 2 dalla stazione.
+[UTENTE] PID 132855: Uscita gruppo 1 completata.
+[UTENTE] PID 132855: Inizio giornata 2.
+[UTENTE] PID 132855: In coda alla stazione Primi per il piatto 18.
+[UTENTE] PID 132855: Ricevuto piatto index 18 dalla stazione.
+[UTENTE] PID 132855: In coda alla stazione Secondi per il piatto 6.
+[UTENTE] PID 132855: Ricevuto piatto index 6 dalla stazione.
+[UTENTE] PID 132855: Attesa amici al meeting point...
+[UTENTE] PID 132855: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132855: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132855: Attesa tavolo dal leader...
+[UTENTE] PID 132855: Pasto terminato.
+[UTENTE] PID 132855: Coda Caffè/Dolce...
+[UTENTE] PID 132855: In coda alla stazione Caffè per il piatto 3.
+[UTENTE] PID 132855: Ricevuto piatto index 3 dalla stazione.
+[UTENTE] PID 132855: Uscita gruppo 1 completata.
+[UTENTE] PID 132855: Inizio giornata 3.
+[UTENTE] PID 132855: In coda alla stazione Primi per il piatto 1.
+[UTENTE] PID 132855: Ricevuto piatto index 1 dalla stazione.
+[UTENTE] PID 132855: In coda alla stazione Secondi per il piatto 17.
+[UTENTE] PID 132855: Ricevuto piatto index 17 dalla stazione.
+[UTENTE] PID 132855: Attesa amici al meeting point...
+[UTENTE] PID 132855: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132855: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132855: Attesa tavolo dal leader...
+[UTENTE] PID 132855: Pasto terminato.
+[UTENTE] PID 132855: Coda Caffè/Dolce...
+[UTENTE] PID 132855: In coda alla stazione Caffè per il piatto 0.
+[UTENTE] PID 132855: Ricevuto piatto index 0 dalla stazione.
+[UTENTE] PID 132855: Uscita gruppo 1 completata.
+[UTENTE] PID 132855: Terminazione pulita.
+[DEBUG] Utente PID 132848: Inizializzazione completata. Pronto.
+[UTENTE] PID 132848: Inizio giornata 1.
+[UTENTE] PID 132848: In coda per validazione ticket...
+[UTENTE] PID 132848: Ticket validato.
+[UTENTE] PID 132848: In coda alla stazione Primi per il piatto 19.
+[UTENTE] PID 132848: Ricevuto piatto index 19 dalla stazione.
+[UTENTE] PID 132848: In coda alla stazione Secondi per il piatto 7.
+[UTENTE] PID 132848: Ricevuto piatto index 7 dalla stazione.
+[UTENTE] PID 132848: Attesa amici al meeting point...
+[UTENTE] PID 132848: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132848: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132848: Attesa tavolo dal leader...
+[UTENTE] PID 132848: Pasto terminato.
+[UTENTE] PID 132848: Coda Caffè/Dolce...
+[UTENTE] PID 132848: In coda alla stazione Caffè per il piatto 0.
+[UTENTE] PID 132848: Ricevuto piatto index 0 dalla stazione.
+[UTENTE] PID 132848: Uscita gruppo 0 completata.
+[UTENTE] PID 132848: Inizio giornata 2.
+[UTENTE] PID 132848: In coda per validazione ticket...
+[UTENTE] PID 132848: Ticket validato.
+[UTENTE] PID 132848: In coda alla stazione Primi per il piatto 19.
+[UTENTE] PID 132848: Ricevuto piatto index 19 dalla stazione.
+[UTENTE] PID 132848: In coda alla stazione Secondi per il piatto 10.
+[UTENTE] PID 132848: Ricevuto piatto index 10 dalla stazione.
+[UTENTE] PID 132848: Attesa amici al meeting point...
+[UTENTE] PID 132848: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132848: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132848: Attesa tavolo dal leader...
+[UTENTE] PID 132848: Pasto terminato.
+[UTENTE] PID 132848: Coda Caffè/Dolce...
+[UTENTE] PID 132848: In coda alla stazione Caffè per il piatto 0.
+[UTENTE] PID 132848: Ricevuto piatto index 0 dalla stazione.
+[UTENTE] PID 132848: Uscita gruppo 0 completata.
+[UTENTE] PID 132848: Inizio giornata 3.
+[UTENTE] PID 132848: In coda per validazione ticket...
+[UTENTE] PID 132848: Ticket validato.
+[UTENTE] PID 132848: In coda alla stazione Primi per il piatto 12.
+[UTENTE] PID 132848: Ricevuto piatto index 12 dalla stazione.
+[UTENTE] PID 132848: In coda alla stazione Secondi per il piatto 13.
+[UTENTE] PID 132848: Ricevuto piatto index 13 dalla stazione.
+[UTENTE] PID 132848: Attesa amici al meeting point...
+[UTENTE] PID 132848: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132848: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132848: Attesa tavolo dal leader...
+[UTENTE] PID 132848: Pasto terminato.
+[UTENTE] PID 132848: Coda Caffè/Dolce...
+[UTENTE] PID 132848: In coda alla stazione Caffè per il piatto 3.
+[UTENTE] PID 132848: Ricevuto piatto index 3 dalla stazione.
+[UTENTE] PID 132848: Uscita gruppo 0 completata.
+[UTENTE] PID 132848: Terminazione pulita.
+[DEBUG] Utente PID 132850: Inizializzazione completata. Pronto.
+[UTENTE] PID 132850: Inizio giornata 1.
+[UTENTE] PID 132850: In coda alla stazione Primi per il piatto 10.
+[UTENTE] PID 132850: Ricevuto piatto index 10 dalla stazione.
+[UTENTE] PID 132850: In coda alla stazione Secondi per il piatto 12.
+[UTENTE] PID 132850: Ricevuto piatto index 12 dalla stazione.
+[UTENTE] PID 132850: Attesa amici al meeting point...
+[UTENTE] PID 132850: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132850: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132850: Attesa tavolo dal leader...
+[UTENTE] PID 132850: Pasto terminato.
+[UTENTE] PID 132850: Coda Caffè/Dolce...
+[UTENTE] PID 132850: In coda alla stazione Caffè per il piatto 3.
+[UTENTE] PID 132850: Ricevuto piatto index 3 dalla stazione.
+[UTENTE] PID 132850: Uscita gruppo 0 completata.
+[UTENTE] PID 132850: Inizio giornata 2.
+[UTENTE] PID 132850: In coda alla stazione Primi per il piatto 11.
+[UTENTE] PID 132850: Ricevuto piatto index 11 dalla stazione.
+[UTENTE] PID 132850: In coda alla stazione Secondi per il piatto 6.
+[UTENTE] PID 132850: Ricevuto piatto index 6 dalla stazione.
+[UTENTE] PID 132850: Attesa amici al meeting point...
+[UTENTE] PID 132850: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132850: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132850: Attesa tavolo dal leader...
+[UTENTE] PID 132850: Pasto terminato.
+[UTENTE] PID 132850: Coda Caffè/Dolce...
+[UTENTE] PID 132850: In coda alla stazione Caffè per il piatto 3.
+[UTENTE] PID 132850: Ricevuto piatto index 3 dalla stazione.
+[UTENTE] PID 132850: Uscita gruppo 0 completata.
+[UTENTE] PID 132850: Inizio giornata 3.
+[UTENTE] PID 132850: In coda alla stazione Primi per il piatto 8.
+[UTENTE] PID 132850: Ricevuto piatto index 8 dalla stazione.
+[UTENTE] PID 132850: In coda alla stazione Secondi per il piatto 10.
+[UTENTE] PID 132850: Ricevuto piatto index 10 dalla stazione.
+[UTENTE] PID 132850: Attesa amici al meeting point...
+[UTENTE] PID 132850: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132850: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132850: Attesa tavolo dal leader...
+[UTENTE] PID 132850: Pasto terminato.
+[UTENTE] PID 132850: Coda Caffè/Dolce...
+[UTENTE] PID 132850: In coda alla stazione Caffè per il piatto 0.
+[UTENTE] PID 132850: Ricevuto piatto index 0 dalla stazione.
+[UTENTE] PID 132850: Uscita gruppo 0 completata.
+[UTENTE] PID 132850: Terminazione pulita.
+[DEBUG] Utente PID 132854: Inizializzazione completata. Pronto.
+[UTENTE] PID 132854: Inizio giornata 1.
+[UTENTE] PID 132854: In coda per validazione ticket...
+[UTENTE] PID 132854: Ticket validato.
+[UTENTE] PID 132854: In coda alla stazione Primi per il piatto 8.
+[UTENTE] PID 132854: Ricevuto piatto index 8 dalla stazione.
+[UTENTE] PID 132854: In coda alla stazione Secondi per il piatto 15.
+[UTENTE] PID 132854: Ricevuto piatto index 15 dalla stazione.
+[UTENTE] PID 132854: Attesa amici al meeting point...
+[UTENTE] PID 132854: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132854: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132854 (Leader): Prenoto tavolo per 7.
+[UTENTE] PID 132854: Pasto terminato.
+[UTENTE] PID 132854: Coda Caffè/Dolce...
+[UTENTE] PID 132854: In coda alla stazione Caffè per il piatto 2.
+[UTENTE] PID 132854: Ricevuto piatto index 2 dalla stazione.
+[UTENTE] PID 132854: Uscita gruppo 1 completata.
+[UTENTE] PID 132854: Inizio giornata 2.
+[UTENTE] PID 132854: In coda per validazione ticket...
+[UTENTE] PID 132854: Ticket validato.
+[UTENTE] PID 132854: In coda alla stazione Primi per il piatto 11.
+[UTENTE] PID 132854: Ricevuto piatto index 11 dalla stazione.
+[UTENTE] PID 132854: In coda alla stazione Secondi per il piatto 6.
+[UTENTE] PID 132854: Ricevuto piatto index 6 dalla stazione.
+[UTENTE] PID 132854: Attesa amici al meeting point...
+[UTENTE] PID 132854: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132854: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132854 (Leader): Prenoto tavolo per 7.
+[UTENTE] PID 132854: Pasto terminato.
+[UTENTE] PID 132854: Coda Caffè/Dolce...
+[UTENTE] PID 132854: In coda alla stazione Caffè per il piatto 2.
+[UTENTE] PID 132854: Ricevuto piatto index 2 dalla stazione.
+[UTENTE] PID 132854: Uscita gruppo 1 completata.
+[UTENTE] PID 132854: Inizio giornata 3.
+[UTENTE] PID 132854: In coda per validazione ticket...
+[UTENTE] PID 132854: Ticket validato.
+[UTENTE] PID 132854: In coda alla stazione Primi per il piatto 14.
+[UTENTE] PID 132854: Ricevuto piatto index 14 dalla stazione.
+[UTENTE] PID 132854: In coda alla stazione Secondi per il piatto 12.
+[UTENTE] PID 132854: Ricevuto piatto index 12 dalla stazione.
+[UTENTE] PID 132854: Attesa amici al meeting point...
+[UTENTE] PID 132854: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132854: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132854 (Leader): Prenoto tavolo per 7.
+[UTENTE] PID 132854: Pasto terminato.
+[UTENTE] PID 132854: Coda Caffè/Dolce...
+[UTENTE] PID 132854: In coda alla stazione Caffè per il piatto 3.
+[UTENTE] PID 132854: Ricevuto piatto index 3 dalla stazione.
+[UTENTE] PID 132854: Uscita gruppo 1 completata.
+[UTENTE] PID 132854: Terminazione pulita.
+[DEBUG] Utente PID 132852: Inizializzazione completata. Pronto.
+[UTENTE] PID 132852: Inizio giornata 1.
+[UTENTE] PID 132852: In coda per validazione ticket...
+[UTENTE] PID 132852: Ticket validato.
+[UTENTE] PID 132852: In coda alla stazione Primi per il piatto 5.
+[UTENTE] PID 132852: Ricevuto piatto index 5 dalla stazione.
+[UTENTE] PID 132852: In coda alla stazione Secondi per il piatto 5.
+[UTENTE] PID 132852: Ricevuto piatto index 5 dalla stazione.
+[UTENTE] PID 132852: Attesa amici al meeting point...
+[UTENTE] PID 132852: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132852: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132852: Attesa tavolo dal leader...
+[UTENTE] PID 132852: Pasto terminato.
+[UTENTE] PID 132852: Coda Caffè/Dolce...
+[UTENTE] PID 132852: In coda alla stazione Caffè per il piatto 0.
+[UTENTE] PID 132852: Ricevuto piatto index 0 dalla stazione.
+[UTENTE] PID 132852: Uscita gruppo 0 completata.
+[UTENTE] PID 132852: Inizio giornata 2.
+[UTENTE] PID 132852: In coda per validazione ticket...
+[UTENTE] PID 132852: Ticket validato.
+[UTENTE] PID 132852: In coda alla stazione Primi per il piatto 5.
+[UTENTE] PID 132852: Ricevuto piatto index 5 dalla stazione.
+[UTENTE] PID 132852: In coda alla stazione Secondi per il piatto 16.
+[UTENTE] PID 132852: Ricevuto piatto index 16 dalla stazione.
+[UTENTE] PID 132852: Attesa amici al meeting point...
+[UTENTE] PID 132852: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132852: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132852: Attesa tavolo dal leader...
+[UTENTE] PID 132852: Pasto terminato.
+[UTENTE] PID 132852: Coda Caffè/Dolce...
+[UTENTE] PID 132852: In coda alla stazione Caffè per il piatto 0.
+[UTENTE] PID 132852: Ricevuto piatto index 0 dalla stazione.
+[UTENTE] PID 132852: Uscita gruppo 0 completata.
+[UTENTE] PID 132852: Inizio giornata 3.
+[UTENTE] PID 132852: In coda per validazione ticket...
+[UTENTE] PID 132852: Ticket validato.
+[UTENTE] PID 132852: In coda alla stazione Primi per il piatto 4.
+[UTENTE] PID 132852: Ricevuto piatto index 4 dalla stazione.
+[UTENTE] PID 132852: In coda alla stazione Secondi per il piatto 0.
+[UTENTE] PID 132852: Ricevuto piatto index 0 dalla stazione.
+[UTENTE] PID 132852: Attesa amici al meeting point...
+[UTENTE] PID 132852: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132852: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132852: Attesa tavolo dal leader...
+[UTENTE] PID 132852: Pasto terminato.
+[UTENTE] PID 132852: Coda Caffè/Dolce...
+[UTENTE] PID 132852: In coda alla stazione Caffè per il piatto 1.
+[UTENTE] PID 132852: Ricevuto piatto index 1 dalla stazione.
+[UTENTE] PID 132852: Uscita gruppo 0 completata.
+[UTENTE] PID 132852: Terminazione pulita.
+[DEBUG] Utente PID 132849: Inizializzazione completata. Pronto.
+[UTENTE] PID 132849: Inizio giornata 1.
+[UTENTE] PID 132849: In coda per validazione ticket...
+[UTENTE] PID 132849: Ticket validato.
+[UTENTE] PID 132849: In coda alla stazione Primi per il piatto 9.
+[UTENTE] PID 132849: Ricevuto piatto index 9 dalla stazione.
+[UTENTE] PID 132849: In coda alla stazione Secondi per il piatto 19.
+[UTENTE] PID 132849: Ricevuto piatto index 19 dalla stazione.
+[UTENTE] PID 132849: Attesa amici al meeting point...
+[UTENTE] PID 132849: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132849: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132849: Attesa tavolo dal leader...
+[UTENTE] PID 132849: Pasto terminato.
+[UTENTE] PID 132849: Coda Caffè/Dolce...
+[UTENTE] PID 132849: In coda alla stazione Caffè per il piatto 0.
+[UTENTE] PID 132849: Ricevuto piatto index 0 dalla stazione.
+[UTENTE] PID 132849: Uscita gruppo 0 completata.
+[UTENTE] PID 132849: Inizio giornata 2.
+[UTENTE] PID 132849: In coda per validazione ticket...
+[UTENTE] PID 132849: Ticket validato.
+[UTENTE] PID 132849: In coda alla stazione Primi per il piatto 19.
+[UTENTE] PID 132849: Ricevuto piatto index 19 dalla stazione.
+[UTENTE] PID 132849: In coda alla stazione Secondi per il piatto 6.
+[UTENTE] PID 132849: Ricevuto piatto index 6 dalla stazione.
+[UTENTE] PID 132849: Attesa amici al meeting point...
+[UTENTE] PID 132849: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132849: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132849: Attesa tavolo dal leader...
+[UTENTE] PID 132849: Pasto terminato.
+[UTENTE] PID 132849: Coda Caffè/Dolce...
+[UTENTE] PID 132849: In coda alla stazione Caffè per il piatto 1.
+[UTENTE] PID 132849: Ricevuto piatto index 1 dalla stazione.
+[UTENTE] PID 132849: Uscita gruppo 0 completata.
+[UTENTE] PID 132849: Inizio giornata 3.
+[UTENTE] PID 132849: In coda per validazione ticket...
+[UTENTE] PID 132849: Ticket validato.
+[UTENTE] PID 132849: In coda alla stazione Primi per il piatto 16.
+[UTENTE] PID 132849: Ricevuto piatto index 16 dalla stazione.
+[UTENTE] PID 132849: In coda alla stazione Secondi per il piatto 9.
+[UTENTE] PID 132849: Ricevuto piatto index 9 dalla stazione.
+[UTENTE] PID 132849: Attesa amici al meeting point...
+[UTENTE] PID 132849: In coda alla Cassa (Piatti presi: 2)...
+[UTENTE] PID 132849: Pagamento completato. Ricevuto scontrino dal Cassiere.
+[UTENTE] PID 132849: Attesa tavolo dal leader...
+[UTENTE] PID 132849: Pasto terminato.
+[UTENTE] PID 132849: Coda Caffè/Dolce...
+[UTENTE] PID 132849: In coda alla stazione Caffè per il piatto 3.
+[UTENTE] PID 132849: Ricevuto piatto index 3 dalla stazione.
+[UTENTE] PID 132849: Uscita gruppo 0 completata.
+[UTENTE] PID 132849: Terminazione pulita.
+azione in corso...

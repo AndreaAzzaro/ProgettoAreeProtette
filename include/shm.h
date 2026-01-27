@@ -1,9 +1,11 @@
 /**
  * @file shm.h
- * @brief Definizioni per la gestione della Memoria Condivisa (System V IPC).
+ * @brief Wrapper per la gestione della Memoria Condivisa (System V IPC).
  * 
- * Questo modulo isola le primitive shmget, shmat, shmdt e shmctl per fornire
- * un'interfaccia di gestione della SHM coerente e robusta.
+ * Questo modulo fornisce un'astrazione sopra le primitive shmget, shmat, shmdt
+ * e shmctl per la gestione della memoria condivisa tra processi.
+ * 
+ * @see common.h per la struttura MainSharedMemory.
  */
 
 #ifndef SHM_H
@@ -13,13 +15,17 @@
 #include <stddef.h>
 #include <stdbool.h>
 
+/* ==========================================================================
+ *                         SEZIONE: FUNZIONI PUBBLICHE
+ * ========================================================================== */
+
 /**
  * @brief Crea o ottiene un identificatore per un segmento di memoria condivisa.
  * 
- * @param key Chiave IPC generata.
+ * @param key Chiave IPC (generata tramite ftok o IPC_PRIVATE).
  * @param segment_size Dimensione totale del segmento in byte.
  * @param segment_flags Flag di creazione e permessi (es. IPC_CREAT | 0666).
- * @return int ID della memoria condivisa (shmid) o -1 in caso di errore.
+ * @return int ID della memoria condivisa (shmid), o -1 in caso di errore.
  */
 int create_shared_memory_segment(key_t key, size_t segment_size, int segment_flags);
 
@@ -48,4 +54,4 @@ int detach_shared_memory_segment(const void *shared_memory_address);
  */
 int remove_shared_memory_segment(int shared_memory_id);
 
-#endif
+#endif /* SHM_H */

@@ -32,23 +32,29 @@ typedef struct {
 void init_cassiere(StatoCassiere *cassiere, int argc, char *argv[]);
 
 /**
- * @brief Sincronizza il cassiere con il Direttore sulle barriere giornaliere.
- * 
- * @param cassiere Puntatore allo stato cassiere.
+ * @brief Configura gli handler per i segnali asincroni.
  */
-void attendi_avvio_cassa(StatoCassiere *cassiere);
+void setup_cassiere_signals(void);
 
 /**
- * @brief Ciclo principale di gestione dei pagamenti alla cassa.
- * 
- * @param cassiere Puntatore allo stato cassiere.
+ * @brief Esegue il ciclo di vita principale del cassiere (Settimana -> Giorno -> Lavoro).
  */
-void esegui_ciclo_lavoro_cassa(StatoCassiere *cassiere);
+void run_cassiere_simulation(StatoCassiere *cassiere);
+
+/* --- Funzioni di Fase (Dettagli del ciclo di vita) --- */
 
 /**
- * @brief Gestisce l'allontanamento temporaneo dalla cassa per una pausa.
- * 
- * @param cassiere Puntatore allo stato cassiere.
+ * @brief Implementa il ciclo di ricezione pagamenti (Loop 3).
+ */
+void fase_lavoro_cassa(StatoCassiere *cassiere);
+
+/**
+ * @brief Gestisce il rilascio della cassa e la decisione atomica della pausa.
+ */
+void fase_decisione_pausa_cassa(StatoCassiere *cassiere);
+
+/**
+ * @brief Simula il periodo di riposo del cassiere.
  */
 void esegui_pausa_cassa(StatoCassiere *cassiere);
 

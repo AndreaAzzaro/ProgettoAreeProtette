@@ -1,80 +1,87 @@
-# Makefile per Progetto Sistemi Operativi - System-V
-# Progettato per essere modulare e scalabile
-
-# Compilatore e Flag
 CC = gcc
-CFLAGS = -Wall -Wextra -std=c11 -D_GNU_SOURCE -Iinclude
-LDFLAGS = -lrt
+CFLAGS = -Wall -Wextra -pthread -g
+INCLUDES = -Iinclude
 
-# Directory del progetto
+# Directory
 SRC_DIR = src
 OBJ_DIR = obj
 BIN_DIR = bin
 
-# Moduli comuni (librerie interne)
-COMMON_SRCS = $(SRC_DIR)/common/common.c \
-              $(SRC_DIR)/config/menu.c \
-              $(SRC_DIR)/config/config.c \
-              $(SRC_DIR)/ipc/sem.c \
-              $(SRC_DIR)/ipc/shm.c \
-              $(SRC_DIR)/ipc/queue.c \
-              $(SRC_DIR)/statistics/statistics.c \
-              $(SRC_DIR)/utils/utils.c \
-              $(SRC_DIR)/signal/signals_handler.c
+# File sorgente comuni (Utilities e IPC)
+COMMON_SRC = $(wildcard $(SRC_DIR)/ipc/*.c) \
+             $(wildcard $(SRC_DIR)/utils/*.c) \
+             $(wildcard $(SRC_DIR)/common/*.c) \
+             $(wildcard $(SRC_DIR)/config/*.c) \
+             $(wildcard $(SRC_DIR)/statistics/*.c)
 
-COMMON_OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(COMMON_SRCS))
+COMMON_OBJ = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(COMMON_SRC))
 
-# Programmi
-PROGS = add_users communication_disorder operatore operatore_cassa responsabile_mensa utente
-TARGETS = $(addprefix $(BIN_DIR)/, $(PROGS))
+# Target specifici
+TARGETS = responsabile_mensa operatore utente operatore_cassa add_users communication_disorder
 
-all: $(TARGETS)
+.PHONY: all clean dirs
 
-# Regola per ogni eseguibile
-$(BIN_DIR)/add_users: $(OBJ_DIR)/programs/add_users/add_users.o $(COMMON_OBJS) | $(BIN_DIR)
-	@echo "Linking $@..."
-	@$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
+all: dirs $(addprefix $(BIN_DIR)/, $(TARGETS))
 
-$(BIN_DIR)/communication_disorder: $(OBJ_DIR)/programs/communication_disorder/communication_disorder.o $(COMMON_OBJS) | $(BIN_DIR)
-	@echo "Linking $@..."
-	@$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
-
-$(BIN_DIR)/operatore: $(OBJ_DIR)/programs/operatore/operatore.o $(COMMON_OBJS) | $(BIN_DIR)
-	@echo "Linking $@..."
-	@$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
-
-$(BIN_DIR)/operatore_cassa: $(OBJ_DIR)/programs/operatore_cassa/operatore_cassa.o $(COMMON_OBJS) | $(BIN_DIR)
-	@echo "Linking $@..."
-	@$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
-
-$(BIN_DIR)/responsabile_mensa: $(OBJ_DIR)/programs/responsabile_mensa/responsabile_mensa.o $(OBJ_DIR)/programs/responsabile_mensa/setup_ipc.o $(OBJ_DIR)/programs/responsabile_mensa/setup_population.o $(OBJ_DIR)/programs/responsabile_mensa/simulation_engine.o $(COMMON_OBJS) | $(BIN_DIR)
-	@echo "Linking $@..."
-	@$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
-
-$(BIN_DIR)/utente: $(OBJ_DIR)/programs/utente/utente.o $(COMMON_OBJS) | $(BIN_DIR)
-	@echo "Linking $@..."
-	@$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
-
-# Regola per compilare gli oggetti dei programmi
-$(OBJ_DIR)/programs/%/%.o: $(SRC_DIR)/programs/%/%.c | $(OBJ_DIR)_dirs
-	@echo "Compiling program module $<..."
-	@$(CC) $(CFLAGS) -c $< -o $@
-
-# Regola generale per compilare i moduli comuni
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)_dirs
-	@echo "Compiling common module $<..."
-	@$(CC) $(CFLAGS) -c $< -o $@
-
-$(BIN_DIR):
+# Creazione directory necessarie
+dirs:
 	@mkdir -p $(BIN_DIR)
+	@mkdir -p $(OBJ_DIR)/ipc $(OBJ_DIR)/utils $(OBJ_DIR)/common $(OBJ_DIR)/config $(OBJ_DIR)/statistics
+	@mkdir -p $(OBJ_DIR)/programs/responsabile_mensa
+	@mkdir -p $(OBJ_DIR)/programs/operatore
+	@mkdir -p $(OBJ_DIR)/programs/utente
+	@mkdir -p $(OBJ_DIR)/programs/operatore_cassa
+	@mkdir -p $(OBJ_DIR)/programs/add_users
+	@mkdir -p $(OBJ_DIR)/programs/communication_disorder
 
-$(OBJ_DIR)_dirs:
-	@mkdir -p $(OBJ_DIR)/common $(OBJ_DIR)/config $(OBJ_DIR)/ipc $(OBJ_DIR)/statistics $(OBJ_DIR)/utils $(OBJ_DIR)/signal
-	@mkdir -p $(addprefix $(OBJ_DIR)/programs/, $(PROGS))
+# Regola per gli oggetti
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+# Responsabile Mensa
+RESP_SRC = $(SRC_DIR)/programs/responsabile_mensa/responsabile_mensa.c \
+           $(SRC_DIR)/programs/responsabile_mensa/simulation_engine.c \
+           $(SRC_DIR)/programs/responsabile_mensa/setup_population.c \
+           $(SRC_DIR)/programs/responsabile_mensa/setup_ipc.c
+RESP_OBJ = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(RESP_SRC))
+
+$(BIN_DIR)/responsabile_mensa: $(RESP_OBJ) $(COMMON_OBJ)
+	$(CC) $(CFLAGS) $(RESP_OBJ) $(COMMON_OBJ) -o $@ -lrt
+
+# Operatore
+OPER_SRC = $(SRC_DIR)/programs/operatore/operatore.c
+OPER_OBJ = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(OPER_SRC))
+
+$(BIN_DIR)/operatore: $(OPER_OBJ) $(COMMON_OBJ)
+	$(CC) $(CFLAGS) $(OPER_OBJ) $(COMMON_OBJ) -o $@ -lrt
+
+# Utente
+UTENT_SRC = $(SRC_DIR)/programs/utente/utente.c
+UTENT_OBJ = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(UTENT_SRC))
+
+$(BIN_DIR)/utente: $(UTENT_OBJ) $(COMMON_OBJ)
+	$(CC) $(CFLAGS) $(UTENT_OBJ) $(COMMON_OBJ) -o $@ -lrt
+
+# Operatore Cassa (Aggiunto per completezza)
+CASSA_SRC = $(SRC_DIR)/programs/operatore_cassa/operatore_cassa.c
+CASSA_OBJ = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(CASSA_SRC))
+
+$(BIN_DIR)/operatore_cassa: $(CASSA_OBJ) $(COMMON_OBJ)
+	$(CC) $(CFLAGS) $(CASSA_OBJ) $(COMMON_OBJ) -o $@ -lrt
+
+# Add Users Utility
+ADD_USERS_SRC = $(SRC_DIR)/programs/add_users/add_users.c
+ADD_USERS_OBJ = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(ADD_USERS_SRC))
+
+$(BIN_DIR)/add_users: $(ADD_USERS_OBJ) $(COMMON_OBJ)
+	$(CC) $(CFLAGS) $(ADD_USERS_OBJ) $(COMMON_OBJ) -o $@ -lrt
+
+# Communication Disorder Utility
+DISORDER_SRC = $(SRC_DIR)/programs/communication_disorder/communication_disorder.c
+DISORDER_OBJ = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(DISORDER_SRC))
+
+$(BIN_DIR)/communication_disorder: $(DISORDER_OBJ) $(COMMON_OBJ)
+	$(CC) $(CFLAGS) $(DISORDER_OBJ) $(COMMON_OBJ) -o $@ -lrt
 
 clean:
-	@echo "Cleaning up..."
-	@rm -rf $(OBJ_DIR) $(BIN_DIR)
-	@echo "Done."
-
-.PHONY: all clean
+	rm -rf $(OBJ_DIR) $(BIN_DIR)

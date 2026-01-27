@@ -1,10 +1,19 @@
 /**
  * @file config.h
  * @brief Definizioni delle strutture dati per la configurazione della simulazione.
+ * 
+ * Questo modulo definisce le strutture che incapsulano tutti i parametri
+ * configurabili della simulazione, caricati dal file `config/config.conf`.
+ * 
+ * @see load_simulation_configuration() per il caricamento dei valori.
  */
 
 #ifndef CONFIG_H
 #define CONFIG_H
+
+/* ==========================================================================
+ *                      SEZIONE: STRUTTURE DI CONFIGURAZIONE
+ * ========================================================================== */
 
 /**
  * @brief Parametri quantitativi delle entità nella simulazione.
@@ -29,28 +38,30 @@ typedef struct {
 } ConfigurationSeats;
 
 /**
- * @brief Prezzi unitari per tipologia di piatto.
+ * @brief Prezzi unitari per tipologia di piatto (in EUR).
  */
 typedef struct {
-    double price_first_course;
-    double price_second_course;
-    double price_coffee_dessert;
+    double price_first_course;          /**< Prezzo di un primo piatto */
+    double price_second_course;         /**< Prezzo di un secondo piatto */
+    double price_coffee_dessert;        /**< Prezzo di caffè/dolce */
 } ConfigurationPrices;
 
 /**
  * @brief Parametri temporali della simulazione.
+ * 
+ * Definisce durate, tempi medi di servizio e il fattore di scala temporale.
  */
 typedef struct {
-    int simulation_duration_days;       /**< Numero di giorni totali della simulazione */
-    int meal_duration_minutes;          /**< Durata fittizia di un pasto */
-    long nanoseconds_per_tick;          /**< Fattore di scala temporale (Nanosleep) */
-    int average_service_time_primi;
-    int average_service_time_secondi;
-    int average_service_time_coffee;
-    int average_service_time_cassa;
-    int average_service_time_ticket;    /**< Tempo medio per la lettura del ticket */
-    int average_refill_time;
-    int stop_duration_minutes;
+    int simulation_duration_days;       /**< Numero di giorni totali della simulazione (SIM_DURATION) */
+    int meal_duration_minutes;          /**< Durata fittizia di un pasto in minuti simulati */
+    long nanoseconds_per_tick;          /**< Nanosecondi reali per minuto simulato (scala tempo) */
+    int average_service_time_primi;     /**< Tempo medio servizio stazione Primi (sec simulati) */
+    int average_service_time_secondi;   /**< Tempo medio servizio stazione Secondi (sec simulati) */
+    int average_service_time_coffee;    /**< Tempo medio servizio stazione Caffè (sec simulati) */
+    int average_service_time_cassa;     /**< Tempo medio servizio in Cassa (sec simulati) */
+    int average_service_time_ticket;    /**< Tempo medio per la validazione del ticket */
+    int average_refill_time;            /**< Tempo medio per un rifornimento stazione */
+    int stop_duration_minutes;          /**< Durata del blocco Communication Disorder (sec reali) */
 } ConfigurationTimings;
 
 /**
@@ -76,9 +87,18 @@ typedef struct {
     ConfigurationTimings timings;
 } SimulationConfiguration;
 
+/* ==========================================================================
+ *                         SEZIONE: FUNZIONI PUBBLICHE
+ * ========================================================================== */
+
 /**
  * @brief Carica la configurazione dal file di sistema.
+ * 
+ * Legge il file `config/config.conf` e popola la struttura SimulationConfiguration.
+ * In caso di errore di lettura, termina il processo con EXIT_FAILURE.
+ * 
+ * @return SimulationConfiguration Struttura popolata con i parametri letti.
  */
-SimulationConfiguration load_simulation_configuration(); 
+SimulationConfiguration load_simulation_configuration();
 
-#endif
+#endif /* CONFIG_H */

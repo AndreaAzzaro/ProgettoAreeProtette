@@ -33,23 +33,36 @@ typedef struct {
 void init_operatore(StatoOperatore *operatore, int argc, char *argv[]);
 
 /**
- * @brief Sincronizza l'operatore con il Direttore sulle barriere giornaliere.
- * 
- * @param operatore Puntatore allo stato operatore.
+ * @brief Configura gli handler per i segnali asincroni.
  */
-void attendi_avvio_operatore(StatoOperatore *operatore);
+void setup_operatore_signals(void);
 
 /**
- * @brief Ciclo principale di servizio (attesa ordini e distribuzione).
+ * @brief Esegue il ciclo di vita principale dell'operatore (Settimana -> Giorno -> Lavoro).
  * 
- * @param operatore Puntatore allo stato operatore.
+ * @param operatore Puntatore allo stato dell'operatore.
  */
-void esegui_ciclo_lavoro(StatoOperatore *operatore);
+void run_operatore_simulation(StatoOperatore *operatore);
+
+/* --- Funzioni di Fase (Dettagli del ciclo di vita) --- */
 
 /**
- * @brief Gestisce l'allontanamento temporaneo dalla postazione per una pausa.
- * 
- * @param operatore Puntatore allo stato operatore.
+ * @brief Prepara i riferimenti alla stazione e i tempi medi di servizio.
+ */
+void prepare_station_context(StatoOperatore *operatore, FoodDistributionStation **stazione_ptr, int *avg_service_time);
+
+/**
+ * @brief Implementa il ciclo di ricezione e servizio ordini (Loop 3).
+ */
+void fase_lavoro_stazione(StatoOperatore *operatore, FoodDistributionStation *stazione_ptr, int avg_service_time);
+
+/**
+ * @brief Gestisce il rilascio della postazione e la decisione atomica della pausa.
+ */
+void fase_decisione_pausa_atomica(StatoOperatore *operatore, FoodDistributionStation *stazione_ptr);
+
+/**
+ * @brief Simula il periodo di riposo dell'operatore.
  */
 void esegui_pausa_operatore(StatoOperatore *operatore);
 
