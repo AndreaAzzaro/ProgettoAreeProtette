@@ -117,6 +117,7 @@ void run_cassiere_simulation(StatoCassiere *cassiere) {
                 if (!already_counted_active_today) {
                     reserve_sem(cassiere->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
                     cassiere->shm_ptr->statistics.operators_statistics.daily_active_operators++;
+                    cassiere->shm_ptr->statistics.operators_statistics.total_active_operators_all_time++;
                     already_counted_active_today = true;
                     release_sem(cassiere->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
                 }
@@ -143,6 +144,12 @@ void fase_lavoro_cassa(StatoCassiere *cassiere) {
     int avg_service_time = cassiere->shm_ptr->configuration.timings.average_service_time_cassa;
 
     while (local_daily_cycle_is_active && is_at_work) {
+        /* [DESIGN] Probabilità spontanea di richiedere pausa tra un cliente e l'altro */
+        if (generate_random_integer(1, 100) <= 25) {
+            is_at_work = 0;
+            break;
+        }
+
         SimulationMessage msg;
         
         /* [COMMUNICATION DISORDER] Attesa se il gate è bloccato */
@@ -188,7 +195,8 @@ void fase_lavoro_cassa(StatoCassiere *cassiere) {
                 release_sem(cassiere->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
 
                 /* [PUNTO 4.3] Simulazione Tempo di Servizio */
-                usleep(avg_service_time);
+                int varied_time = calculate_varied_time(avg_service_time, 20);
+                simulate_time_passage(varied_time, cassiere->shm_ptr->configuration.timings.nanoseconds_per_tick);
                 cassiere->total_customers_processed++;
 
                 /* Invio Ricevuta (Feedback all'Utente) */
@@ -233,6 +241,7 @@ void esegui_pausa_cassa(StatoCassiere *cassiere) {
     
     cassiere->daily_breaks_taken++;
     reserve_sem(cassiere->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
+    cassiere->shm_ptr->statistics.operators_statistics.daily_breaks_taken++;
     cassiere->shm_ptr->statistics.operators_statistics.total_breaks_taken++;
     release_sem(cassiere->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
 

@@ -3,4 +3,5 @@ obj/
 exe/
 *.o
 *.zip
-*.tgz
+*.tgz.agent/
+statistics_report.csv

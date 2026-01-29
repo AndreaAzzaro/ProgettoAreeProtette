@@ -146,12 +146,11 @@ void esegui_percorso_mensa_giornaliero(StatoUtente *utente) {
         fase_pagamento_cassa(utente, got_first, got_second);
         fase_prenotazione_tavolo(utente);
         fase_consumazione_pasto(utente, got_first, got_second);
+        fase_servizio_caffe(utente);
         
         aggiorna_statistiche_servito(utente);
-        
-        fase_servizio_caffe(utente);
         fase_uscita_collettiva(utente);
-    } else if (!got_first && !got_second) {
+    } else {
         aggiorna_statistiche_non_servito(utente);
     }
 }
@@ -165,7 +164,10 @@ void fase_validazione_ticket(StatoUtente *utente) {
         printf("[UTENTE] PID %d: In coda per validazione ticket...\n", getpid());
         if (reserve_sem_interruptible(utente->shm_ptr->semaphore_ticket_id, 0) != -1) {
             if (local_daily_cycle_is_active) {
-                usleep(utente->shm_ptr->configuration.timings.average_service_time_ticket);
+                int avg_ticket_time = utente->shm_ptr->configuration.timings.average_service_time_ticket;
+                int varied_time = calculate_varied_time(avg_ticket_time, 20);
+                
+                simulate_time_passage(varied_time, utente->shm_ptr->configuration.timings.nanoseconds_per_tick);
                 utente->ticket_is_validated = true;
                 printf("[UTENTE] PID %d: Ticket validato.\n", getpid());
             }
@@ -357,7 +359,11 @@ void fase_consumazione_pasto(StatoUtente *utente, bool p1, bool p2) {
     if (!local_daily_cycle_is_active || utente->assigned_table_id == -1) return;
 
     int count = (p1?1:0) + (p2?1:0);
-    if (count > 0) usleep(count * 100000); /* Tempo di consumo proporzionale */
+    if (count > 0) {
+        /* [FIX] Tempo di consumo proporzionale e allineato alla scala temporale */
+        int minutes_to_eat = generate_random_integer(5 * count, 10 * count);
+        simulate_time_passage(minutes_to_eat, utente->shm_ptr->configuration.timings.nanoseconds_per_tick);
+    }
     
     /* Fase Rilascio Posto (Step 4) */
     reserve_sem(utente->shm_ptr->semaphore_mutex_id, MUTEX_TABLES);
@@ -372,7 +378,7 @@ void fase_consumazione_pasto(StatoUtente *utente, bool p1, bool p2) {
 }
 
 void fase_servizio_caffe(StatoUtente *utente) {
-    if (!local_daily_cycle_is_active) return;
+    /* [FIX] Permettiamo il caffè anche se il timer è scaduto, purché il pasto sia finito */
     
     FoodDistributionStation *stazione = &utente->shm_ptr->coffee_dessert_station;
     int choice = utente->selected_dessert_coffee_index;
@@ -395,14 +401,18 @@ void fase_uscita_collettiva(StatoUtente *utente) {
 }
 
 void aggiorna_statistiche_servito(StatoUtente *utente) {
-    /* NB: Rimosso il check local_daily_cycle_is_active qui per permettere 
-       il conteggio se l'utente ha terminato il pasto proprio al cambio turno. */
     reserve_sem(utente->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
+    
+    /* Incremento Giornaliero */
+    utente->shm_ptr->statistics.clients_statistics.daily_clients_served++;
+    /* Incremento Totale */
     utente->shm_ptr->statistics.clients_statistics.total_clients_served++;
     
     if (utente->has_ticket) {
+        utente->shm_ptr->statistics.clients_statistics.daily_clients_with_ticket++;
         utente->shm_ptr->statistics.clients_statistics.total_clients_with_ticket++;
     } else {
+        utente->shm_ptr->statistics.clients_statistics.daily_clients_without_ticket++;
         utente->shm_ptr->statistics.clients_statistics.total_clients_without_ticket++;
     }
     release_sem(utente->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
@@ -410,6 +420,7 @@ void aggiorna_statistiche_servito(StatoUtente *utente) {
 
 void aggiorna_statistiche_non_servito(StatoUtente *utente) {
     reserve_sem(utente->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
+    utente->shm_ptr->statistics.clients_statistics.daily_clients_not_served++;
     utente->shm_ptr->statistics.clients_statistics.total_clients_not_served++;
     release_sem(utente->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
 }
@@ -437,9 +448,15 @@ void setup_utente_signals(void) {
 void genera_identita_casuale(StatoUtente *utente) {
     /* PID % 5 != 0 garantisce circa l'80% di utenti con ticket sconto */
     utente->has_ticket = ((getpid() % 5) != 0);
-    utente->selected_first_course_index = generate_random_integer(0, MAX_DISHES_PER_CATEGORY - 1);
-    utente->selected_second_course_index = generate_random_integer(0, MAX_DISHES_PER_CATEGORY - 1);
-    utente->selected_dessert_coffee_index = generate_random_integer(0, 3);
+    
+    int n_primi = utente->shm_ptr->food_menu.number_of_first_courses;
+    int n_secondi = utente->shm_ptr->food_menu.number_of_second_courses;
+    int n_desserts = utente->shm_ptr->food_menu.number_of_dessert_courses;
+
+    utente->selected_first_course_index = (n_primi > 0) ? generate_random_integer(0, n_primi - 1) : -1;
+    utente->selected_second_course_index = (n_secondi > 0) ? generate_random_integer(0, n_secondi - 1) : -1;
+    utente->selected_dessert_coffee_index = (n_desserts > 0) ? generate_random_integer(0, n_desserts - 1) : -1;
+    
     utente->group_patience_threshold = generate_random_integer(30, 120);
 }
 
@@ -487,10 +504,14 @@ double get_simulated_minutes(struct timespec start, struct timespec end, long na
 
 void update_wait_time_stat(StatoUtente *utente, double wait_min, int type) {
     reserve_sem(utente->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
-    WaitTimeAccumulator *acc = &utente->shm_ptr->statistics.daily_wait_accumulators;
-    if (type == 0)      { acc->sum_wait_first += wait_min; acc->count_first++; }
-    else if (type == 1) { acc->sum_wait_second += wait_min; acc->count_second++; }
-    else if (type == 2) { acc->sum_wait_coffee += wait_min; acc->count_coffee++; }
-    else if (type == 3) { acc->sum_wait_cashier += wait_min; acc->count_cashier++; }
+    
+    WaitTimeAccumulator *daily = &utente->shm_ptr->statistics.daily_wait_accumulators;
+    WaitTimeAccumulator *total = &utente->shm_ptr->statistics.total_wait_accumulators;
+    
+    if (type == 0)      { daily->sum_wait_first += wait_min; daily->count_first++; total->sum_wait_first += wait_min; total->count_first++; }
+    else if (type == 1) { daily->sum_wait_second += wait_min; daily->count_second++; total->sum_wait_second += wait_min; total->count_second++; }
+    else if (type == 2) { daily->sum_wait_coffee += wait_min; daily->count_coffee++; total->sum_wait_coffee += wait_min; total->count_coffee++; }
+    else if (type == 3) { daily->sum_wait_cashier += wait_min; daily->count_cashier++; total->sum_wait_cashier += wait_min; total->count_cashier++; }
+    
     release_sem(utente->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
 }

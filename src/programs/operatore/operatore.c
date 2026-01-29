@@ -113,6 +113,7 @@ void run_operatore_simulation(StatoOperatore *operatore) {
                 if (!already_counted_active_today) {
                     reserve_sem(operatore->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
                     operatore->shm_ptr->statistics.operators_statistics.daily_active_operators++;
+                    operatore->shm_ptr->statistics.operators_statistics.total_active_operators_all_time++;
                     already_counted_active_today = true;
                     release_sem(operatore->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
                 }
@@ -151,6 +152,11 @@ void prepare_station_context(StatoOperatore *operatore, FoodDistributionStation 
 
 void fase_lavoro_stazione(StatoOperatore *operatore, FoodDistributionStation *stazione_ptr, int avg_service_time) {
     while (local_daily_cycle_is_active && is_at_work) {
+        /* [DESIGN] Probabilità spontanea di richiedere pausa tra un cliente e l'altro */
+        if (generate_random_integer(1, 100) <= 25) {
+            is_at_work = 0;
+            break;
+        }
         /* Check Cancello Refill */
         if (wait_for_zero(stazione_ptr->semaphore_set_id, STATION_SEM_REFILL_GATE) != -1) {
             
@@ -181,18 +187,27 @@ void fase_lavoro_stazione(StatoOperatore *operatore, FoodDistributionStation *st
                 /* Simulazione Tempo e Feedback */
                 if (available) {
                     payload->status = ORDER_STATUS_SERVED;
-                    usleep(avg_service_time); 
+                    
+                    /* [CONSEGNA 5.1] Calcolo tempo casuale nell'intorno ± variation% */
+                    int variation = (operatore->station_type == 2) ? 80 : 50;
+                    int varied_time = calculate_varied_time(avg_service_time, variation);
+                    
+                    simulate_time_passage(varied_time, operatore->shm_ptr->configuration.timings.nanoseconds_per_tick); 
                     operatore->total_portions_served++;
 
                     /* Aggiornamento Statistiche Globali (PROTEZIONE MUTEX_SIMULATION_STATS) */
                     reserve_sem(operatore->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
                     if (operatore->station_type == 0) {
+                        operatore->shm_ptr->statistics.daily_served_plates.first_course_count++;
                         operatore->shm_ptr->statistics.total_served_plates.first_course_count++;
                     } else if (operatore->station_type == 1) {
+                        operatore->shm_ptr->statistics.daily_served_plates.second_course_count++;
                         operatore->shm_ptr->statistics.total_served_plates.second_course_count++;
                     } else {
+                        operatore->shm_ptr->statistics.daily_served_plates.coffee_dessert_count++;
                         operatore->shm_ptr->statistics.total_served_plates.coffee_dessert_count++;
                     }
+                    operatore->shm_ptr->statistics.daily_served_plates.total_plates_count++;
                     operatore->shm_ptr->statistics.total_served_plates.total_plates_count++;
                     release_sem(operatore->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
 
@@ -241,6 +256,7 @@ void esegui_pausa_operatore(StatoOperatore *operatore) {
     
     operatore->daily_breaks_taken++;
     reserve_sem(operatore->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
+    operatore->shm_ptr->statistics.operators_statistics.daily_breaks_taken++;
     operatore->shm_ptr->statistics.operators_statistics.total_breaks_taken++;
     release_sem(operatore->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
 

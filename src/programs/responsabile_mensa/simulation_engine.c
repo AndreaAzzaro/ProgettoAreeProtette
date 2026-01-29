@@ -52,6 +52,7 @@ static void handle_refill_signal(int sig);
 static void handle_sigchld(int sig);
 
 static void reset_daily_statistics(MainSharedMemory *shm);
+static void calculate_food_waste_and_teardown(MainSharedMemory *shm);
 static void perform_initial_daily_refill(MainSharedMemory *shm);
 static void process_add_users_requests(MainSharedMemory *shm);
 
@@ -121,13 +122,16 @@ void run_simulation_loop(MainSharedMemory *shm) {
             
             open_barrier_gate(shm->semaphore_sync_id, BARRIER_EVENING_GATE);
 
+            /* Calcolo sprechi prima del report */
+            calculate_food_waste_and_teardown(shm);
+
             /* Reporting */
             SimulationStatistics daily_stats = collect_simulation_statistics(shm);
             
             /* Controllo OVERLOAD (Sez 5.6 della Consegna) */
-            if (daily_stats.clients_statistics.total_clients_not_served > shm->configuration.thresholds.overload_threshold) {
-                printf("[MASTER] TERMINAZIONE PER OVERLOAD: %d utenti rinunciatari (Soglia: %d)\n", 
-                       daily_stats.clients_statistics.total_clients_not_served,
+            if (daily_stats.clients_statistics.daily_clients_not_served > shm->configuration.thresholds.overload_threshold) {
+                printf("[MASTER] TERMINAZIONE PER OVERLOAD: %d utenti rinunciatari oggi (Soglia: %d)\n", 
+                       daily_stats.clients_statistics.daily_clients_not_served,
                        shm->configuration.thresholds.overload_threshold);
                 shm->is_simulation_running = 0;
                 shm->statistics.reason_for_termination = TERMINATION_REASON_OVERLOAD;
@@ -144,19 +148,18 @@ void run_simulation_loop(MainSharedMemory *shm) {
     }
 
     /* 4. Fine Simulazione */
-    const char *reasons[] = {"NON SPECIFICATE", "TIMEOUT (DURATA GIORNI RAGGIUNTA)", "OVERLOAD (TROPPI UTENTI NON SERVITI)", "SEGNALE ESTERNO"};
-    printf("\n[MASTER] --- SIMULAZIONE TERMINATA ---\n");
-    printf("[MASTER] Causa: %s\n", reasons[shm->statistics.reason_for_termination]);
-    printf("[MASTER] Giorni simulati: %d\n", shm->current_simulation_day);
-
-    if (shm->current_simulation_day < shm->configuration.timings.simulation_duration_days) {
-        SimulationStatistics final_stats = collect_simulation_statistics(shm);
-        display_daily_statistics_report(final_stats, shm->current_simulation_day);
-    }
+    usleep(500000); /* Breve attesa per permettere ai figli di stampare i log di chiusura */
+    printf("\n[MASTER] Elaborazione report finale in corso...\n");
+    
+    SimulationStatistics final_stats = collect_simulation_statistics(shm);
+    display_final_simulation_report(final_stats, shm->current_simulation_day);
 }
-
 void handle_refill_cycle(MainSharedMemory *shm) {
-    printf("[MASTER] Operazione Refill in corso...\n");
+    /* [CONSEGNA 6] Simulazione tempo di esecuzione refill (AVG ± 20%) */
+    int refill_avg = shm->configuration.timings.average_refill_time;
+    int varied_refill_time = calculate_varied_time(refill_avg, 20);
+    
+    simulate_time_passage(varied_refill_time, shm->configuration.timings.nanoseconds_per_tick);
 
     /* Refill Primi */
     release_sem(shm->first_course_station.semaphore_set_id, STATION_SEM_REFILL_GATE);
@@ -178,7 +181,7 @@ void handle_refill_cycle(MainSharedMemory *shm) {
     }
     reserve_sem(shm->second_course_station.semaphore_set_id, STATION_SEM_REFILL_GATE);
 
-    printf("[MASTER] Refill completato.\n");
+    printf("[MASTER] Refill completato in %d min.\n", varied_refill_time);
 }
 
 void arm_daily_timer(MainSharedMemory *shm) {
@@ -255,8 +258,9 @@ void setup_refill_signal(void) {
     sev.sigev_value.sival_ptr = &timerid;
     timer_create(CLOCK_REALTIME, &sev, &timerid);
 
-    int random_minutes = generate_random_integer(5, 60);
-    long long refill_ns = (long long)random_minutes * global_shm_ref->configuration.timings.nanoseconds_per_tick;
+    /* [CONSEGNA 5.2] Trigger refill ogni 10 minuti simulati */
+    int trigger_minutes = 10;
+    long long refill_ns = (long long)trigger_minutes * global_shm_ref->configuration.timings.nanoseconds_per_tick;
 
     its.it_value.tv_sec = (time_t)(refill_ns / 1000000000LL);
     its.it_value.tv_nsec = (long)(refill_ns % 1000000000LL);
@@ -345,22 +349,67 @@ static void handle_sigchld(int sig) {
 static void reset_daily_statistics(MainSharedMemory *shm) {
     reserve_sem(shm->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
     
-    shm->statistics.clients_statistics.total_clients_served = 0;
-    shm->statistics.clients_statistics.total_clients_not_served = 0;
-    shm->statistics.clients_statistics.total_clients_with_ticket = 0;
-    shm->statistics.clients_statistics.total_clients_without_ticket = 0;
+    /* Reset Utenti Giornalieri */
+    shm->statistics.clients_statistics.daily_clients_served = 0;
+    shm->statistics.clients_statistics.daily_clients_not_served = 0;
+    shm->statistics.clients_statistics.daily_clients_with_ticket = 0;
+    shm->statistics.clients_statistics.daily_clients_without_ticket = 0;
     
-    shm->statistics.total_served_plates.first_course_count = 0;
-    shm->statistics.total_served_plates.second_course_count = 0;
-    shm->statistics.total_served_plates.coffee_dessert_count = 0;
+    /* Reset Piatti Giornalieri */
+    memset(&shm->statistics.daily_served_plates, 0, sizeof(StatisticsPlateCounts));
+    memset(&shm->statistics.daily_leftover_plates, 0, sizeof(StatisticsPlateCounts));
 
+    /* Reset Operatori e Incassi Giornalieri */
     shm->statistics.income_statistics.current_daily_income = 0.0;
     shm->statistics.operators_statistics.daily_active_operators = 0;
+    shm->statistics.operators_statistics.daily_breaks_taken = 0;
     
+    /* Reset Accumulatori Tempi del Giorno */
     memset(&shm->statistics.daily_wait_accumulators, 0, sizeof(WaitTimeAccumulator));
     
     release_sem(shm->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
 }
+
+/**
+ * Calcola i piatti avanzati nelle stazioni alla fine della giornata.
+ */
+static void calculate_food_waste_and_teardown(MainSharedMemory *shm) {
+    reserve_sem(shm->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
+    reserve_sem(shm->semaphore_mutex_id, MUTEX_SHARED_DATA);
+    
+    int first_waste = 0;
+    for (int i = 0; i < shm->food_menu.number_of_first_courses; i++) {
+        first_waste += shm->first_course_station.portions[i];
+    }
+    
+    int second_waste = 0;
+    for (int i = 0; i < shm->food_menu.number_of_second_courses; i++) {
+        second_waste += shm->second_course_station.portions[i];
+    }
+    
+    /* Nota: Anche caffè e dolci contano come waste se avanzano a fine turno */
+    int coffee_waste = 0;
+    for (int i = 0; i < 4; i++) { 
+        coffee_waste += shm->coffee_dessert_station.portions[i];
+    }
+
+    /* Aggiornamento Statistiche Giornaliere */
+    shm->statistics.daily_leftover_plates.first_course_count = first_waste;
+    shm->statistics.daily_leftover_plates.second_course_count = second_waste;
+    shm->statistics.daily_leftover_plates.coffee_dessert_count = coffee_waste;
+    shm->statistics.daily_leftover_plates.total_plates_count = first_waste + second_waste + coffee_waste;
+
+    /* Aggiornamento Statistiche Totali (Accumulo) */
+    shm->statistics.total_leftover_plates.first_course_count += first_waste;
+    shm->statistics.total_leftover_plates.second_course_count += second_waste;
+    shm->statistics.total_leftover_plates.coffee_dessert_count += coffee_waste;
+    shm->statistics.total_leftover_plates.total_plates_count += (first_waste + second_waste + coffee_waste);
+
+    release_sem(shm->semaphore_mutex_id, MUTEX_SHARED_DATA);
+    release_sem(shm->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
+}
+
+
 
 static void perform_initial_daily_refill(MainSharedMemory *shm) {
     /* Primi */
@@ -376,6 +425,13 @@ static void perform_initial_daily_refill(MainSharedMemory *shm) {
         shm->second_course_station.portions[i] = shm->configuration.thresholds.refill_amount_secondi;
     }
     reserve_sem(shm->second_course_station.semaphore_set_id, STATION_SEM_REFILL_GATE);
+
+    /* Caffè e Dessert */
+    release_sem(shm->coffee_dessert_station.semaphore_set_id, STATION_SEM_REFILL_GATE);
+    for (int i = 0; i < 4; i++) {
+        shm->coffee_dessert_station.portions[i] = 100; /* Abbondante per caffè/dolci */
+    }
+    reserve_sem(shm->coffee_dessert_station.semaphore_set_id, STATION_SEM_REFILL_GATE);
 }
 
 static void process_add_users_requests(MainSharedMemory *shm) {

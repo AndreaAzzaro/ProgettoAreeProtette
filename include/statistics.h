@@ -95,22 +95,27 @@ typedef struct {
  * @brief Statistiche relative ai flussi dei clienti (Utenti).
  */
 typedef struct {
+    int daily_clients_served;             /**< Clienti serviti oggi */
+    int daily_clients_not_served;         /**< Clienti non serviti oggi */
+    int daily_clients_with_ticket;        /**< Clienti con ticket oggi */
+    int daily_clients_without_ticket;     /**< Clienti senza ticket oggi */
     int total_clients_served;             /**< Totale clienti serviti nella simulazione */
     int total_clients_not_served;         /**< Totale clienti che hanno rinunciato */
     double average_daily_clients_served;  /**< Media clienti serviti/giorno */
     double average_daily_clients_not_served; /**< Media rinunce/giorno */
-    int total_clients_with_ticket;        /**< Clienti serviti con ticket (sconto) */
-    int total_clients_without_ticket;     /**< Clienti serviti senza ticket */
+    int total_clients_with_ticket;        /**< Totale clienti con ticket */
+    int total_clients_without_ticket;     /**< Totale clienti senza ticket */
 } StatisticsClientData;
 
 /**
  * @brief Performance e attività degli operatori della mensa.
  */
 typedef struct {
-    int total_active_simulations;   /**< Totale operatori attivati nella simulazione */
-    int daily_active_operators;     /**< Operatori attivi nel giorno corrente */
-    int total_breaks_taken;         /**< Totale pause effettuate */
-    double average_daily_breaks;    /**< Media pause/giorno */
+    int total_active_operators_all_time; /**< Totale operatori attivati nella simulazione */
+    int daily_active_operators;          /**< Operatori attivi nel giorno corrente */
+    int daily_breaks_taken;              /**< Pause effettuate oggi */
+    int total_breaks_taken;              /**< Totale pause effettuate nella simulazione */
+    double average_daily_breaks;         /**< Media pause/giorno */
 } StatisticsOperatorData;
 
 /* ==========================================================================
@@ -137,13 +142,19 @@ typedef struct {
  * per il report finale e il monitoraggio in tempo reale.
  */
 typedef struct {
-    StatisticsPlateCounts total_served_plates;      
-    StatisticsPlateCounts total_leftover_plates;   
+    StatisticsPlateCounts daily_served_plates;      /**< Piatti serviti oggi */
+    StatisticsPlateCounts total_served_plates;      /**< Piatti serviti totali nella simulazione */
+    StatisticsPlateCounts daily_leftover_plates;    /**< Piatti avanzati oggi */
+    StatisticsPlateCounts total_leftover_plates;    /**< Piatti avanzati totali nella simulazione */
+    
     StatisticsPlateAverages average_daily_served_plates;   
     StatisticsPlateAverages average_daily_leftover_plates; 
-    StatisticsWaitTimes total_average_wait_times;  
-    StatisticsWaitTimes daily_average_wait_times;  
-    WaitTimeAccumulator daily_wait_accumulators;  /**< Accumulatori per calcolo medie del giorno corrente */
+    
+    StatisticsWaitTimes total_average_wait_times;  /**< Medie complessive della simulazione */
+    StatisticsWaitTimes daily_average_wait_times;  /**< Medie del giorno corrente */
+    
+    WaitTimeAccumulator daily_wait_accumulators;  /**< Accumulatori per il giorno corrente */
+    WaitTimeAccumulator total_wait_accumulators;  /**< Accumulatori storici per l'intera simulazione */
     
     StatisticsClientData clients_statistics;
     StatisticsOperatorData operators_statistics;
@@ -171,6 +182,13 @@ SimulationStatistics collect_simulation_statistics(struct MainSharedMemory *shar
  * @param simulation_day Indice del giorno corrente (partendo da 0).
  */
 void display_daily_statistics_report(SimulationStatistics statistics, int simulation_day);
+
+/**
+ * Stampa a terminale il report finale complessivo della simulazione.
+ * @param s Struttura statistiche con i dati accumulati.
+ * @param total_days Numero totale di giorni simulati.
+ */
+void display_final_simulation_report(SimulationStatistics s, int total_days);
 
 /**
  * @brief Salva le statistiche giornaliere in un file CSV.
