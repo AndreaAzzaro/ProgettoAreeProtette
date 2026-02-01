@@ -19,7 +19,7 @@ COMMON_OBJ = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(COMMON_SRC))
 # Target specifici
 TARGETS = responsabile_mensa operatore utente operatore_cassa add_users communication_disorder
 
-.PHONY: all clean dirs
+.PHONY: all clean dirs kill
 
 all: dirs $(addprefix $(BIN_DIR)/, $(TARGETS))
 	@rm -f statistics_report.csv
@@ -87,3 +87,10 @@ $(BIN_DIR)/communication_disorder: $(DISORDER_OBJ) $(COMMON_OBJ)
 
 clean:
 	rm -rf $(OBJ_DIR) $(BIN_DIR)
+
+kill:
+	@echo "Terminazione processi in corso..."
+	@killall -9 responsabile_mensa operatore utente operatore_cassa add_users communication_disorder 2>/dev/null || true
+	@echo "Pulizia risorse IPC System V per l'utente $(shell whoami)..."
+	@ipcs | grep $(shell whoami) | awk '{print $$2}' | xargs -I {} ipcrm -a {} 2>/dev/null || true
+	@echo "Cleanup completato."

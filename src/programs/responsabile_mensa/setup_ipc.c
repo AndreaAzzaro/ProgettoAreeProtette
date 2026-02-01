@@ -52,24 +52,23 @@ MainSharedMemory* initialize_simulation_shared_memory(int group_pool_size) {
         exit(EXIT_FAILURE);
     }
 
-    /* Creazione del segmento */
+    /* ==========================================================================
+     *  TAULA RASA: Pulizia pre-emptiva risorse orfane della sessione precedente
+     * ========================================================================== */
+    int old_shmid = shmget(key, 0, 0);
+    if (old_shmid != -1) {
+        printf("[MASTER] Tabula Rasa: Trovata SHM orfana (ID: %d). Rimozione in corso...\n", old_shmid);
+        if (shmctl(old_shmid, IPC_RMID, NULL) == -1) {
+            perror("[WARNING] Impossibile rimuovere SHM orfana");
+        }
+    }
+
+    /* Creazione del segmento con IPC_EXCL per garantire un'area di memoria fresca */
     shmid = create_shared_memory_segment(key, shm_size, IPC_CREAT | IPC_EXCL | 0666);
     
     if (shmid == -1) {
-        if (errno == EEXIST) {
-            /* Cleanup di emergenza se esiste già un vecchio segmento */
-            printf("[WARNING] Segmento SHM esistente. Tentativo di rimozione e ricreazione...\n");
-            int old_shmid = shmget(key, 0, 0);
-            if (old_shmid != -1) {
-                shmctl(old_shmid, IPC_RMID, NULL);
-            }
-            shmid = create_shared_memory_segment(key, shm_size, IPC_CREAT | 0666);
-        }
-        
-        if (shmid == -1) {
-            perror("[ERROR] Creazione memoria condivisa fallita");
-            exit(EXIT_FAILURE);
-        }
+        perror("[ERROR] Creazione memoria condivisa fallita (anche dopo Tabula Rasa)");
+        exit(EXIT_FAILURE);
     }
 
     /* Attach alla memoria del processo Master */

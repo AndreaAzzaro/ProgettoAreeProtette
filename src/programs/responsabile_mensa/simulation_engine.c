@@ -68,7 +68,10 @@ void run_simulation_loop(MainSharedMemory *shm) {
     while (shm->is_simulation_running && shm->current_simulation_day < shm->configuration.timings.simulation_duration_days) {
         
         /* 1. Fase Preparazione Giorno */
-        while (wait_for_zero(shm->semaphore_sync_id, BARRIER_MORNING_READY) == -1 && errno == EINTR);
+        while (wait_for_zero(shm->semaphore_sync_id, BARRIER_MORNING_READY) == -1 && errno == EINTR) {
+            if (!shm->is_simulation_running) break;
+        }
+        if (!shm->is_simulation_running) break;
         printf("[MASTER] --- INIZIO GIORNO %d ---\n", shm->current_simulation_day + 1);
 
         reset_daily_statistics(shm);
@@ -90,10 +93,12 @@ void run_simulation_loop(MainSharedMemory *shm) {
         while (daily_cycle_is_active && shm->is_simulation_running) {
             pause(); /* Attesa segnali (Timer, Refill, Emergenza) */
 
-            if (refill_requested && shm->is_simulation_running) {
-                handle_refill_cycle(shm);
-                refill_requested = 0;
-                setup_refill_signal(); /* Ri-arma per il prossimo evento casuale */
+            if (daily_cycle_is_active && shm->is_simulation_running) {
+                if (refill_requested && shm->is_simulation_running) {
+                    handle_refill_cycle(shm);
+                    refill_requested = 0;
+                    setup_refill_signal(); /* Ri-arma per il prossimo evento casuale */
+                }
             }
         }
 
@@ -108,7 +113,9 @@ void run_simulation_loop(MainSharedMemory *shm) {
         broadcast_signal_to_all_groups(shm, end_sig);
 
         /* Sincronizzazione serale */
-        while (wait_for_zero(shm->semaphore_sync_id, BARRIER_EVENING_READY) == -1 && errno == EINTR);
+        while (wait_for_zero(shm->semaphore_sync_id, BARRIER_EVENING_READY) == -1 && errno == EINTR) {
+            if (!shm->is_simulation_running) break;
+        }
 
         if (shm->is_simulation_running) {
             /* Elaborazione richieste asincrone di espansione utenti */
