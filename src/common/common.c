@@ -47,6 +47,7 @@ void cleanup_ipc_resources(MainSharedMemory *shared_memory_ptr) {
     remove_message_queue(shared_memory_ptr->second_course_station.message_queue_id);
     remove_message_queue(shared_memory_ptr->coffee_dessert_station.message_queue_id);
     remove_message_queue(shared_memory_ptr->register_station.message_queue_id);
+    remove_message_queue(shared_memory_ptr->control_queue_id);
 
     /* 2. Set semafori stazioni */
     delete_sem_set(shared_memory_ptr->first_course_station.semaphore_set_id);
@@ -58,6 +59,7 @@ void cleanup_ipc_resources(MainSharedMemory *shared_memory_ptr) {
     delete_sem_set(shared_memory_ptr->semaphore_mutex_id);
     delete_sem_set(shared_memory_ptr->semaphore_ticket_id);
     delete_sem_set(shared_memory_ptr->seat_area.condition_semaphore_id);
+    delete_sem_set(shared_memory_ptr->group_sync_semaphore_id);
 
     /* 4. Memoria condivisa (detach prima, remove dopo) */
     int shmid = shared_memory_ptr->shared_memory_id;

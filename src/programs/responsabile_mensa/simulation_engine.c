@@ -492,6 +492,7 @@ static void process_add_users_requests(MainSharedMemory *shm) {
         open_barrier_gate(shm->semaphore_sync_id, BARRIER_ADD_USERS_GATE);
         printf("[MASTER] Elaborati %d blocchi add_users. Spawn completato.\n", processed);
     }
+    shm->add_users_flag = 0;
 }
 
 /**
