@@ -108,7 +108,7 @@ void run_cassiere_simulation(StatoCassiere *cassiere) {
         /* LOOP 2: Ciclo "Giornaliero" */
         while (local_daily_cycle_is_active) {
             /* Competizione per la postazione cassa (Interrompibile) */
-            int res = reserve_sem(cassiere->shm_ptr->register_station.semaphore_set_id, STATION_SEM_AVAILABLE_POSTS);
+            int res = reserve_sem_interruptible(cassiere->shm_ptr->register_station.semaphore_set_id, STATION_SEM_AVAILABLE_POSTS);
             
             if (res != -1) {
                 is_at_work = 1;

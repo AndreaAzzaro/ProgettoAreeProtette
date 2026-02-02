@@ -103,7 +103,7 @@ void run_operatore_simulation(StatoOperatore *operatore) {
         /* LOOP 2: Ciclo "Giornaliero" (Periodo di vigenza del timer Master) */
         while (local_daily_cycle_is_active) {
             /* Acquisizione Postazione (Interrompibile) */
-            int res = reserve_sem(stazione_ptr->semaphore_set_id, STATION_SEM_AVAILABLE_POSTS);
+            int res = reserve_sem_interruptible(stazione_ptr->semaphore_set_id, STATION_SEM_AVAILABLE_POSTS);
             
             if (res != -1) {
                 is_at_work = 1; /* Turno iniziato */

@@ -141,7 +141,7 @@ void display_final_simulation_report(SimulationStatistics s, int total_days) {
 
     printf("\n\n");
     printf("######################################################################\n");
-    printf("      REPORT FINALE COMPLESSIVO DELLA SIMULAZIONE (%d GIORNI)\n", total_days);
+    printf("      REPORT FINALE COMPLESSIVO DELLA SIMULAZIONE (%d GIORNI)\n", total_days+1);
     printf("######################################################################\n\n");
 
     printf("--- CAUSA DI TERMINAZIONE: %s ---\n\n", (s.reason_for_termination < 4) ? reasons[s.reason_for_termination] : "SCONOSCIUTA");

@@ -244,8 +244,15 @@ void fase_ritiro_formale(StatoUtente *utente) {
 
     /* Sblocco semafori di gruppo per evitare deadlock degli altri membri */
     int base_sem = s_idx * GROUP_SEMS_PER_ENTRY;
-    reserve_sem_no_undo(utente->shm_ptr->group_sync_semaphore_id, base_sem + GROUP_SEM_PRE_CASHIER);
-    reserve_sem_no_undo(utente->shm_ptr->group_sync_semaphore_id, base_sem + GROUP_SEM_EXIT);
+    
+    if (reserve_sem_try_no_undo(utente->shm_ptr->group_sync_semaphore_id, base_sem + GROUP_SEM_PRE_CASHIER) == -1) {
+        /* Se fallisce (EAGAIN), significa che era già a 0. Bene così, proseguiamo. */
+        printf("[DEBUG] PID %d: Skip lock PRE_CASHIER during abandonment (already locked).\n", getpid());
+    }
+
+    if (reserve_sem_try_no_undo(utente->shm_ptr->group_sync_semaphore_id, base_sem + GROUP_SEM_EXIT) == -1) {
+        printf("[DEBUG] PID %d: Skip lock EXIT during abandonment (already locked).\n", getpid());
+    }
 }
 
 void fase_riunione_gruppo(StatoUtente *utente) {
@@ -473,7 +480,7 @@ ssize_t receive_message_with_soft_timeout(int queue_id, SimulationMessage *msg, 
 bool fase_checkout_piatto(StatoUtente *utente, FoodDistributionStation *stazione, int *choice, int stazione_tipo) {
     struct timespec s_t, e_t;
     clock_gettime(CLOCK_MONOTONIC, &s_t);
-    
+
     SimulationMessage msg;
     msg.message_type = MSG_TYPE_ORDER;
     StationPayload *pay = (StationPayload *)msg.message_text;
@@ -481,10 +488,13 @@ bool fase_checkout_piatto(StatoUtente *utente, FoodDistributionStation *stazione
     pay->dish_index = *choice;
     pay->status = 0;
 
-    if (send_message_to_queue(stazione->message_queue_id, &msg, sizeof(StationPayload), 0) == -1) return false;
-    if (receive_message_with_soft_timeout(stazione->message_queue_id, &msg, sizeof(StationPayload), getpid()) == -1) return false;
-
-    if (!local_daily_cycle_is_active) return false;
+    if (!local_daily_cycle_is_active) { printf("[DEBUG] PID %d: Exit at line 484\n", getpid()); return false; }
+    if (send_message_to_queue_interruptible(stazione->message_queue_id, &msg, sizeof(StationPayload), 0) == -1) { printf("[DEBUG] PID %d: Exit at line 485 (send failed)\n", getpid()); return false; }
+    printf("[DEBUG] PID %d: Passed line 485 (send ok)\n", getpid());
+    if (!local_daily_cycle_is_active) { printf("[DEBUG] PID %d: Exit at line 486\n", getpid()); return false; }
+    if (receive_message_with_soft_timeout(stazione->message_queue_id, &msg, sizeof(StationPayload), getpid()) == -1) { printf("[DEBUG] PID %d: Exit at line 487 (receive failed)\n", getpid()); return false; }
+    printf("[DEBUG] PID %d: Passed line 487 (receive ok)\n", getpid());
+    if (!local_daily_cycle_is_active) { printf("[DEBUG] PID %d: Exit at line 489\n", getpid()); return false; }
 
     clock_gettime(CLOCK_MONOTONIC, &e_t);
     double w_min = get_simulated_minutes(s_t, e_t, utente->shm_ptr->configuration.timings.nanoseconds_per_tick);

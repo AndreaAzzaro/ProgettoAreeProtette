@@ -56,6 +56,16 @@ int send_message_to_queue(int message_queue_id, SimulationMessage *message_point
 }
 
 /**
+ * Invia un messaggio, interrompibile da segnali (non riprova su EINTR).
+ */
+int send_message_to_queue_interruptible(int message_queue_id, SimulationMessage *message_pointer, size_t message_size, int message_flags) {
+    if (msgsnd(message_queue_id, (void *)message_pointer, message_size, message_flags) == -1) {
+        return -1;
+    }
+    return 0;
+}
+
+/**
  * Riceve un messaggio dalla coda.
  * Gestisce EINTR, ENOMSG, EIDRM silenziosamente.
  */

@@ -178,6 +178,7 @@ int open_barrier_gate(int sem_id, int gate_idx) {
 }
 
 /** Sincronizza un figlio: decrementa ready, attende gate=0. */
+/** Sincronizza un figlio: decrementa ready, attende gate=0. */
 int sync_child_start(int sem_id, int ready_idx, int gate_idx) {
     /* Per le barriere usiamo NO_UNDO: il SIGCHLD del Master gestisce le morti */
     if (reserve_sem_no_undo(sem_id, ready_idx) == -1) return -1;

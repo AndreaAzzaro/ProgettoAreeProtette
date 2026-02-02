@@ -59,6 +59,14 @@ int create_message_queue(key_t key, int message_flags);
 int send_message_to_queue(int message_queue_id, SimulationMessage *message_pointer, size_t message_size, int message_flags);
 
 /**
+ * @brief Invia un messaggio alla coda, interrompibile da segnali.
+ *
+ * A differenza di send_message_to_queue, ritorna -1 con errno=EINTR se
+ * interrotta da un segnale, permettendo al chiamante di gestire la situazione.
+ */
+int send_message_to_queue_interruptible(int message_queue_id, SimulationMessage *message_pointer, size_t message_size, int message_flags);
+
+/**
  * @brief Riceve un messaggio dalla coda specificata.
  * 
  * Gestisce internamente l'interruzione da segnali (EINTR) a meno che non si verifichino errori gravi.

@@ -52,6 +52,8 @@ static void handle_refill_signal(int sig);
 static void handle_sigchld(int sig);
 
 static void reset_daily_statistics(MainSharedMemory *shm);
+static void reset_dining_area_tables(MainSharedMemory *shm);
+static void flush_message_queues(MainSharedMemory *shm);
 static void calculate_food_waste_and_teardown(MainSharedMemory *shm);
 static void perform_initial_daily_refill(MainSharedMemory *shm);
 static void process_add_users_requests(MainSharedMemory *shm);
@@ -84,6 +86,8 @@ void run_simulation_loop(MainSharedMemory *shm) {
 
         /* 2. Fase Operativa Attiva */
         daily_cycle_is_active = 1;
+        reset_dining_area_tables(shm);
+        flush_message_queues(shm);
         arm_daily_timer(shm);
         open_barrier_gate(shm->semaphore_sync_id, BARRIER_MORNING_GATE);
 
@@ -112,7 +116,7 @@ void run_simulation_loop(MainSharedMemory *shm) {
 
         if (shm->is_simulation_running) {
             /* Elaborazione richieste asincrone di espansione utenti */
-            process_add_users_requests(shm);
+            if(shm->is_simulation_running)process_add_users_requests(shm);
 
             /* Preparazione barriera mattutina per il giorno dopo */
             int next_morning_count = shm->configuration.quantities.number_of_workers + 
@@ -456,5 +460,54 @@ static void process_add_users_requests(MainSharedMemory *shm) {
             release_sem(shm->semaphore_mutex_id, MUTEX_ADD_USERS_PERMISSION);
         }
         printf("[MASTER] Elaborati %d blocchi add_users.\n", processed);
+    }
+}
+
+/**
+ * Resetta i posti occupati di tutti i tavoli a 0 all'inizio di ogni giornata.
+ * Risolve il leak di posti causato da utenti interrotti prima di liberare il tavolo.
+ */
+static void reset_dining_area_tables(MainSharedMemory *shm) {
+    reserve_sem(shm->semaphore_mutex_id, MUTEX_TABLES);
+    for (int i = 0; i < shm->seat_area.active_tables_count; i++) {
+        shm->seat_area.tables[i].occupied_seats = 0;
+    }
+    release_sem(shm->semaphore_mutex_id, MUTEX_TABLES);
+}
+
+/**
+ * Svuota tutte le code di messaggi delle stazioni all'inizio di ogni giornata.
+ * Risolve l'accumulo di messaggi orfani (ordini non processati del giorno precedente).
+ */
+static void flush_message_queues(MainSharedMemory *shm) {
+    SimulationMessage msg;
+    int flushed_count = 0;
+
+    /* Svuota coda Primi Piatti */
+    while (receive_message_from_queue(shm->first_course_station.message_queue_id,
+           &msg, sizeof(StationPayload), 0, IPC_NOWAIT) != -1) {
+        flushed_count++;
+    }
+
+    /* Svuota coda Secondi Piatti */
+    while (receive_message_from_queue(shm->second_course_station.message_queue_id,
+           &msg, sizeof(StationPayload), 0, IPC_NOWAIT) != -1) {
+        flushed_count++;
+    }
+
+    /* Svuota coda Caffè/Dolci */
+    while (receive_message_from_queue(shm->coffee_dessert_station.message_queue_id,
+           &msg, sizeof(StationPayload), 0, IPC_NOWAIT) != -1) {
+        flushed_count++;
+    }
+
+    /* Svuota coda Cassa */
+    while (receive_message_from_queue(shm->register_station.message_queue_id,
+           &msg, sizeof(CashierPayload), 0, IPC_NOWAIT) != -1) {
+        flushed_count++;
+    }
+
+    if (flushed_count > 0) {
+        printf("[MASTER] Svuotate code messaggi: %d messaggi orfani rimossi.\n", flushed_count);
     }
 }
