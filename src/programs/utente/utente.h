@@ -39,6 +39,7 @@ typedef struct {
     int group_id;                       /**< Indice del gruppo utile per la sincronizzazione IPC */
     int group_size;                     /**< Numero totale di membri del gruppo */
     bool is_group_leader;               /**< Flag di leadership per la prenotazione dei tavoli */
+    bool is_late_joiner;                /**< Utente aggiunto a simulazione in corso (da add_users) */
 
     MainSharedMemory *shm_ptr;          /**< Puntatore alla memoria condivisa agganciata */
     

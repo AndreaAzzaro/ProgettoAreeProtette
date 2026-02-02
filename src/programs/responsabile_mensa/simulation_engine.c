@@ -70,91 +70,89 @@ void run_simulation_loop(MainSharedMemory *shm) {
     while (shm->is_simulation_running && shm->current_simulation_day < shm->configuration.timings.simulation_duration_days) {
         
         /* 1. Fase Preparazione Giorno */
-        while (wait_for_zero(shm->semaphore_sync_id, BARRIER_MORNING_READY) == -1 && errno == EINTR) {
-            if (!shm->is_simulation_running) break;
+        while (shm->is_simulation_running &&
+               wait_for_zero(shm->semaphore_sync_id, BARRIER_MORNING_READY) == -1 &&
+               errno == EINTR) {
+            /* Riprova se interrotto da segnale */
         }
-        if (!shm->is_simulation_running) break;
-        printf("[MASTER] --- INIZIO GIORNO %d ---\n", shm->current_simulation_day + 1);
 
-        reset_daily_statistics(shm);
-        perform_initial_daily_refill(shm);
-        setup_group_barriers(shm);
-        setup_refill_signal();
+        if (shm->is_simulation_running) {
+            printf("[MASTER] --- INIZIO GIORNO %d ---\n", shm->current_simulation_day + 1);
 
-        /* Setup barriera serale in base alla popolazione attuale */
-        int evening_count = shm->configuration.quantities.number_of_workers + 
-                            shm->configuration.seats.seats_cash_desk + 
-                            shm->current_total_users;
-        setup_barrier(shm->semaphore_sync_id, BARRIER_EVENING_READY, BARRIER_EVENING_GATE, evening_count);
+            reset_daily_statistics(shm);
+            perform_initial_daily_refill(shm);
+            setup_group_barriers(shm);
+            setup_refill_signal();
 
-        /* 2. Fase Operativa Attiva */
-        daily_cycle_is_active = 1;
-        reset_dining_area_tables(shm);
-        flush_message_queues(shm);
-        arm_daily_timer(shm);
-        open_barrier_gate(shm->semaphore_sync_id, BARRIER_MORNING_GATE);
+            /* Setup barriera serale in base alla popolazione attuale */
+            int evening_count = shm->configuration.quantities.number_of_workers +
+                                shm->configuration.seats.seats_cash_desk +
+                                shm->current_total_users;
+            setup_barrier(shm->semaphore_sync_id, BARRIER_EVENING_READY, BARRIER_EVENING_GATE, evening_count);
 
-        while (daily_cycle_is_active && shm->is_simulation_running) {
-            pause(); /* Attesa segnali (Timer, Refill, Emergenza) */
+            /* 2. Fase Operativa Attiva */
+            daily_cycle_is_active = 1;
+            reset_dining_area_tables(shm);
+            flush_message_queues(shm);
+            arm_daily_timer(shm);
+            open_barrier_gate(shm->semaphore_sync_id, BARRIER_MORNING_GATE);
 
-            if (daily_cycle_is_active && shm->is_simulation_running) {
-                if (refill_requested && shm->is_simulation_running) {
+            while (daily_cycle_is_active && shm->is_simulation_running) {
+                pause(); /* Attesa segnali (Timer, Refill, Emergenza) */
+
+                if (daily_cycle_is_active && shm->is_simulation_running && refill_requested) {
                     handle_refill_cycle(shm);
                     refill_requested = 0;
                     setup_refill_signal(); /* Ri-arma per il prossimo evento casuale */
                 }
             }
-        }
 
-        /* 3. Fase Chiusura Giorno */
-        if (shm->current_simulation_day + 1 >= shm->configuration.timings.simulation_duration_days) {
-            shm->is_simulation_running = 0;
-            shm->statistics.reason_for_termination = TERMINATION_REASON_TIMEOUT;
-        }
-
-        /* Notifica figli (Fine turno o Fine Simulazione) */
-        int end_sig = (shm->is_simulation_running) ? SIGUSR2 : SIGTERM;
-        broadcast_signal_to_all_groups(shm, end_sig);
-
-        /* Sincronizzazione serale */
-        while (wait_for_zero(shm->semaphore_sync_id, BARRIER_EVENING_READY) == -1 && errno == EINTR) {
-            if (!shm->is_simulation_running) break;
-        }
-
-        if (shm->is_simulation_running) {
-            /* Elaborazione richieste asincrone di espansione utenti */
-            if(shm->is_simulation_running)process_add_users_requests(shm);
-
-            /* Preparazione barriera mattutina per il giorno dopo */
-            int next_morning_count = shm->configuration.quantities.number_of_workers + 
-                                     shm->configuration.seats.seats_cash_desk + 
-                                     shm->current_total_users;
-            setup_barrier(shm->semaphore_sync_id, BARRIER_MORNING_READY, BARRIER_MORNING_GATE, next_morning_count);
-            
-            open_barrier_gate(shm->semaphore_sync_id, BARRIER_EVENING_GATE);
-
-            /* Calcolo sprechi prima del report */
-            calculate_food_waste_and_teardown(shm);
-
-            /* Reporting */
-            SimulationStatistics daily_stats = collect_simulation_statistics(shm);
-            
-            /* Controllo OVERLOAD (Sez 5.6 della Consegna) */
-            if (daily_stats.clients_statistics.daily_clients_not_served > shm->configuration.thresholds.overload_threshold) {
-                printf("[MASTER] TERMINAZIONE PER OVERLOAD: %d utenti rinunciatari oggi (Soglia: %d)\n", 
-                       daily_stats.clients_statistics.daily_clients_not_served,
-                       shm->configuration.thresholds.overload_threshold);
+            /* 3. Fase Chiusura Giorno */
+            if (shm->current_simulation_day + 1 >= shm->configuration.timings.simulation_duration_days) {
                 shm->is_simulation_running = 0;
-                shm->statistics.reason_for_termination = TERMINATION_REASON_OVERLOAD;
+                shm->statistics.reason_for_termination = TERMINATION_REASON_TIMEOUT;
             }
 
-            display_daily_statistics_report(daily_stats, shm->current_simulation_day);
-            save_statistics_to_csv(daily_stats, shm->current_simulation_day, "statistics_report.csv");
+            /* Notifica figli (Fine turno o Fine Simulazione) */
+            int end_sig = (shm->is_simulation_running) ? SIGUSR2 : SIGTERM;
+            broadcast_signal_to_all_groups(shm, end_sig);
 
-            shm->current_simulation_day++;
-            printf("[MASTER] --- FINE GIORNO %d ---\n", shm->current_simulation_day);
-        } else {
-            open_barrier_gate(shm->semaphore_sync_id, BARRIER_EVENING_GATE);
+            /* Sincronizzazione serale */
+            while (shm->is_simulation_running &&
+                   wait_for_zero(shm->semaphore_sync_id, BARRIER_EVENING_READY) == -1 &&
+                   errno == EINTR) {
+                /* Riprova se interrotto da segnale */
+            }
+
+            if (shm->is_simulation_running) {
+                /* Elaborazione richieste add_users e preparazione barriera mattutina */
+                process_add_users_requests(shm);
+
+                open_barrier_gate(shm->semaphore_sync_id, BARRIER_EVENING_GATE);
+
+                /* Calcolo sprechi prima del report */
+                calculate_food_waste_and_teardown(shm);
+
+                /* Reporting */
+                SimulationStatistics daily_stats = collect_simulation_statistics(shm);
+
+                /* Controllo OVERLOAD (Sez 5.6 della Consegna) */
+                if (daily_stats.clients_statistics.daily_clients_not_served > shm->configuration.thresholds.overload_threshold) {
+                    printf("[MASTER] TERMINAZIONE PER OVERLOAD: %d utenti rinunciatari oggi (Soglia: %d)\n",
+                           daily_stats.clients_statistics.daily_clients_not_served,
+                           shm->configuration.thresholds.overload_threshold);
+                    shm->is_simulation_running = 0;
+                    shm->statistics.reason_for_termination = TERMINATION_REASON_OVERLOAD;
+                }
+
+                display_daily_statistics_report(daily_stats, shm->current_simulation_day);
+                save_statistics_to_csv(daily_stats, shm->current_simulation_day, "statistics_report.csv");
+
+                shm->current_simulation_day++;
+                printf("[MASTER] --- FINE GIORNO %d ---\n", shm->current_simulation_day);
+            } else {
+                open_barrier_gate(shm->semaphore_sync_id, BARRIER_EVENING_GATE);
+            }
         }
     }
 
@@ -447,26 +445,52 @@ static void perform_initial_daily_refill(MainSharedMemory *shm) {
 
 static void process_add_users_requests(MainSharedMemory *shm) {
     int processed = 0;
+    printf("[DEBUG-MASTER] process_add_users_requests: add_users_flag=%d, current_total_users=%d\n",
+           shm->add_users_flag, shm->current_total_users);
+
     if (shm->add_users_flag) {
         SimulationMessage msg;
         while (receive_message_from_queue(shm->control_queue_id, &msg, sizeof(ControlPayload), 0, IPC_NOWAIT) != -1) {
             processed++;
-            ControlPayload *payload = (ControlPayload *)msg.message_text;
-            
-            if (shm->current_total_users + payload->users_count <= MAX_USERS_REGISTRY) {
-                shm->current_total_users += payload->users_count;
-            } else {
-                shm->current_total_users = MAX_USERS_REGISTRY;
-            }
+            /* NON incrementiamo current_total_users qui - lo farà add_users dopo lo spawn */
         }
+        printf("[DEBUG-MASTER] Letti %d messaggi dalla coda\n", processed);
     }
 
     if (processed > 0) {
         shm->add_users_flag = 0;
+
+        printf("[DEBUG-MASTER] Configuro BARRIER_ADD_USERS con count=%d\n", processed);
+        setup_barrier(shm->semaphore_sync_id, BARRIER_ADD_USERS_READY, BARRIER_ADD_USERS_GATE, processed);
+
+        printf("[DEBUG-MASTER] Rilascio %d permessi MUTEX_ADD_USERS_PERMISSION\n", processed);
         for (int i = 0; i < processed; i++) {
             release_sem(shm->semaphore_mutex_id, MUTEX_ADD_USERS_PERMISSION);
         }
-        printf("[MASTER] Elaborati %d blocchi add_users.\n", processed);
+
+        printf("[DEBUG-MASTER] Attendo BARRIER_ADD_USERS_READY = 0...\n");
+        while (wait_for_zero(shm->semaphore_sync_id, BARRIER_ADD_USERS_READY) == -1 && errno == EINTR) {
+            /* Riprova se interrotto da segnale */
+        }
+        printf("[DEBUG-MASTER] BARRIER_ADD_USERS_READY raggiunto 0, current_total_users=%d\n",
+               shm->current_total_users);
+    }
+
+    /* Configura la barriera mattutina PRIMA di aprire i gate - così è pronta quando i nuovi utenti partono */
+    int next_morning_count = shm->configuration.quantities.number_of_workers +
+                             shm->configuration.seats.seats_cash_desk +
+                             shm->current_total_users;
+    printf("[DEBUG-MASTER] Configuro BARRIER_MORNING: workers=%d + casse=%d + users=%d = %d\n",
+           shm->configuration.quantities.number_of_workers,
+           shm->configuration.seats.seats_cash_desk,
+           shm->current_total_users,
+           next_morning_count);
+    setup_barrier(shm->semaphore_sync_id, BARRIER_MORNING_READY, BARRIER_MORNING_GATE, next_morning_count);
+
+    if (processed > 0) {
+        printf("[DEBUG-MASTER] Apro BARRIER_ADD_USERS_GATE\n");
+        open_barrier_gate(shm->semaphore_sync_id, BARRIER_ADD_USERS_GATE);
+        printf("[MASTER] Elaborati %d blocchi add_users. Spawn completato.\n", processed);
     }
 }
 

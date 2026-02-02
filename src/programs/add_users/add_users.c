@@ -13,6 +13,7 @@
 #include <signal.h>
 #include <string.h>
 #include <time.h>
+#include <errno.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
 
@@ -54,12 +55,29 @@ int main(int argc, char *argv[]) {
     }
 
     /* 4. Attesa autorizzazione */
+    printf("[DEBUG-ADD_USERS] Attendo permesso dal Master...\n");
     if (wait_for_master_permission(shm) != 0) {
         return EXIT_FAILURE;
     }
+    printf("[DEBUG-ADD_USERS] Permesso ricevuto, current_total_users=%d, richiesti=%d\n",
+           shm->current_total_users, users_to_add);
 
     /* 5. Spawn dei gruppi utenti */
-    int spawned = spawn_user_groups(shm, shmid, users_to_add);
+    printf("[DEBUG-ADD_USERS] Inizio spawn di %d utenti...\n", users_to_add);
+    int spawned = spawn_user_groups(shm, users_to_add);
+    printf("[DEBUG-ADD_USERS] Spawn completato: richiesti=%d, effettivi=%d\n", users_to_add, spawned);
+
+    /* 6. Aggiorna current_total_users con il numero EFFETTIVO di utenti spawnati */
+    reserve_sem(shm->semaphore_mutex_id, MUTEX_SHARED_DATA);
+    int old_total = shm->current_total_users;
+    shm->current_total_users += spawned;
+    printf("[DEBUG-ADD_USERS] current_total_users: %d -> %d\n", old_total, shm->current_total_users);
+    release_sem(shm->semaphore_mutex_id, MUTEX_SHARED_DATA);
+
+    /* 7. Sincronizzazione barriera: segnala spawn completato e attende via libera */
+    printf("[DEBUG-ADD_USERS] Chiamo sync_child_start su BARRIER_ADD_USERS...\n");
+    sync_child_start(shm->semaphore_sync_id, BARRIER_ADD_USERS_READY, BARRIER_ADD_USERS_GATE);
+    printf("[DEBUG-ADD_USERS] sync_child_start completato, gate aperto\n");
 
     printf("[ADD_USERS] Completato. %d utenti aggiunti.\n", spawned);
     return EXIT_SUCCESS;
@@ -170,21 +188,30 @@ void register_user_in_registry(MainSharedMemory *shm, pid_t pid, int group_index
     }
 }
 
-void spawn_single_user(MainSharedMemory *shm, int shmid, int group_size, 
+void spawn_single_user(MainSharedMemory *shm, int group_size,
                        int sync_index, int member_index) {
     pid_t pid = fork();
-    
+
     if (pid == 0) {
         setpgid(0, shm->process_group_pids[GROUP_USERS]);
 
-        char shm_str[24], gsize_str[24], gindex_str[24], is_leader_str[8];
-        sprintf(shm_str, "%d", shmid);
+        char shm_str[24], gsize_str[24], gindex_str[24], is_leader_str[8], late_joiner_str[8];
+        sprintf(shm_str, "%d", shm->shared_memory_id);
         sprintf(gsize_str, "%d", group_size);
         sprintf(gindex_str, "%d", sync_index);
         sprintf(is_leader_str, "%d", (member_index == 0));
+        sprintf(late_joiner_str, "1"); /* Sempre late joiner quando creato da add_users */
 
-        execl("./bin/utente", "utente", shm_str, gsize_str, gindex_str, is_leader_str, (char *)NULL);
-        perror("[ERROR] execl fallita");
+        printf("[DEBUG-SPAWN] Lancio utente con args: %s %s %s %s %s\n",
+               shm_str, gsize_str, gindex_str, is_leader_str, late_joiner_str);
+        fflush(stdout);
+
+        execl("./bin/utente", "utente", shm_str, gsize_str, gindex_str, is_leader_str, late_joiner_str, (char *)NULL);
+        /* Se arriviamo qui, execl è fallita */
+        char cwd[1024];
+        getcwd(cwd, sizeof(cwd));
+        fprintf(stderr, "[ERROR] execl fallita! CWD=%s, errno=%d\n", cwd, errno);
+        perror("[ERROR] execl");
         exit(EXIT_FAILURE);
         
     } else if (pid > 0) {
@@ -194,7 +221,7 @@ void spawn_single_user(MainSharedMemory *shm, int shmid, int group_size,
     }
 }
 
-int spawn_user_groups(MainSharedMemory *shm, int shmid, int total_users) {
+int spawn_user_groups(MainSharedMemory *shm, int total_users) {
     int users_spawned = 0;
 
     while (users_spawned < total_users) {
@@ -217,7 +244,8 @@ int spawn_user_groups(MainSharedMemory *shm, int shmid, int total_users) {
         release_sem(shm->semaphore_mutex_id, MUTEX_SHARED_DATA);
 
         for (int i = 0; i < group_size; i++) {
-            spawn_single_user(shm, shmid, group_size, sync_index, i);
+            printf("Creo un utente\n");
+            spawn_single_user(shm, group_size, sync_index, i);
         }
         
         users_spawned += group_size;

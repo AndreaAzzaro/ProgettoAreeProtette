@@ -59,13 +59,13 @@ void register_user_in_registry(MainSharedMemory *shm, pid_t pid, int group_index
 /**
  * @brief Spawna un singolo utente del gruppo.
  */
-void spawn_single_user(MainSharedMemory *shm, int shmid, int group_size, 
+void spawn_single_user(MainSharedMemory *shm, int group_size,
                        int sync_index, int member_index);
 
 /**
  * @brief Spawna tutti i gruppi di utenti richiesti.
  * @return Numero di utenti effettivamente spawnati.
  */
-int spawn_user_groups(MainSharedMemory *shm, int shmid, int total_users);
+int spawn_user_groups(MainSharedMemory *shm, int total_users);
 
 #endif /* ADD_USERS_H */

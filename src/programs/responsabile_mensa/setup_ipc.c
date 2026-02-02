@@ -119,7 +119,7 @@ void initialize_global_simulation_mutexes(MainSharedMemory *shared_memory_ptr) {
     init_sem_val(semid, MUTEX_SHARED_DATA, 1);
     
     /* Semaforo di controllo per add_users (inizializzato a 0, sbloccato dal Master) */
-    init_sem_val(semid, MUTEX_ADD_USERS_PERMISSION, 0); 
+    init_sem_val(semid, MUTEX_ADD_USERS_PERMISSION, 0);
 
     /* Mutex per la scansione dei tavoli (inizializzato a 1) */
     init_sem_val(semid, MUTEX_TABLES, 1);

@@ -39,7 +39,10 @@ static volatile sig_atomic_t local_daily_cycle_is_active = 0;
 
 int main(int argc, char *argv[]) {
     StatoUtente utente;
-    
+
+    fprintf(stderr, "[DEBUG-UTENTE-MAIN] PID %d avviato, argc=%d\n", getpid(), argc);
+    fflush(stderr);
+
     if (argc < 5) {
         fprintf(stderr, "[ERROR] %s: Parametri insufficienti\n", argv[0]);
         exit(EXIT_FAILURE);
@@ -66,14 +69,16 @@ int main(int argc, char *argv[]) {
  * ========================================================================== */
 
 void init_utente(StatoUtente *utente, int argc, char *argv[]) {
-    (void)argc;
-    
     /* Parsing parametri da linea di comando */
     utente->shared_memory_id = atoi(argv[1]);
     utente->group_size = atoi(argv[2]);
     int sync_index = atoi(argv[3]);
     utente->is_group_leader = (atoi(argv[4]) == 1);
-    
+    utente->is_late_joiner = (argc > 5 && atoi(argv[5]) == 1);
+
+    fprintf(stderr, "[DEBUG-UTENTE-INIT] PID %d: argc=%d, argv[5]=%s, is_late_joiner=%d\n",
+           getpid(), argc, (argc > 5 ? argv[5] : "NULL"), utente->is_late_joiner);
+
     /* Group ID basato sull'indice nel pool di sincronizzazione */
     utente->group_id = sync_index; 
 
@@ -92,8 +97,15 @@ void run_utente_simulation(StatoUtente *utente) {
     while (utente->shm_ptr->is_simulation_running) {
         /* Preparazione giornata */
         reset_stato_giornaliero_utente(utente);
+        if (utente->is_late_joiner) {
+            printf("[DEBUG-UTENTE] PID %d (late_joiner): arrivo a BARRIER_MORNING\n", getpid());
+        }
         sync_child_start(utente->shm_ptr->semaphore_sync_id, BARRIER_MORNING_READY, BARRIER_MORNING_GATE);
-        
+        if (utente->is_late_joiner) {
+            printf("[DEBUG-UTENTE] PID %d (late_joiner): passato BARRIER_MORNING\n", getpid());
+            utente->is_late_joiner = false; /* Non più late joiner dopo il primo giorno */
+        }
+
         /* Esecuzione Percorso Operativo */
         if (local_daily_cycle_is_active) {
             esegui_percorso_mensa_giornaliero(utente);
@@ -105,19 +117,27 @@ void run_utente_simulation(StatoUtente *utente) {
 }
 
 void sincronizza_startup_utente(StatoUtente *utente) {
-    if (utente->shm_ptr->current_simulation_day == 0) {
-        printf("[DEBUG] Utente PID %d: In attesa barriera di Startup.\n", getpid());
+    fprintf(stderr, "[DEBUG-UTENTE-SYNC] PID %d: is_late_joiner=%d, current_day=%d\n",
+           getpid(), utente->is_late_joiner, utente->shm_ptr->current_simulation_day);
+
+    /* IMPORTANTE: controllare is_late_joiner PRIMA di current_simulation_day,
+       altrimenti i late joiner del giorno 0 finiscono sulla barriera startup già passata */
+    if (utente->is_late_joiner) {
+        /* Late joiner: aspetta che il Master configuri la barriera mattutina */
+        fprintf(stderr, "[DEBUG-UTENTE] PID %d: Late joiner, attendo BARRIER_ADD_USERS_GATE...\n", getpid());
+        wait_for_zero(utente->shm_ptr->semaphore_sync_id, BARRIER_ADD_USERS_GATE);
+        fprintf(stderr, "[DEBUG-UTENTE] PID %d: Late joiner, gate aperto, procedo\n", getpid());
+    } else if (utente->shm_ptr->current_simulation_day == 0) {
+        fprintf(stderr, "[DEBUG] Utente PID %d: In attesa barriera di Startup.\n", getpid());
         sync_child_start(utente->shm_ptr->semaphore_sync_id, BARRIER_STARTUP_READY, BARRIER_STARTUP_GATE);
-    } else {
-        printf("[DEBUG] Utente PID %d: Inizializzazione a simulazione in corso.\n", getpid());
     }
-    
+
     if (utente->is_group_leader) {
         reserve_sem(utente->shm_ptr->semaphore_mutex_id, MUTEX_SHARED_DATA);
         utente->shm_ptr->group_statuses[utente->group_id].group_leader_pid = getpid();
         release_sem(utente->shm_ptr->semaphore_mutex_id, MUTEX_SHARED_DATA);
     }
-    printf("[DEBUG] Utente PID %d: Pronto.\n", getpid());
+    printf("[DEBUG] Utente PID %d: Pronto (late_joiner=%d).\n", getpid(), utente->is_late_joiner);
 }
 
 void reset_stato_giornaliero_utente(StatoUtente *utente) {

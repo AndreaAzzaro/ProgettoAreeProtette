@@ -65,7 +65,9 @@ typedef enum {
     BARRIER_MORNING_GATE,       /**< Mattina: Cancello di avvio giornaliero */
     BARRIER_EVENING_READY,      /**< Sera: Conteggio processi arrivati a fine giornata */
     BARRIER_EVENING_GATE,       /**< Sera: Cancello di chiusura/reset giorno e sblocco */
-    SYNC_BARRIER_SEM_COUNT      /**< Totale semafori in questo set (incrementato a 6) */
+    BARRIER_ADD_USERS_READY,    /**< Add Users: Conteggio processi add_users che hanno completato spawn */
+    BARRIER_ADD_USERS_GATE,     /**< Add Users: Cancello di sincronizzazione spawn completato */
+    SYNC_BARRIER_SEM_COUNT      /**< Totale semafori in questo set */
 } SyncBarrierIndex;
 
 /**
