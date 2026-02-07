@@ -396,23 +396,19 @@ static void calculate_food_waste_and_teardown(MainSharedMemory *shm) {
         second_waste += shm->second_course_station.portions[i];
     }
     
-    /* Nota: Anche caffè e dolci contano come waste se avanzano a fine turno */
-    int coffee_waste = 0;
-    for (int i = 0; i < 4; i++) { 
-        coffee_waste += shm->coffee_dessert_station.portions[i];
-    }
+    /* Caffè/Dolci: quantità illimitata (consegna sez. 5.2), non contano come waste */
 
     /* Aggiornamento Statistiche Giornaliere */
     shm->statistics.daily_leftover_plates.first_course_count = first_waste;
     shm->statistics.daily_leftover_plates.second_course_count = second_waste;
-    shm->statistics.daily_leftover_plates.coffee_dessert_count = coffee_waste;
-    shm->statistics.daily_leftover_plates.total_plates_count = first_waste + second_waste + coffee_waste;
+    shm->statistics.daily_leftover_plates.coffee_dessert_count = 0;
+    shm->statistics.daily_leftover_plates.total_plates_count = first_waste + second_waste;
 
     /* Aggiornamento Statistiche Totali (Accumulo) */
     shm->statistics.total_leftover_plates.first_course_count += first_waste;
     shm->statistics.total_leftover_plates.second_course_count += second_waste;
-    shm->statistics.total_leftover_plates.coffee_dessert_count += coffee_waste;
-    shm->statistics.total_leftover_plates.total_plates_count += (first_waste + second_waste + coffee_waste);
+    shm->statistics.total_leftover_plates.coffee_dessert_count += 0;
+    shm->statistics.total_leftover_plates.total_plates_count += (first_waste + second_waste);
 
     release_sem(shm->semaphore_mutex_id, MUTEX_SHARED_DATA);
     release_sem(shm->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
