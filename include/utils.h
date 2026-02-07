@@ -67,9 +67,18 @@ bool evaluate_probability_event(int success_percentage_rate);
  * Trasforma i minuti/unità della simulazione in nanosecondi reali utilizzando nanosleep.
  * Gestisce automaticamente le interruzioni dovute ai segnali (EINTR).
  * 
- * @param units_to_wait Quantità di unità temporali da attendere.
- * @param nanoseconds_per_tick Fattore di conversione (NNANOSECS).
+ * @param simulated_minutes Minuti simulati da attendere.
+ * @param nanoseconds_per_minute Nanosecondi reali per minuto simulato (NNANOSECS).
  */
-void simulate_time_passage(int units_to_wait, long nanoseconds_per_tick);
+void simulate_time_passage(int simulated_minutes, long nanoseconds_per_minute);
+
+/**
+ * Simula il passaggio di un tempo espresso in SECONDI simulati.
+ * Converte internamente: ns_totali = (secondi * nanoseconds_per_minute) / 60.
+ *
+ * @param simulated_seconds Secondi simulati da attendere.
+ * @param nanoseconds_per_minute Nanosecondi reali per minuto simulato (NNANOSECS).
+ */
+void simulate_seconds_passage(int simulated_seconds, long nanoseconds_per_minute);
 
 #endif /* UTILS_H */

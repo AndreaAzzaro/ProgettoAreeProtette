@@ -84,21 +84,36 @@ bool evaluate_probability_event(int success_percentage_rate) {
  * Simula il passaggio del tempo convertendo unità simulate in nanosleep.
  * Gestisce automaticamente le interruzioni da segnale (EINTR).
  */
-void simulate_time_passage(int units_to_wait, long nanoseconds_per_tick) {
-    if (units_to_wait <= 0) return;
+void simulate_time_passage(int simulated_minutes, long nanoseconds_per_minute) {
+    if (simulated_minutes <= 0) return;
 
     struct timespec requested_time;
-    long total_nanoseconds = (long)units_to_wait * nanoseconds_per_tick;
+    long total_nanoseconds = (long)simulated_minutes * nanoseconds_per_minute;
 
-    /* Conversione in secondi e nanosecondi per struct timespec */
     requested_time.tv_sec = total_nanoseconds / 1000000000L;
     requested_time.tv_nsec = total_nanoseconds % 1000000000L;
-    
+
     /* Loop robusto per nanosleep: riprende se interrotto da EINTR */
     while (nanosleep(&requested_time, &requested_time) == -1) {
         if (errno != EINTR) {
-            /* Errore critico non dovuto a segnali */
-            break; 
+            break;
+        }
+    }
+}
+
+void simulate_seconds_passage(int simulated_seconds, long nanoseconds_per_minute) {
+    if (simulated_seconds <= 0) return;
+
+    struct timespec requested_time;
+    /* Conversione: secondi simulati → nanosecondi reali via scala NNANOSECS (per minuto) */
+    long long total_nanoseconds = ((long long)simulated_seconds * nanoseconds_per_minute) / 60;
+
+    requested_time.tv_sec = (time_t)(total_nanoseconds / 1000000000LL);
+    requested_time.tv_nsec = (long)(total_nanoseconds % 1000000000LL);
+
+    while (nanosleep(&requested_time, &requested_time) == -1) {
+        if (errno != EINTR) {
+            break;
         }
     }
 }
