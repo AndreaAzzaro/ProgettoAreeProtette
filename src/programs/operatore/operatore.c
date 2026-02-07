@@ -153,7 +153,7 @@ void prepare_station_context(StatoOperatore *operatore, FoodDistributionStation 
 void fase_lavoro_stazione(StatoOperatore *operatore, FoodDistributionStation *stazione_ptr, int avg_service_time) {
     while (local_daily_cycle_is_active && is_at_work) {
         /* [DESIGN] Probabilità spontanea di richiedere pausa tra un cliente e l'altro */
-        if (generate_random_integer(1, 100) <= 25) {
+        if (generate_random_integer(1, 100) <= 10) {
             is_at_work = 0;
             break;
         }
@@ -192,7 +192,7 @@ void fase_lavoro_stazione(StatoOperatore *operatore, FoodDistributionStation *st
                     int variation = (operatore->station_type == 2) ? 80 : 50;
                     int varied_time = calculate_varied_time(avg_service_time, variation);
                     
-                    simulate_time_passage(varied_time, operatore->shm_ptr->configuration.timings.nanoseconds_per_tick); 
+                    simulate_seconds_passage(varied_time, operatore->shm_ptr->configuration.timings.nanoseconds_per_tick);
                     operatore->total_portions_served++;
 
                     /* Aggiornamento Statistiche Globali (PROTEZIONE MUTEX_SIMULATION_STATS) */
@@ -252,7 +252,7 @@ void fase_decisione_pausa_atomica(StatoOperatore *operatore, FoodDistributionSta
 
 void esegui_pausa_operatore(StatoOperatore *operatore) {
     printf("[OPERATORE] PID %d: Inizio simulazione riposo.\n", getpid());
-    int break_mins = generate_random_integer(5, 30);
+    int break_mins = generate_random_integer(2, 5);
     
     operatore->daily_breaks_taken++;
     reserve_sem(operatore->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);

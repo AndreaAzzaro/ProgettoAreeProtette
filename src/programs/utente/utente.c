@@ -187,7 +187,7 @@ void fase_validazione_ticket(StatoUtente *utente) {
                 int avg_ticket_time = utente->shm_ptr->configuration.timings.average_service_time_ticket;
                 int varied_time = calculate_varied_time(avg_ticket_time, 20);
                 
-                simulate_time_passage(varied_time, utente->shm_ptr->configuration.timings.nanoseconds_per_tick);
+                simulate_seconds_passage(varied_time, utente->shm_ptr->configuration.timings.nanoseconds_per_tick);
                 utente->ticket_is_validated = true;
                 printf("[UTENTE] PID %d: Ticket validato.\n", getpid());
             }
@@ -388,7 +388,7 @@ void fase_consumazione_pasto(StatoUtente *utente, bool p1, bool p2) {
     int count = (p1?1:0) + (p2?1:0);
     if (count > 0) {
         /* [FIX] Tempo di consumo proporzionale e allineato alla scala temporale */
-        int minutes_to_eat = generate_random_integer(5 * count, 10 * count);
+        int minutes_to_eat = generate_random_integer(3 * count, 6 * count);
         simulate_time_passage(minutes_to_eat, utente->shm_ptr->configuration.timings.nanoseconds_per_tick);
     }
     

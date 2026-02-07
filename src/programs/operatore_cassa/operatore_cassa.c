@@ -145,7 +145,7 @@ void fase_lavoro_cassa(StatoCassiere *cassiere) {
 
     while (local_daily_cycle_is_active && is_at_work) {
         /* [DESIGN] Probabilità spontanea di richiedere pausa tra un cliente e l'altro */
-        if (generate_random_integer(1, 100) <= 25) {
+        if (generate_random_integer(1, 100) <= 10) {
             is_at_work = 0;
             break;
         }
@@ -196,7 +196,7 @@ void fase_lavoro_cassa(StatoCassiere *cassiere) {
 
                 /* [PUNTO 4.3] Simulazione Tempo di Servizio */
                 int varied_time = calculate_varied_time(avg_service_time, 20);
-                simulate_time_passage(varied_time, cassiere->shm_ptr->configuration.timings.nanoseconds_per_tick);
+                simulate_seconds_passage(varied_time, cassiere->shm_ptr->configuration.timings.nanoseconds_per_tick);
                 cassiere->total_customers_processed++;
 
                 /* Invio Ricevuta (Feedback all'Utente) */
@@ -237,7 +237,7 @@ void fase_decisione_pausa_cassa(StatoCassiere *cassiere) {
 
 void esegui_pausa_cassa(StatoCassiere *cassiere) {
     printf("[CASSIERE] PID %d: In pausa...\n", getpid());
-    int break_mins = generate_random_integer(5, 20);
+    int break_mins = generate_random_integer(2, 5);
     
     cassiere->daily_breaks_taken++;
     reserve_sem(cassiere->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
