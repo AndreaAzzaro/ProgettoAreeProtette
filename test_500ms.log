@@ -1,0 +1,200 @@
+[DEBUG-UTENTE-MAIN] PID 23206 avviato, argc=5
+[DEBUG-UTENTE-INIT] PID 23206: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23206: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23206: In attesa barriera di Startup.
+[DEBUG-UTENTE-MAIN] PID 23209 avviato, argc=5
+[DEBUG-UTENTE-INIT] PID 23209: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23209: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23209: In attesa barriera di Startup.
+[DEBUG-UTENTE-MAIN] PID 23219 avviato, argc=5
+[DEBUG-UTENTE-MAIN] PID 23217 avviato, argc=5
+[DEBUG-UTENTE-INIT] PID 23217: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23217: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23217: In attesa barriera di Startup.
+[DEBUG-UTENTE-INIT] PID 23219: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23219: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23219: In attesa barriera di Startup.
+[DEBUG-UTENTE-MAIN] PID 23214 avviato, argc=5
+[DEBUG-UTENTE-MAIN] PID 23220 avviato, argc=5
+[DEBUG-UTENTE-INIT] PID 23220: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23220: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23220: In attesa barriera di Startup.
+[DEBUG-UTENTE-INIT] PID 23214: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23214: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23214: In attesa barriera di Startup.
+[DEBUG-UTENTE-MAIN] PID 23221 avviato, argc=5
+[DEBUG-UTENTE-INIT] PID 23221: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-MAIN] PID 23224 avviato, argc=5
+[DEBUG-UTENTE-SYNC] PID 23221: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23221: In attesa barriera di Startup.
+[DEBUG-UTENTE-INIT] PID 23224: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23224: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23224: In attesa barriera di Startup.
+[DEBUG-UTENTE-MAIN] PID 23226 avviato, argc=5
+[DEBUG-UTENTE-INIT] PID 23226: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-MAIN] PID 23211 avviato, argc=5
+[DEBUG-UTENTE-INIT] PID 23211: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23226: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23226: In attesa barriera di Startup.
+[DEBUG-UTENTE-SYNC] PID 23211: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23211: In attesa barriera di Startup.
+[DEBUG-UTENTE-MAIN] PID 23225 avviato, argc=5
+[DEBUG-UTENTE-INIT] PID 23225: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23225: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23225: In attesa barriera di Startup.
+[DEBUG-UTENTE-MAIN] PID 23215 avviato, argc=5
+[DEBUG-UTENTE-INIT] PID 23215: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-MAIN] PID 23213 avviato, argc=5
+[DEBUG-UTENTE-INIT] PID 23213: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23213: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23213: In attesa barriera di Startup.
+[DEBUG-UTENTE-SYNC] PID 23215: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23215: In attesa barriera di Startup.
+[DEBUG-UTENTE-MAIN] PID 23216 avviato, argc=5
+[DEBUG-UTENTE-INIT] PID 23216: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23216: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23216: In attesa barriera di Startup.
+[DEBUG-UTENTE-MAIN] PID 23241 avviato, argc=5
+[DEBUG-UTENTE-INIT] PID 23241: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23241: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23241: In attesa barriera di Startup.
+[DEBUG-UTENTE-MAIN] PID 23239 avviato, argc=5
+[DEBUG-UTENTE-INIT] PID 23239: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23239: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23239: In attesa barriera di Startup.
+[DEBUG-UTENTE-MAIN] PID 23240 avviato, argc=5
+[DEBUG-UTENTE-MAIN] PID 23252 avviato, argc=5
+[DEBUG-UTENTE-MAIN] PID 23255 avviato, argc=5
+[DEBUG-UTENTE-MAIN] PID 23251 avviato, argc=5
+[DEBUG-UTENTE-INIT] PID 23255: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-INIT] PID 23252: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-INIT] PID 23251: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23252: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23252: In attesa barriera di Startup.
+[DEBUG-UTENTE-SYNC] PID 23251: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23251: In attesa barriera di Startup.
+[DEBUG-UTENTE-SYNC] PID 23255: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23255: In attesa barriera di Startup.
+[DEBUG-UTENTE-INIT] PID 23240: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23240: is_late_joiner=0, current_day=0
+[DEBUG-UTENTE-MAIN] PID 23247 avviato, argc=5
+[DEBUG] Utente PID 23240: In attesa barriera di Startup.
+[DEBUG-UTENTE-MAIN] PID 23231 avviato, argc=5
+[DEBUG-UTENTE-MAIN] PID 23230 avviato, argc=5
+[DEBUG-UTENTE-MAIN] PID 23250 avviato, argc=5
+[DEBUG-UTENTE-INIT] PID 23250: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-INIT] PID 23247: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23250: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23250: In attesa barriera di Startup.
+[DEBUG-UTENTE-SYNC] PID 23247: is_late_joiner=0, current_day=0
+[DEBUG-UTENTE-MAIN] PID 23218 avviato, argc=5
+[DEBUG-UTENTE-INIT] PID 23218: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG] Utente PID 23247: In attesa barriera di Startup.
+[DEBUG-UTENTE-SYNC] PID 23218: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23218: In attesa barriera di Startup.
+[DEBUG-UTENTE-INIT] PID 23230: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23230: is_late_joiner=0, current_day=0
+[DEBUG-UTENTE-INIT] PID 23231: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG] Utente PID 23230: In attesa barriera di Startup.
+[DEBUG-UTENTE-SYNC] PID 23231: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23231: In attesa barriera di Startup.
+[DEBUG-UTENTE-MAIN] PID 23232 avviato, argc=5
+[DEBUG-UTENTE-INIT] PID 23232: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23232: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23232: In attesa barriera di Startup.
+[DEBUG-UTENTE-MAIN] PID 23253 avviato, argc=5
+[DEBUG-UTENTE-INIT] PID 23253: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23253: is_late_joiner=0, current_day=0
+[DEBUG-UTENTE-MAIN] PID 23228 avviato, argc=5
+[DEBUG-UTENTE-INIT] PID 23228: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG] Utente PID 23253: In attesa barriera di Startup.
+[DEBUG-UTENTE-SYNC] PID 23228: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23228: In attesa barriera di Startup.
+[DEBUG-UTENTE-MAIN] PID 23242 avviato, argc=5
+[DEBUG-UTENTE-INIT] PID 23242: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23242: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23242: In attesa barriera di Startup.
+[DEBUG-UTENTE-MAIN] PID 23229 avviato, argc=5
+[DEBUG-UTENTE-MAIN] PID 23243 avviato, argc=5
+[DEBUG-UTENTE-INIT] PID 23243: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-INIT] PID 23229: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23243: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23243: In attesa barriera di Startup.
+[DEBUG-UTENTE-SYNC] PID 23229: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23229: In attesa barriera di Startup.
+[DEBUG-UTENTE-MAIN] PID 23222 avviato, argc=5
+[DEBUG-UTENTE-MAIN] PID 23236 avviato, argc=5
+[DEBUG-UTENTE-INIT] PID 23236: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-MAIN] PID 23233 avviato, argc=5
+[DEBUG-UTENTE-INIT] PID 23233: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23236: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23236: In attesa barriera di Startup.
+[DEBUG-UTENTE-SYNC] PID 23233: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23233: In attesa barriera di Startup.
+[DEBUG-UTENTE-MAIN] PID 23223 avviato, argc=5
+[DEBUG-UTENTE-INIT] PID 23223: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23223: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23223: In attesa barriera di Startup.
+[DEBUG-UTENTE-INIT] PID 23222: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23222: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23222: In attesa barriera di Startup.
+[DEBUG-UTENTE-MAIN] PID 23248 avviato, argc=5
+[DEBUG-UTENTE-MAIN] PID 23246 avviato, argc=5
+[DEBUG-UTENTE-INIT] PID 23246: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23246: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23246: In attesa barriera di Startup.
+[DEBUG-UTENTE-INIT] PID 23248: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-MAIN] PID 23227 avviato, argc=5
+[DEBUG-UTENTE-SYNC] PID 23248: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23248: In attesa barriera di Startup.
+[DEBUG-UTENTE-MAIN] PID 23237 avviato, argc=5
+[DEBUG-UTENTE-INIT] PID 23237: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23237: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23237: In attesa barriera di Startup.
+[DEBUG-UTENTE-INIT] PID 23227: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23227: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23227: In attesa barriera di Startup.
+[DEBUG-UTENTE-MAIN] PID 23235 avviato, argc=5
+[DEBUG-UTENTE-MAIN] PID 23207 avviato, argc=5
+[DEBUG-UTENTE-INIT] PID 23207: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23207: is_late_joiner=0, current_day=0
+[DEBUG-UTENTE-INIT] PID 23235: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23235: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23235: In attesa barriera di Startup.
+[DEBUG-UTENTE-MAIN] PID 23238 avviato, argc=5
+[DEBUG-UTENTE-INIT] PID 23238: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23238: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23238: In attesa barriera di Startup.
+[DEBUG] Utente PID 23207: In attesa barriera di Startup.
+[DEBUG-UTENTE-MAIN] PID 23210 avviato, argc=5
+[DEBUG-UTENTE-INIT] PID 23210: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23210: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23210: In attesa barriera di Startup.
+[DEBUG-UTENTE-MAIN] PID 23212 avviato, argc=5
+[DEBUG-UTENTE-INIT] PID 23212: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23212: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23212: In attesa barriera di Startup.
+[DEBUG-UTENTE-MAIN] PID 23208 avviato, argc=5
+[DEBUG-UTENTE-INIT] PID 23208: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23208: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23208: In attesa barriera di Startup.
+[DEBUG-UTENTE-MAIN] PID 23244 avviato, argc=5
+[DEBUG-UTENTE-INIT] PID 23244: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23244: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23244: In attesa barriera di Startup.
+[DEBUG-UTENTE-MAIN] PID 23245 avviato, argc=5
+[DEBUG-UTENTE-INIT] PID 23245: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23245: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23245: In attesa barriera di Startup.
+[DEBUG-UTENTE-MAIN] PID 23254 avviato, argc=5
+[DEBUG-UTENTE-INIT] PID 23254: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23254: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23254: In attesa barriera di Startup.
+[DEBUG-UTENTE-MAIN] PID 23249 avviato, argc=5
+[DEBUG-UTENTE-INIT] PID 23249: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23249: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23249: In attesa barriera di Startup.
+[DEBUG-UTENTE-MAIN] PID 23234 avviato, argc=5
+[DEBUG-UTENTE-INIT] PID 23234: argc=5, argv[5]=NULL, is_late_joiner=0
+[DEBUG-UTENTE-SYNC] PID 23234: is_late_joiner=0, current_day=0
+[DEBUG] Utente PID 23234: In attesa barriera di Startup.
