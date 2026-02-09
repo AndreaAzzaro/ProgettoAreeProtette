@@ -155,70 +155,81 @@ void fase_lavoro_stazione(StatoOperatore *operatore, FoodDistributionStation *st
         /* [DESIGN] Probabilità spontanea di richiedere pausa tra un cliente e l'altro */
         if (generate_random_integer(1, 100) <= 10) {
             is_at_work = 0;
-            break;
+            /* Uscita dal loop via controllo flag is_at_work */
         }
-        /* Check Cancello Refill */
-        if (wait_for_zero(stazione_ptr->semaphore_set_id, STATION_SEM_REFILL_GATE) != -1) {
+        
+        if (local_daily_cycle_is_active && is_at_work) {
+            /* Check Cancello Refill (Interrompibile) */
+            int wait_res = wait_for_zero_interruptible(stazione_ptr->semaphore_set_id, STATION_SEM_REFILL_GATE);
             
-            SimulationMessage msg;
-            /* Ricezione Ordine - Controllo esito esplicito */
-            ssize_t result = receive_message_from_queue(stazione_ptr->message_queue_id, &msg, sizeof(StationPayload), MSG_TYPE_ORDER, 0);
-            
-            if (result == -1) {
-                /* Se l'errore non è un'interruzione (EINTR), usciamo dal turno */
-                if (errno != EINTR) {
+            if (wait_res == 0) {
+                /* Cancello OK: attendi ordine */
+                SimulationMessage msg;
+                /* Ricezione Ordine */
+                ssize_t result = receive_message_from_queue(stazione_ptr->message_queue_id, &msg, sizeof(StationPayload), MSG_TYPE_ORDER, 0);
+                
+                if (result != -1) {
+                    StationPayload *payload = (StationPayload *)msg.message_text;
+                    
+                    /* Verifica Disponibilità Porzioni */
+                    reserve_sem(operatore->shm_ptr->semaphore_mutex_id, MUTEX_SHARED_DATA);
+                    bool available = false;
+                    
+                    if (operatore->station_type == 2) {
+                        available = true; /* Caffè/Dessert sempre disponibili */
+                    } else if (stazione_ptr->portions[payload->dish_index] > 0) {
+                        stazione_ptr->portions[payload->dish_index]--;
+                        available = true;
+                    }
+                    release_sem(operatore->shm_ptr->semaphore_mutex_id, MUTEX_SHARED_DATA);
+
+                    /* Simulazione Tempo e Feedback */
+                    if (available) {
+                        payload->status = ORDER_STATUS_SERVED;
+                        
+                        /* [CONSEGNA 5.1] Calcolo tempo casuale nell'intorno ± variation% */
+                        int variation = (operatore->station_type == 2) ? 80 : 50;
+                        int varied_time = calculate_varied_time(avg_service_time, variation);
+                        
+                        simulate_seconds_passage(varied_time, operatore->shm_ptr->configuration.timings.nanoseconds_per_tick);
+                        operatore->total_portions_served++;
+
+                        /* Aggiornamento Statistiche Globali (PROTEZIONE MUTEX_SIMULATION_STATS) */
+                        reserve_sem(operatore->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
+                        if (operatore->station_type == 0) {
+                            operatore->shm_ptr->statistics.daily_served_plates.first_course_count++;
+                            operatore->shm_ptr->statistics.total_served_plates.first_course_count++;
+                        } else if (operatore->station_type == 1) {
+                            operatore->shm_ptr->statistics.daily_served_plates.second_course_count++;
+                            operatore->shm_ptr->statistics.total_served_plates.second_course_count++;
+                        } else {
+                            operatore->shm_ptr->statistics.daily_served_plates.coffee_dessert_count++;
+                            operatore->shm_ptr->statistics.total_served_plates.coffee_dessert_count++;
+                        }
+                        operatore->shm_ptr->statistics.daily_served_plates.total_plates_count++;
+                        operatore->shm_ptr->statistics.total_served_plates.total_plates_count++;
+                        release_sem(operatore->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
+
+                    } else {
+                        payload->status = ORDER_STATUS_OUT_OF_STOCK;
+                    }
+
+                    /* Risposta all'Utente */
+                    msg.message_type = payload->user_pid;
+                    send_message_to_queue(stazione_ptr->message_queue_id, &msg, sizeof(StationPayload), 0);
+                    
+                } else if (errno != EINTR) {
+                    /* Se l'errore non è un'interruzione (EINTR), usciamo dal turno */
+                    perror("[OPERATORE] Errore critico ricezione messaggio");
                     is_at_work = 0;
                 }
-            } else {
-                StationPayload *payload = (StationPayload *)msg.message_text;
+                /* Se EINTR su msgrcv, loop riprende e ricontrolla flag */
                 
-                /* Verifica Disponibilità Porzioni */
-                reserve_sem(operatore->shm_ptr->semaphore_mutex_id, MUTEX_SHARED_DATA);
-                bool available = false;
-                
-                if (operatore->station_type == 2) {
-                    available = true; /* Caffè/Dessert sempre disponibili (?) o non decrementano */
-                } else if (stazione_ptr->portions[payload->dish_index] > 0) {
-                    stazione_ptr->portions[payload->dish_index]--;
-                    available = true;
-                }
-                release_sem(operatore->shm_ptr->semaphore_mutex_id, MUTEX_SHARED_DATA);
-
-                /* Simulazione Tempo e Feedback */
-                if (available) {
-                    payload->status = ORDER_STATUS_SERVED;
-                    
-                    /* [CONSEGNA 5.1] Calcolo tempo casuale nell'intorno ± variation% */
-                    int variation = (operatore->station_type == 2) ? 80 : 50;
-                    int varied_time = calculate_varied_time(avg_service_time, variation);
-                    
-                    simulate_seconds_passage(varied_time, operatore->shm_ptr->configuration.timings.nanoseconds_per_tick);
-                    operatore->total_portions_served++;
-
-                    /* Aggiornamento Statistiche Globali (PROTEZIONE MUTEX_SIMULATION_STATS) */
-                    reserve_sem(operatore->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
-                    if (operatore->station_type == 0) {
-                        operatore->shm_ptr->statistics.daily_served_plates.first_course_count++;
-                        operatore->shm_ptr->statistics.total_served_plates.first_course_count++;
-                    } else if (operatore->station_type == 1) {
-                        operatore->shm_ptr->statistics.daily_served_plates.second_course_count++;
-                        operatore->shm_ptr->statistics.total_served_plates.second_course_count++;
-                    } else {
-                        operatore->shm_ptr->statistics.daily_served_plates.coffee_dessert_count++;
-                        operatore->shm_ptr->statistics.total_served_plates.coffee_dessert_count++;
-                    }
-                    operatore->shm_ptr->statistics.daily_served_plates.total_plates_count++;
-                    operatore->shm_ptr->statistics.total_served_plates.total_plates_count++;
-                    release_sem(operatore->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
-
-                } else {
-                    payload->status = ORDER_STATUS_OUT_OF_STOCK;
-                }
-
-                /* Risposta all'Utente */
-                msg.message_type = payload->user_pid;
-                send_message_to_queue(stazione_ptr->message_queue_id, &msg, sizeof(StationPayload), 0);
+            } else if (errno != EINTR) {
+                 perror("[OPERATORE] Errore critico su wait_for_zero");
+                 is_at_work = 0;
             }
+            /* Se EINTR su wait_for_zero, loop riprende e ricontrolla flag */
         }
     }
 }
