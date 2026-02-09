@@ -33,15 +33,15 @@
 /** Flag atomica per la gestione del ciclo giornaliero tramite segnali dal Master. */
 static volatile sig_atomic_t local_daily_cycle_is_active = 0;
 
+/* Prototypes locali per helper non esposti in header */
+ssize_t receive_message_robust(int queue_id, void *msg_ptr, size_t size, long type);
+
 /* ==========================================================================
  *                             SEZIONE: MAIN
  * ========================================================================== */
 
 int main(int argc, char *argv[]) {
     StatoUtente utente;
-
-    fprintf(stderr, "[DEBUG-UTENTE-MAIN] PID %d avviato, argc=%d\n", getpid(), argc);
-    fflush(stderr);
 
     if (argc < 5) {
         fprintf(stderr, "[ERROR] %s: Parametri insufficienti\n", argv[0]);
@@ -76,9 +76,6 @@ void init_utente(StatoUtente *utente, int argc, char *argv[]) {
     utente->is_group_leader = (atoi(argv[4]) == 1);
     utente->is_late_joiner = (argc > 5 && atoi(argv[5]) == 1);
 
-    fprintf(stderr, "[DEBUG-UTENTE-INIT] PID %d: argc=%d, argv[5]=%s, is_late_joiner=%d\n",
-           getpid(), argc, (argc > 5 ? argv[5] : "NULL"), utente->is_late_joiner);
-
     /* Group ID basato sull'indice nel pool di sincronizzazione */
     utente->group_id = sync_index; 
 
@@ -97,12 +94,10 @@ void run_utente_simulation(StatoUtente *utente) {
     while (utente->shm_ptr->is_simulation_running) {
         /* Preparazione giornata */
         reset_stato_giornaliero_utente(utente);
-        if (utente->is_late_joiner) {
-            printf("[DEBUG-UTENTE] PID %d (late_joiner): arrivo a BARRIER_MORNING\n", getpid());
-        }
+        
         sync_child_start(utente->shm_ptr->semaphore_sync_id, BARRIER_MORNING_READY, BARRIER_MORNING_GATE);
+        
         if (utente->is_late_joiner) {
-            printf("[DEBUG-UTENTE] PID %d (late_joiner): passato BARRIER_MORNING\n", getpid());
             utente->is_late_joiner = false; /* Non più late joiner dopo il primo giorno */
         }
 
@@ -117,18 +112,25 @@ void run_utente_simulation(StatoUtente *utente) {
 }
 
 void sincronizza_startup_utente(StatoUtente *utente) {
-    fprintf(stderr, "[DEBUG-UTENTE-SYNC] PID %d: is_late_joiner=%d, current_day=%d\n",
-           getpid(), utente->is_late_joiner, utente->shm_ptr->current_simulation_day);
-
-    /* IMPORTANTE: controllare is_late_joiner PRIMA di current_simulation_day,
-       altrimenti i late joiner del giorno 0 finiscono sulla barriera startup già passata */
+    /* IMPORTANTE: controllare is_late_joiner PRIMA di current_simulation_day */
     if (utente->is_late_joiner) {
-        /* Late joiner: aspetta che il Master configuri la barriera mattutina */
-        fprintf(stderr, "[DEBUG-UTENTE] PID %d: Late joiner, attendo BARRIER_ADD_USERS_GATE...\n", getpid());
-        wait_for_zero(utente->shm_ptr->semaphore_sync_id, BARRIER_ADD_USERS_GATE);
-        fprintf(stderr, "[DEBUG-UTENTE] PID %d: Late joiner, gate aperto, procedo\n", getpid());
+        /* Late joiner: aspetta che il Master configuri la barriera mattutina (Interrompibile) */
+        printf("[DEBUG-UTENTE] PID %d: Late joiner, attendo BARRIER_ADD_USERS_GATE...\n", getpid());
+        
+        /* Uso versione interrompibile per non bloccare su SIGINT/SIGTERM */
+        while (local_daily_cycle_is_active || utente->shm_ptr->is_simulation_running) {
+             if (wait_for_zero_interruptible(utente->shm_ptr->semaphore_sync_id, BARRIER_ADD_USERS_GATE) == 0) {
+                 break;
+             }
+             if (errno != EINTR) { 
+                 perror("[UTENTE] Errore critico late joiner"); 
+                 break; 
+             }
+        }
+        printf("[DEBUG-UTENTE] PID %d: Late joiner, gate aperto, procedo\n", getpid());
+
     } else if (utente->shm_ptr->current_simulation_day == 0) {
-        fprintf(stderr, "[DEBUG] Utente PID %d: In attesa barriera di Startup.\n", getpid());
+        printf("[DEBUG] Utente PID %d: In attesa barriera di Startup.\n", getpid());
         sync_child_start(utente->shm_ptr->semaphore_sync_id, BARRIER_STARTUP_READY, BARRIER_STARTUP_GATE);
     }
 
@@ -266,12 +268,11 @@ void fase_ritiro_formale(StatoUtente *utente) {
     int base_sem = s_idx * GROUP_SEMS_PER_ENTRY;
     
     if (reserve_sem_try_no_undo(utente->shm_ptr->group_sync_semaphore_id, base_sem + GROUP_SEM_PRE_CASHIER) == -1) {
-        /* Se fallisce (EAGAIN), significa che era già a 0. Bene così, proseguiamo. */
-        printf("[DEBUG] PID %d: Skip lock PRE_CASHIER during abandonment (already locked).\n", getpid());
+        /* Se fallisce (EAGAIN), significa che era già a 0. Bene così. */
     }
 
     if (reserve_sem_try_no_undo(utente->shm_ptr->group_sync_semaphore_id, base_sem + GROUP_SEM_EXIT) == -1) {
-        printf("[DEBUG] PID %d: Skip lock EXIT during abandonment (already locked).\n", getpid());
+        /* Se fallisce, ok */
     }
 }
 
@@ -314,14 +315,20 @@ void fase_pagamento_cassa(StatoUtente *utente, bool p1, bool p2) {
 
     printf("[UTENTE] PID %d: In coda alla Cassa...\n", getpid());
 
-    if (send_message_to_queue(utente->shm_ptr->register_station.message_queue_id, &msg, sizeof(CashierPayload), 0) != -1) {
-        if (receive_message_with_soft_timeout(utente->shm_ptr->register_station.message_queue_id, &msg, sizeof(CashierPayload), getpid()) != -1) {
-            if (local_daily_cycle_is_active) {
-                clock_gettime(CLOCK_MONOTONIC, &end_t);
-                double w_min = get_simulated_minutes(start_t, end_t, utente->shm_ptr->configuration.timings.nanoseconds_per_tick);
-                update_wait_time_stat(utente, w_min, 3); /* 3: Cassa */
-                printf("[UTENTE] PID %d: Pagamento completato.\n", getpid());
-            }
+    /* Invio Messaggio (Interrompibile) */
+    if (send_message_to_queue_interruptible(utente->shm_ptr->register_station.message_queue_id, &msg, sizeof(CashierPayload), 0) == -1) {
+        return;
+    }
+
+    if (!local_daily_cycle_is_active) return;
+
+    /* Ricezione Risposta (Robusta e Bloccante) */
+    if (receive_message_robust(utente->shm_ptr->register_station.message_queue_id, &msg, sizeof(CashierPayload), getpid()) != -1) {
+        if (local_daily_cycle_is_active) {
+            clock_gettime(CLOCK_MONOTONIC, &end_t);
+            double w_min = get_simulated_minutes(start_t, end_t, utente->shm_ptr->configuration.timings.nanoseconds_per_tick);
+            update_wait_time_stat(utente, w_min, 3); /* 3: Cassa */
+            printf("[UTENTE] PID %d: Pagamento completato.\n", getpid());
         }
     }
 }
@@ -387,7 +394,6 @@ void fase_consumazione_pasto(StatoUtente *utente, bool p1, bool p2) {
 
     int count = (p1?1:0) + (p2?1:0);
     if (count > 0) {
-        /* [FIX] Tempo di consumo proporzionale e allineato alla scala temporale */
         int minutes_to_eat = generate_random_integer(3 * count, 6 * count);
         simulate_time_passage(minutes_to_eat, utente->shm_ptr->configuration.timings.nanoseconds_per_tick);
     }
@@ -405,8 +411,6 @@ void fase_consumazione_pasto(StatoUtente *utente, bool p1, bool p2) {
 }
 
 void fase_servizio_caffe(StatoUtente *utente) {
-    /* [FIX] Permettiamo il caffè anche se il timer è scaduto, purché il pasto sia finito */
-    
     FoodDistributionStation *stazione = &utente->shm_ptr->coffee_dessert_station;
     int choice = utente->selected_dessert_coffee_index;
 
@@ -487,14 +491,22 @@ void genera_identita_casuale(StatoUtente *utente) {
     utente->group_patience_threshold = generate_random_integer(30, 120);
 }
 
-ssize_t receive_message_with_soft_timeout(int queue_id, SimulationMessage *msg, size_t size, long type) {
+/* Funzione helper per ricezione robusta senza polling */
+ssize_t receive_message_robust(int queue_id, void *msg_ptr, size_t size, long type) {
+    ssize_t res;
     while (local_daily_cycle_is_active) {
-        ssize_t res = receive_message_from_queue(queue_id, msg, size, type, IPC_NOWAIT);
+        /* Chiamata bloccante (0), ma interrompibile da segnali */
+        res = receive_message_from_queue(queue_id, msg_ptr, size, type, 0); 
+        
         if (res != -1) return res;
-        if (errno != ENOMSG) return -1;
-        usleep(5000); /* 5ms prima del retry */
+        
+        /* Se interrotto da segnale (EINTR), il loop controlla local_daily_cycle_is_active e riprova se attivo */
+        if (errno != EINTR) {
+            perror("[UTENTE] Errore msgrcv");
+            return -1;
+        }
     }
-    return -1;
+    return -1; /* Ciclo finito */
 }
 
 bool fase_checkout_piatto(StatoUtente *utente, FoodDistributionStation *stazione, int *choice, int stazione_tipo) {
@@ -508,13 +520,19 @@ bool fase_checkout_piatto(StatoUtente *utente, FoodDistributionStation *stazione
     pay->dish_index = *choice;
     pay->status = 0;
 
-    if (!local_daily_cycle_is_active) { printf("[DEBUG] PID %d: Exit at line 484\n", getpid()); return false; }
-    if (send_message_to_queue_interruptible(stazione->message_queue_id, &msg, sizeof(StationPayload), 0) == -1) { printf("[DEBUG] PID %d: Exit at line 485 (send failed)\n", getpid()); return false; }
-    printf("[DEBUG] PID %d: Passed line 485 (send ok)\n", getpid());
-    if (!local_daily_cycle_is_active) { printf("[DEBUG] PID %d: Exit at line 486\n", getpid()); return false; }
-    if (receive_message_with_soft_timeout(stazione->message_queue_id, &msg, sizeof(StationPayload), getpid()) == -1) { printf("[DEBUG] PID %d: Exit at line 487 (receive failed)\n", getpid()); return false; }
-    printf("[DEBUG] PID %d: Passed line 487 (receive ok)\n", getpid());
-    if (!local_daily_cycle_is_active) { printf("[DEBUG] PID %d: Exit at line 489\n", getpid()); return false; }
+    if (!local_daily_cycle_is_active) return false;
+    
+    /* Invio ordine */
+    if (send_message_to_queue_interruptible(stazione->message_queue_id, &msg, sizeof(StationPayload), 0) == -1) { 
+        return false; 
+    }
+    
+    if (!local_daily_cycle_is_active) return false;
+    
+    /* Ricezione risposta (Robusta e Bloccante) */
+    if (receive_message_robust(stazione->message_queue_id, &msg, sizeof(StationPayload), getpid()) == -1) { 
+        return false; 
+    }
 
     clock_gettime(CLOCK_MONOTONIC, &e_t);
     double w_min = get_simulated_minutes(s_t, e_t, utente->shm_ptr->configuration.timings.nanoseconds_per_tick);

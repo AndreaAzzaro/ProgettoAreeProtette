@@ -147,68 +147,70 @@ void fase_lavoro_cassa(StatoCassiere *cassiere) {
         /* [DESIGN] Probabilità spontanea di richiedere pausa tra un cliente e l'altro */
         if (generate_random_integer(1, 100) <= 10) {
             is_at_work = 0;
-            break;
+            /* Uscita dal loop controllata dal flag is_at_work */
         }
 
-        SimulationMessage msg;
-        
-        /* [COMMUNICATION DISORDER] Attesa se il gate è bloccato */
-        /* [COMMUNICATION DISORDER] Attesa se il gate è bloccato */
-        int wait_res = wait_for_zero(cassiere->shm_ptr->register_station.semaphore_set_id, STATION_SEM_STOP_GATE);
-        
-        /* Se wait ha successo (0) o se fallisce ma NON per interruzione segnale (es. errore grave, ignoriamo per ora), procediamo.
-           Se wait fallisce per EINTR, il loop ricomincerebbe. Per evitare continue, usiamo un if grande. */
-        
-        if (wait_res == 0 || (wait_res == -1 && errno != EINTR)) {
-            /* Ricezione Dati Pagamento (MSQ Cassa) */
-            ssize_t result = receive_message_from_queue(cassiere->shm_ptr->register_station.message_queue_id, 
-                                                       &msg, sizeof(CashierPayload), MSG_TYPE_ORDER, 0);
+        if (local_daily_cycle_is_active && is_at_work) {
+            SimulationMessage msg;
             
-            if (result == -1) {
-                if (errno != EINTR) {
-                    is_at_work = 0;
-                }
-            } else {   
-                CashierPayload *payload = (CashierPayload *)msg.message_text;
-                double amount = 0.0;
-
-                /* [PUNTO 4.1] Calcolo Importo in base ai prezzi configurati */
-                if (payload->had_first)  amount += cassiere->shm_ptr->configuration.prices.price_first_course;
-                if (payload->had_second) amount += cassiere->shm_ptr->configuration.prices.price_second_course;
-                if (payload->want_coffee) amount += cassiere->shm_ptr->configuration.prices.price_coffee_dessert;
-
-                /* Applicazione Sconto Ticket (es. 50% di sconto se ticket validato) */
-                if (payload->has_discount) {
-                    amount *= 0.5; 
-                }
-
-                /* [PUNTO 4.2] Aggiornamento Incassi (Protezione Mutex) */
-                reserve_sem(cassiere->shm_ptr->semaphore_mutex_id, MUTEX_SHARED_DATA);
-                cassiere->shm_ptr->register_station.daily_income += amount;
-                cassiere->shm_ptr->register_station.total_income += amount;
-                release_sem(cassiere->shm_ptr->semaphore_mutex_id, MUTEX_SHARED_DATA);
-
-                /* Aggiornamento Statistiche Globali (PROTEZIONE MUTEX_SIMULATION_STATS) */
-                reserve_sem(cassiere->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
-                cassiere->shm_ptr->statistics.income_statistics.current_daily_income += amount;
-                cassiere->shm_ptr->statistics.income_statistics.accumulated_total_income += amount;
-                release_sem(cassiere->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
-
-                /* [PUNTO 4.3] Simulazione Tempo di Servizio */
-                int varied_time = calculate_varied_time(avg_service_time, 20);
-                simulate_seconds_passage(varied_time, cassiere->shm_ptr->configuration.timings.nanoseconds_per_tick);
-                cassiere->total_customers_processed++;
-
-                /* Invio Ricevuta (Feedback all'Utente) */
-                msg.message_type = payload->user_pid;
-                send_message_to_queue(cassiere->shm_ptr->register_station.message_queue_id, 
-                                     &msg, sizeof(CashierPayload), 0);
+            /* [COMMUNICATION DISORDER] Attesa se il gate è bloccato (Interrompibile) */
+            int wait_res = wait_for_zero_interruptible(cassiere->shm_ptr->register_station.semaphore_set_id, STATION_SEM_STOP_GATE);
+            
+            if (wait_res == 0) {
+                /* Gate aperto: Ricezione Dati Pagamento (MSQ Cassa) - Bloccante ma interrompibile */
+                ssize_t result = receive_message_from_queue(cassiere->shm_ptr->register_station.message_queue_id, 
+                                                           &msg, sizeof(CashierPayload), MSG_TYPE_ORDER, 0);
                 
-                printf("[CASSIERE] PID %d: Gestito Utente %d. Incassato: %.2f EUR.\n", 
-                       getpid(), payload->user_pid, amount);
+                if (result != -1) {   
+                    CashierPayload *payload = (CashierPayload *)msg.message_text;
+                    double amount = 0.0;
+
+                    /* [PUNTO 4.1] Calcolo Importo in base ai prezzi configurati */
+                    if (payload->had_first)  amount += cassiere->shm_ptr->configuration.prices.price_first_course;
+                    if (payload->had_second) amount += cassiere->shm_ptr->configuration.prices.price_second_course;
+                    if (payload->want_coffee) amount += cassiere->shm_ptr->configuration.prices.price_coffee_dessert;
+
+                    /* Applicazione Sconto Ticket (es. 50% di sconto se ticket validato) */
+                    if (payload->has_discount) {
+                        amount *= 0.5; 
+                    }
+
+                    /* [PUNTO 4.2] Aggiornamento Incassi (Protezione Mutex) */
+                    reserve_sem(cassiere->shm_ptr->semaphore_mutex_id, MUTEX_SHARED_DATA);
+                    cassiere->shm_ptr->register_station.daily_income += amount;
+                    cassiere->shm_ptr->register_station.total_income += amount;
+                    release_sem(cassiere->shm_ptr->semaphore_mutex_id, MUTEX_SHARED_DATA);
+
+                    /* Aggiornamento Statistiche Globali (PROTEZIONE MUTEX_SIMULATION_STATS) */
+                    reserve_sem(cassiere->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
+                    cassiere->shm_ptr->statistics.income_statistics.current_daily_income += amount;
+                    cassiere->shm_ptr->statistics.income_statistics.accumulated_total_income += amount;
+                    release_sem(cassiere->shm_ptr->semaphore_mutex_id, MUTEX_SIMULATION_STATS);
+
+                    /* [PUNTO 4.3] Simulazione Tempo di Servizio */
+                    int varied_time = calculate_varied_time(avg_service_time, 20);
+                    simulate_seconds_passage(varied_time, cassiere->shm_ptr->configuration.timings.nanoseconds_per_tick);
+                    cassiere->total_customers_processed++;
+
+                    /* Invio Ricevuta (Feedback all'Utente) */
+                    msg.message_type = payload->user_pid;
+                    send_message_to_queue(cassiere->shm_ptr->register_station.message_queue_id, 
+                                         &msg, sizeof(CashierPayload), 0);
+                    
+                    printf("[CASSIERE] PID %d: Gestito Utente %d. Incassato: %.2f EUR.\n", 
+                           getpid(), payload->user_pid, amount);
+                } else if (errno != EINTR) {
+                    perror("[CASSIERE] Errore critico ricezione messaggio");
+                    is_at_work = 0; /* Errore grave, termina turno */
+                }
+                /* Se EINTR, il loop riprende e ricontrolla i flag */
+            } else if (errno != EINTR) {
+                perror("[CASSIERE] Errore critico su wait_for_zero");
+                is_at_work = 0;
             }
+            /* Se EINTR su wait_for_zero, il loop riprende */
         }
-}
+    }
 }
 
 void fase_decisione_pausa_cassa(StatoCassiere *cassiere) {
