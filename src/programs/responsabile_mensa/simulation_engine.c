@@ -302,11 +302,33 @@ static void handle_daily_cycle_end(int sig) {
 
 static void handle_emergency_termination(int sig) {
     (void)sig;
+    
+    /* Disable further signal handling to prevent re-entrance */
+    signal(SIGINT, SIG_IGN);
+    signal(SIGTERM, SIG_IGN);
+    
+    printf("\n[SYSTEM] Terminazione di emergenza richiesta (SIGINT/SIGTERM)...\n");
+    
     if (global_shm_ref != NULL) {
         global_shm_ref->is_simulation_running = 0;
         global_shm_ref->statistics.reason_for_termination = TERMINATION_REASON_SIGNAL;
+        
+        /* Broadcast SIGTERM to all children */
+        printf("[SYSTEM] Invio SIGTERM a tutti i processi figli...\n");
+        broadcast_signal_to_all_groups(global_shm_ref, SIGTERM);
+        
+        /* Wait for children with timeout (max 2 seconds) */
+        alarm(2);  /* Set timeout */
+        while (wait(NULL) > 0);
+        alarm(0);  /* Cancel alarm */
+        
+        /* Cleanup IPC resources */
+        printf("[SYSTEM] Pulizia risorse IPC...\n");
+        cleanup_ipc_resources(global_shm_ref);
     }
-    daily_cycle_is_active = 0;
+    
+    printf("[SYSTEM] Terminazione completata.\n");
+    _exit(EXIT_SUCCESS);  /* Immediate termination, no atexit() handlers */
 }
 
 static void handle_add_users_request(int sig) {
