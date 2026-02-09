@@ -24,6 +24,7 @@
 #include "queue.h"
 #include "utils.h"
 #include "add_users.h"
+#include "ipc_keys.h"
 
 /* ==========================================================================
  *                             SEZIONE: MAIN
@@ -97,13 +98,7 @@ int find_free_group_index(MainSharedMemory *shm) {
 }
 
 int connect_to_simulation(MainSharedMemory **shm_out, int *shmid_out) {
-    key_t key = ftok(IPC_KEY_PATH, IPC_PROJECT_ID);
-    if (key == -1) {
-        perror("[ERROR] ftok fallita. Assicurati che config/config.conf esista");
-        return -1;
-    }
-
-    int shmid = shmget(key, 0, 0);
+    int shmid = shmget(IPC_KEY_SHARED_MEMORY, 0, 0);
     if (shmid == -1) {
         fprintf(stderr, "[ERROR] Impossibile trovare la memoria condivisa.\n");
         fprintf(stderr, "La simulazione è stata avviata?\n");

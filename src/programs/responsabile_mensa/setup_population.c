@@ -107,6 +107,7 @@ void launch_simulation_operators(MainSharedMemory *shared_memory_ptr) {
                 exec_worker(shmid, s);
             } else if (pid > 0) {
                 if (i == 0) pgid = pid; /* Il primo figlio definisce il PGID del gruppo */
+                setpgid(pid, pgid); /* Padre imposta PGID (race condition fix) */
             }
         }
         shared_memory_ptr->process_group_pids[groups[s]] = pgid;
@@ -115,7 +116,7 @@ void launch_simulation_operators(MainSharedMemory *shared_memory_ptr) {
     /* 2. Lancio Operatori di Cassa (Cassieri) */
     pid_t cassa_pgid = 0;
     int num_cashiers = shared_memory_ptr->configuration.seats.seats_cash_desk;
-    
+
     for (int i = 0; i < num_cashiers; i++) {
         pid_t pid = fork();
         if (pid == 0) {
@@ -127,6 +128,7 @@ void launch_simulation_operators(MainSharedMemory *shared_memory_ptr) {
             exit(EXIT_FAILURE);
         } else if (pid > 0) {
             if (i == 0) cassa_pgid = pid;
+            setpgid(pid, cassa_pgid); /* Padre imposta PGID (race condition fix) */
         }
     }
     shared_memory_ptr->process_group_pids[GROUP_CASHIERS] = cassa_pgid;
@@ -186,6 +188,14 @@ void launch_simulation_users(MainSharedMemory *shared_memory_ptr) {
                 perror("[ERROR] execl utente fallita");
                 exit(EXIT_FAILURE);
             } else if (pid > 0) {
+                /* Definizione PGID globale basato sul primissimo utente creato */
+                if (shared_memory_ptr->process_group_pids[GROUP_USERS] == 0) {
+                    shared_memory_ptr->process_group_pids[GROUP_USERS] = pid;
+                }
+
+                /* Padre imposta PGID (race condition fix) */
+                setpgid(pid, shared_memory_ptr->process_group_pids[GROUP_USERS]);
+
                 /* Registrazione nel registro di sistema per gestione zombie e deadlock */
                 reserve_sem(shared_memory_ptr->semaphore_mutex_id, MUTEX_SHARED_DATA);
                 int registered = 0;
@@ -197,11 +207,6 @@ void launch_simulation_users(MainSharedMemory *shared_memory_ptr) {
                     }
                 }
                 release_sem(shared_memory_ptr->semaphore_mutex_id, MUTEX_SHARED_DATA);
-
-                /* Definizione PGID globale basato sul primissimo utente creato */
-                if (shared_memory_ptr->process_group_pids[GROUP_USERS] == 0) {
-                    shared_memory_ptr->process_group_pids[GROUP_USERS] = pid;
-                }
             }
         }
         current_sync_index++;

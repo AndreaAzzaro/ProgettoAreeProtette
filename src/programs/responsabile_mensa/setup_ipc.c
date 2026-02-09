@@ -24,6 +24,7 @@
 #include "queue.h"
 #include "utils.h"
 #include "setup_ipc.h"
+#include "ipc_keys.h"
 
 /* ==========================================================================
  *                       SEZIONE: PROTOTIPI PRIVATI
@@ -32,8 +33,10 @@
 /**
  * @brief Inizializza le risorse (MQ + SEM) per una singola stazione di distribuzione.
  * @param station Puntatore alla struttura stazione in SHM.
+ * @param queue_key Chiave IPC fissa per la coda di messaggi.
+ * @param sem_key Chiave IPC fissa per il set di semafori.
  */
-static void init_station_resource(FoodDistributionStation *station);
+static void init_station_resource(FoodDistributionStation *station, key_t queue_key, key_t sem_key);
 
 /* ==========================================================================
  *                    SEZIONE: IMPLEMENTAZIONE PUBBLICA
@@ -46,16 +49,10 @@ MainSharedMemory* initialize_simulation_shared_memory(int group_pool_size) {
     /* Calcolo della dimensione totale: struct + pool dinamico (Flexible Array Member) */
     size_t shm_size = sizeof(MainSharedMemory) + (group_pool_size * sizeof(GroupStatus));
 
-    key_t key = ftok(IPC_KEY_PATH, IPC_PROJECT_ID);
-    if (key == -1) {
-        perror("[ERROR] ftok fallita per la memoria condivisa");
-        exit(EXIT_FAILURE);
-    }
-
     /* ==========================================================================
      *  TAULA RASA: Pulizia pre-emptiva risorse orfane della sessione precedente
      * ========================================================================== */
-    int old_shmid = shmget(key, 0, 0);
+    int old_shmid = shmget(IPC_KEY_SHARED_MEMORY, 0, 0);
     if (old_shmid != -1) {
         printf("[MASTER] Tabula Rasa: Trovata SHM orfana (ID: %d). Rimozione in corso...\n", old_shmid);
         if (shmctl(old_shmid, IPC_RMID, NULL) == -1) {
@@ -64,7 +61,7 @@ MainSharedMemory* initialize_simulation_shared_memory(int group_pool_size) {
     }
 
     /* Creazione del segmento con IPC_EXCL per garantire un'area di memoria fresca */
-    shmid = create_shared_memory_segment(key, shm_size, IPC_CREAT | IPC_EXCL | 0666);
+    shmid = create_shared_memory_segment(IPC_KEY_SHARED_MEMORY, shm_size, IPC_CREAT | IPC_EXCL | 0666);
     
     if (shmid == -1) {
         perror("[ERROR] Creazione memoria condivisa fallita (anche dopo Tabula Rasa)");
@@ -89,7 +86,7 @@ MainSharedMemory* initialize_simulation_shared_memory(int group_pool_size) {
 }
 
 void initialize_simulation_start_barriers(MainSharedMemory *shared_memory_ptr) {
-    int semid = create_sem_set(IPC_PRIVATE, SYNC_BARRIER_SEM_COUNT, IPC_CREAT | 0666);
+    int semid = create_sem_set(IPC_KEY_SEMAPHORE_SYNC, SYNC_BARRIER_SEM_COUNT, IPC_CREAT | 0666);
     if (semid == -1) {
         perror("[ERROR] Creazione barriere di sincronizzazione fallita");
         exit(EXIT_FAILURE);
@@ -108,57 +105,63 @@ void initialize_daily_cycle_barriers(MainSharedMemory *shared_memory_ptr) {
 }
 
 void initialize_global_simulation_mutexes(MainSharedMemory *shared_memory_ptr) {
-    int semid = create_sem_set(IPC_PRIVATE, MUTEX_SEMAPHORE_COUNT, IPC_CREAT | 0666);
+    int semid = create_sem_set(IPC_KEY_SEMAPHORE_MUTEX, MUTEX_SEMAPHORE_COUNT, IPC_CREAT | 0666);
     if (semid == -1) {
         perror("[ERROR] Creazione mutex globali fallita");
         exit(EXIT_FAILURE);
     }
-    
+
     /* Mutex binari (inizializzati a 1) */
     init_sem_val(semid, MUTEX_SIMULATION_STATS, 1);
     init_sem_val(semid, MUTEX_SHARED_DATA, 1);
-    
+
     /* Semaforo di controllo per add_users (inizializzato a 0, sbloccato dal Master) */
     init_sem_val(semid, MUTEX_ADD_USERS_PERMISSION, 0);
 
     /* Mutex per la scansione dei tavoli (inizializzato a 1) */
     init_sem_val(semid, MUTEX_TABLES, 1);
-    
+
     shared_memory_ptr->semaphore_mutex_id = semid;
 }
 
 void initialize_distribution_stations(MainSharedMemory *shared_memory_ptr) {
-    init_station_resource(&shared_memory_ptr->first_course_station);
-    init_station_resource(&shared_memory_ptr->second_course_station);
-    init_station_resource(&shared_memory_ptr->coffee_dessert_station);
+    init_station_resource(&shared_memory_ptr->first_course_station,
+                          IPC_KEY_QUEUE_FIRST_STATION,
+                          IPC_KEY_SEMAPHORE_FIRST_STATION);
+    init_station_resource(&shared_memory_ptr->second_course_station,
+                          IPC_KEY_QUEUE_SECOND_STATION,
+                          IPC_KEY_SEMAPHORE_SECOND_STATION);
+    init_station_resource(&shared_memory_ptr->coffee_dessert_station,
+                          IPC_KEY_QUEUE_COFFEE_STATION,
+                          IPC_KEY_SEMAPHORE_COFFEE_STATION);
 }
 
 void initialize_dining_area_seats_semaphores(MainSharedMemory *shared_memory_ptr) {
-    int semid = create_sem_set(IPC_PRIVATE, 1, IPC_CREAT | 0666);
+    int semid = create_sem_set(IPC_KEY_SEMAPHORE_DINING_AREA, 1, IPC_CREAT | 0666);
     if (semid == -1) {
         perror("[ERROR] Creazione semaforo posti a sedere fallita");
         exit(EXIT_FAILURE);
     }
-    
+
     /* Il valore reale verrà impostato dal Master dopo il caricamento della configurazione */
     init_sem_val(semid, 0, 0);
     shared_memory_ptr->seat_area.condition_semaphore_id = semid;
 }
 
 void initialize_ticket_validation_semaphores(MainSharedMemory *shared_memory_ptr) {
-    int semid = create_sem_set(IPC_PRIVATE, 1, IPC_CREAT | 0666);
+    int semid = create_sem_set(IPC_KEY_SEMAPHORE_TICKET, 1, IPC_CREAT | 0666);
     if (semid == -1) {
         perror("[ERROR] Creazione semaforo ticket fallita");
         exit(EXIT_FAILURE);
     }
-    
+
     init_sem_val(semid, 0, TICKET_VALIDATORS_COUNT);
     shared_memory_ptr->semaphore_ticket_id = semid;
 }
 
 void initialize_cashier_checkout_message_queue(MainSharedMemory *shared_memory_ptr) {
     /* Set semafori specifico per la cassa (include gate di blocco disorder) */
-    int semid = create_sem_set(IPC_PRIVATE, STATION_SEM_COUNT, IPC_CREAT | 0666);
+    int semid = create_sem_set(IPC_KEY_SEMAPHORE_REGISTER_STATION, STATION_SEM_COUNT, IPC_CREAT | 0666);
     if (semid == -1) {
         perror("[ERROR] Creazione set semafori cassa fallita");
         exit(EXIT_FAILURE);
@@ -173,7 +176,7 @@ void initialize_cashier_checkout_message_queue(MainSharedMemory *shared_memory_p
     shared_memory_ptr->register_station.semaphore_set_id = semid;
 
     /* Coda messaggi per la cassa */
-    int msqid = create_message_queue(IPC_PRIVATE, IPC_CREAT | 0666);
+    int msqid = create_message_queue(IPC_KEY_QUEUE_REGISTER_STATION, IPC_CREAT | 0666);
     if (msqid == -1) {
         perror("[ERROR] Creazione coda messaggi cassa fallita");
         exit(EXIT_FAILURE);
@@ -191,9 +194,9 @@ void initialize_cashier_checkout_message_queue(MainSharedMemory *shared_memory_p
 void initialize_control_structures(MainSharedMemory *shm_ptr) {
     shm_ptr->current_total_users = shm_ptr->configuration.quantities.number_of_initial_users;
     shm_ptr->add_users_flag = 0;
-    
+
     /* Coda di comunicazione Master <-> add_users.c */
-    int msqid = create_message_queue(IPC_PRIVATE, IPC_CREAT | 0666);
+    int msqid = create_message_queue(IPC_KEY_QUEUE_CONTROL, IPC_CREAT | 0666);
     if (msqid == -1) {
         perror("[ERROR] Creazione coda di controllo fallita");
         exit(EXIT_FAILURE);
@@ -202,7 +205,7 @@ void initialize_control_structures(MainSharedMemory *shm_ptr) {
     /* Ottimizzazione */
     struct msqid_ds ds;
     if (msgctl(msqid, IPC_STAT, &ds) != -1) {
-        ds.msg_qbytes = 16384; 
+        ds.msg_qbytes = 16384;
         msgctl(msqid, IPC_SET, &ds);
     }
     shm_ptr->control_queue_id = msqid;
@@ -210,8 +213,8 @@ void initialize_control_structures(MainSharedMemory *shm_ptr) {
 
 void initialize_group_sync_pool(MainSharedMemory *shm_ptr, int pool_size) {
     int total_sems = pool_size * GROUP_SEMS_PER_ENTRY;
-    int semid = create_sem_set(IPC_PRIVATE, total_sems, IPC_CREAT | 0666);
-    
+    int semid = create_sem_set(IPC_KEY_SEMAPHORE_GROUP_POOL, total_sems, IPC_CREAT | 0666);
+
     if (semid == -1) {
         perror("[ERROR] Creazione pool semafori gruppi fallita");
         exit(EXIT_FAILURE);
@@ -244,9 +247,9 @@ void initialize_ipc_sources(MainSharedMemory *shm_ptr) {
  *                    SEZIONE: IMPLEMENTAZIONE PRIVATA
  * ========================================================================== */
 
-static void init_station_resource(FoodDistributionStation *station) {
+static void init_station_resource(FoodDistributionStation *station, key_t queue_key, key_t sem_key) {
     /* 1. Coda Messaggi */
-    station->message_queue_id = create_message_queue(IPC_PRIVATE, IPC_CREAT | 0666);
+    station->message_queue_id = create_message_queue(queue_key, IPC_CREAT | 0666);
     if (station->message_queue_id == -1) {
         perror("[ERROR] Creazione coda messaggi stazione fallita");
         exit(EXIT_FAILURE);
@@ -255,20 +258,20 @@ static void init_station_resource(FoodDistributionStation *station) {
     /* Ottimizzazione throughput */
     struct msqid_ds ds;
     if (msgctl(station->message_queue_id, IPC_STAT, &ds) != -1) {
-        ds.msg_qbytes = 65536; 
+        ds.msg_qbytes = 65536;
         msgctl(station->message_queue_id, IPC_SET, &ds);
     }
 
     /* 2. Set Semafori Stazione */
-    station->semaphore_set_id = create_sem_set(IPC_PRIVATE, STATION_SEM_COUNT, IPC_CREAT | 0666);
+    station->semaphore_set_id = create_sem_set(sem_key, STATION_SEM_COUNT, IPC_CREAT | 0666);
     if (station->semaphore_set_id == -1) {
         perror("[ERROR] Creazione set semafori stazione fallita");
         exit(EXIT_FAILURE);
     }
 
     /* Valori iniziali */
-    init_sem_val(station->semaphore_set_id, STATION_SEM_AVAILABLE_POSTS, 0); 
+    init_sem_val(station->semaphore_set_id, STATION_SEM_AVAILABLE_POSTS, 0);
     init_sem_val(station->semaphore_set_id, STATION_SEM_USER_QUEUE, 0);
-    init_sem_val(station->semaphore_set_id, STATION_SEM_REFILL_GATE, 0); 
+    init_sem_val(station->semaphore_set_id, STATION_SEM_REFILL_GATE, 0);
     init_sem_val(station->semaphore_set_id, STATION_SEM_REFILL_ACK, 0);
 }
