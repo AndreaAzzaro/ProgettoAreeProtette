@@ -188,11 +188,12 @@ void launch_simulation_users(MainSharedMemory *shared_memory_ptr) {
             } else if (pid > 0) {
                 /* Registrazione nel registro di sistema per gestione zombie e deadlock */
                 reserve_sem(shared_memory_ptr->semaphore_mutex_id, MUTEX_SHARED_DATA);
-                for (int r = 0; r < MAX_USERS_REGISTRY; r++) {
+                int registered = 0;
+                for (int r = 0; r < MAX_USERS_REGISTRY && !registered; r++) {
                     if (shared_memory_ptr->user_registry[r].pid == 0) {
                         shared_memory_ptr->user_registry[r].pid = pid;
                         shared_memory_ptr->user_registry[r].group_index = current_sync_index;
-                        break;
+                        registered = 1;
                     }
                 }
                 release_sem(shared_memory_ptr->semaphore_mutex_id, MUTEX_SHARED_DATA);

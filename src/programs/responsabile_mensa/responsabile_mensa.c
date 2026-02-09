@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <errno.h>
 
 #include "common.h"
 #include "responsabile_mensa.h"
@@ -113,13 +114,28 @@ void setup_daily_barriers(MainSharedMemory *shm_ptr) {
 void synchronize_prework_barrier(MainSharedMemory *shm_ptr) {
     printf("[MASTER] In attesa dei figli per il via libera globale (Startup Barrier)...\n");
     
-    /* Attesa che il contatore READY arrivi a 0 (Tutti i figli hanno chiamato sync_child_start) */
-    wait_for_zero(shm_ptr->semaphore_sync_id, BARRIER_STARTUP_READY);
+    /* Attesa interrompibile: controlla is_simulation_running dopo ogni EINTR */
+    int barrier_reached = 0;
+    int critical_error = 0;
+    
+    while (shm_ptr->is_simulation_running && !barrier_reached && !critical_error) {
+        if (wait_for_zero_interruptible(shm_ptr->semaphore_sync_id, BARRIER_STARTUP_READY) == 0) {
+            barrier_reached = 1;
+        } else if (errno != EINTR) {
+            perror("[MASTER] Errore critico su startup barrier");
+            critical_error = 1;
+        }
+        /* EINTR: segnale ricevuto, ricontrolla is_simulation_running nel while */
+    }
     
     /* Sblocco del cancello (GATE -> 0) per permettere ai figli di procedere */
     open_barrier_gate(shm_ptr->semaphore_sync_id, BARRIER_STARTUP_GATE);
     
-    printf("[MASTER] Startup completata! Inizio servizio mensa.\n");
+    if (shm_ptr->is_simulation_running && barrier_reached) {
+        printf("[MASTER] Startup completata! Inizio servizio mensa.\n");
+    } else {
+        printf("[MASTER] Startup interrotta da segnale.\n");
+    }
 }
 
 void start_simulation(MainSharedMemory *shm_ptr) {

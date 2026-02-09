@@ -70,10 +70,16 @@ void run_simulation_loop(MainSharedMemory *shm) {
     while (shm->is_simulation_running && shm->current_simulation_day < shm->configuration.timings.simulation_duration_days) {
         
         /* 1. Fase Preparazione Giorno */
-        while (shm->is_simulation_running &&
-               wait_for_zero(shm->semaphore_sync_id, BARRIER_MORNING_READY) == -1 &&
-               errno == EINTR) {
-            /* Riprova se interrotto da segnale */
+        int morning_barrier_ok = 0;
+        int morning_critical_err = 0;
+        while (shm->is_simulation_running && !morning_barrier_ok && !morning_critical_err) {
+            if (wait_for_zero_interruptible(shm->semaphore_sync_id, BARRIER_MORNING_READY) == 0) {
+                morning_barrier_ok = 1;
+            } else if (errno != EINTR) {
+                perror("[MASTER] Errore critico su barriera mattutina");
+                morning_critical_err = 1;
+            }
+            /* EINTR: segnale ricevuto, ricontrolla is_simulation_running nel while */
         }
 
         if (shm->is_simulation_running) {
@@ -118,10 +124,16 @@ void run_simulation_loop(MainSharedMemory *shm) {
             broadcast_signal_to_all_groups(shm, end_sig);
 
             /* Sincronizzazione serale */
-            while (shm->is_simulation_running &&
-                   wait_for_zero(shm->semaphore_sync_id, BARRIER_EVENING_READY) == -1 &&
-                   errno == EINTR) {
-                /* Riprova se interrotto da segnale */
+            int evening_barrier_ok = 0;
+            int evening_critical_err = 0;
+            while (shm->is_simulation_running && !evening_barrier_ok && !evening_critical_err) {
+                if (wait_for_zero_interruptible(shm->semaphore_sync_id, BARRIER_EVENING_READY) == 0) {
+                    evening_barrier_ok = 1;
+                } else if (errno != EINTR) {
+                    perror("[MASTER] Errore critico su barriera serale");
+                    evening_critical_err = 1;
+                }
+                /* EINTR: segnale ricevuto, ricontrolla is_simulation_running nel while */
             }
 
             if (shm->is_simulation_running) {
@@ -331,7 +343,8 @@ static void handle_sigchld(int sig) {
             reserve_sem_try_no_undo(global_shm_ref->semaphore_sync_id, BARRIER_EVENING_READY);
 
             /* Compensazione gruppi */
-            for (int r = 0; r < MAX_USERS_REGISTRY; r++) {
+            int found = 0;
+            for (int r = 0; r < MAX_USERS_REGISTRY && !found; r++) {
                 if (global_shm_ref->user_registry[r].pid == pid) {
                     int g_idx = global_shm_ref->user_registry[r].group_index;
                     int base = g_idx * GROUP_SEMS_PER_ENTRY;
@@ -348,7 +361,7 @@ static void handle_sigchld(int sig) {
                     }
 
                     global_shm_ref->user_registry[r].pid = 0; 
-                    break;
+                    found = 1;
                 }
             }
         }
@@ -465,8 +478,16 @@ static void process_add_users_requests(MainSharedMemory *shm) {
         }
 
         printf("[DEBUG-MASTER] Attendo BARRIER_ADD_USERS_READY = 0...\n");
-        while (wait_for_zero(shm->semaphore_sync_id, BARRIER_ADD_USERS_READY) == -1 && errno == EINTR) {
-            /* Riprova se interrotto da segnale */
+        int add_users_barrier_ok = 0;
+        int add_users_critical_err = 0;
+        while (shm->is_simulation_running && !add_users_barrier_ok && !add_users_critical_err) {
+            if (wait_for_zero_interruptible(shm->semaphore_sync_id, BARRIER_ADD_USERS_READY) == 0) {
+                add_users_barrier_ok = 1;
+            } else if (errno != EINTR) {
+                perror("[MASTER] Errore critico su barriera add_users");
+                add_users_critical_err = 1;
+            }
+            /* EINTR: segnale ricevuto, ricontrolla is_simulation_running nel while */
         }
         printf("[DEBUG-MASTER] BARRIER_ADD_USERS_READY raggiunto 0, current_total_users=%d\n",
                shm->current_total_users);

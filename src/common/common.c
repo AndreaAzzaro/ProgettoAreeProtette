@@ -53,6 +53,7 @@ void cleanup_ipc_resources(MainSharedMemory *shared_memory_ptr) {
     delete_sem_set(shared_memory_ptr->first_course_station.semaphore_set_id);
     delete_sem_set(shared_memory_ptr->second_course_station.semaphore_set_id);
     delete_sem_set(shared_memory_ptr->coffee_dessert_station.semaphore_set_id);
+    delete_sem_set(shared_memory_ptr->register_station.semaphore_set_id);
 
     /* 3. Risorse globali (barriere, mutex, ticket, posti) */
     delete_sem_set(shared_memory_ptr->semaphore_sync_id);
