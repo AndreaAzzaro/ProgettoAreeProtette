@@ -179,7 +179,7 @@ void handle_refill_cycle(MainSharedMemory *shm) {
 
     /* Refill Primi */
     release_sem(shm->first_course_station.semaphore_set_id, STATION_SEM_REFILL_GATE);
-    for (int i = 0; i < MAX_DISHES_PER_CATEGORY; i++) {
+    for (int i = 0; i < shm->food_menu.number_of_first_courses; i++) {
         shm->first_course_station.portions[i] += shm->configuration.thresholds.refill_amount_primi;
         if (shm->first_course_station.portions[i] > shm->configuration.thresholds.maximum_portions_primi) {
             shm->first_course_station.portions[i] = shm->configuration.thresholds.maximum_portions_primi;
@@ -189,7 +189,7 @@ void handle_refill_cycle(MainSharedMemory *shm) {
 
     /* Refill Secondi */
     release_sem(shm->second_course_station.semaphore_set_id, STATION_SEM_REFILL_GATE);
-    for (int i = 0; i < MAX_DISHES_PER_CATEGORY; i++) {
+    for (int i = 0; i < shm->food_menu.number_of_second_courses; i++) {
         shm->second_course_station.portions[i] += shm->configuration.thresholds.refill_amount_secondi;
         if (shm->second_course_station.portions[i] > shm->configuration.thresholds.maximum_portions_secondi) {
             shm->second_course_station.portions[i] = shm->configuration.thresholds.maximum_portions_secondi;
@@ -427,14 +427,14 @@ static void calculate_food_waste_and_teardown(MainSharedMemory *shm) {
 static void perform_initial_daily_refill(MainSharedMemory *shm) {
     /* Primi */
     release_sem(shm->first_course_station.semaphore_set_id, STATION_SEM_REFILL_GATE);
-    for (int i = 0; i < MAX_DISHES_PER_CATEGORY; i++) {
+    for (int i = 0; i < shm->food_menu.number_of_first_courses; i++) {
         shm->first_course_station.portions[i] = shm->configuration.thresholds.refill_amount_primi;
     }
     reserve_sem(shm->first_course_station.semaphore_set_id, STATION_SEM_REFILL_GATE);
 
     /* Secondi */
     release_sem(shm->second_course_station.semaphore_set_id, STATION_SEM_REFILL_GATE);
-    for (int i = 0; i < MAX_DISHES_PER_CATEGORY; i++) {
+    for (int i = 0; i < shm->food_menu.number_of_second_courses; i++) {
         shm->second_course_station.portions[i] = shm->configuration.thresholds.refill_amount_secondi;
     }
     reserve_sem(shm->second_course_station.semaphore_set_id, STATION_SEM_REFILL_GATE);
