@@ -106,8 +106,10 @@ void run_utente_simulation(StatoUtente *utente) {
             esegui_percorso_mensa_giornaliero(utente);
         }
 
-        /* Fine giornata */
-        sync_child_start(utente->shm_ptr->semaphore_sync_id, BARRIER_EVENING_READY, BARRIER_EVENING_GATE);
+        /* Fine giornata (skip se simulazione terminata) */
+        if (utente->shm_ptr->is_simulation_running) {
+            sync_child_start(utente->shm_ptr->semaphore_sync_id, BARRIER_EVENING_READY, BARRIER_EVENING_GATE);
+        }
     }
 }
 

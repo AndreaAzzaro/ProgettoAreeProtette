@@ -22,6 +22,7 @@
 #include "shm.h"
 #include "config.h"
 #include "menu.h"
+#include "statistics.h"
 
 /* ==========================================================================
  *                             SEZIONE: MAIN
@@ -84,6 +85,14 @@ int main(int argc, char *argv[]) {
     /* 7. Terminazione Coordinata */
     printf("[MASTER] Fine simulazione rilevata. Notifica ai figli e rimozione risorse...\n");
     terminate_simulation_gracefully(shm_ptr, EXIT_SUCCESS);
+
+    /* 8. Report Finale (figli terminati, SHM ancora valida) */
+    printf("\n[MASTER] Elaborazione report finale in corso...\n");
+    SimulationStatistics final_stats = collect_simulation_statistics(shm_ptr);
+    display_final_simulation_report(final_stats, shm_ptr->current_simulation_day);
+
+    /* 9. Cleanup risorse IPC */
+    cleanup_ipc_resources(shm_ptr);
 
     return EXIT_SUCCESS;
 }

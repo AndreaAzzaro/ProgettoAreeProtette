@@ -135,8 +135,10 @@ void run_cassiere_simulation(StatoCassiere *cassiere) {
             }
         }
 
-        /* [FINE GIORNATA] Sincronizzazione Serale */
-        sync_child_start(cassiere->shm_ptr->semaphore_sync_id, BARRIER_EVENING_READY, BARRIER_EVENING_GATE);
+        /* [FINE GIORNATA] Sincronizzazione Serale (skip se simulazione terminata) */
+        if (cassiere->shm_ptr->is_simulation_running) {
+            sync_child_start(cassiere->shm_ptr->semaphore_sync_id, BARRIER_EVENING_READY, BARRIER_EVENING_GATE);
+        }
     }
 }
 

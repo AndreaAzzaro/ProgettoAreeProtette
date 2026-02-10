@@ -164,16 +164,11 @@ void run_simulation_loop(MainSharedMemory *shm) {
                 printf("[MASTER] --- FINE GIORNO %d ---\n", shm->current_simulation_day);
             } else {
                 open_barrier_gate(shm->semaphore_sync_id, BARRIER_EVENING_GATE);
+                open_barrier_gate(shm->semaphore_sync_id, BARRIER_MORNING_GATE);
             }
         }
     }
 
-    /* 4. Fine Simulazione */
-    usleep(500000); /* Breve attesa per permettere ai figli di stampare i log di chiusura */
-    printf("\n[MASTER] Elaborazione report finale in corso...\n");
-    
-    SimulationStatistics final_stats = collect_simulation_statistics(shm);
-    display_final_simulation_report(final_stats, shm->current_simulation_day);
 }
 void handle_refill_cycle(MainSharedMemory *shm) {
     /* [CONSEGNA 6] Simulazione tempo di esecuzione refill (AVG ± 20%) */

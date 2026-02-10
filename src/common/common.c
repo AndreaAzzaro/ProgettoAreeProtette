@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <signal.h>
 #include <sys/wait.h>
 
 /* Includes del progetto */
@@ -73,11 +74,17 @@ void cleanup_ipc_resources(MainSharedMemory *shared_memory_ptr) {
  * Attende tutti i figli prima di rimuovere le risorse IPC.
  */
 void terminate_simulation_gracefully(MainSharedMemory *shared_memory_ptr, int exit_code) {
+    (void)exit_code;
     printf("\n[SYSTEM] Terminazione simulazione in corso...\n");
+
+    /* Invia SIGTERM a tutti i gruppi di processi per sbloccare eventuali figli in attesa */
+    for (int i = 0; i < MAX_PROCESS_GROUPS; i++) {
+        pid_t pgid = shared_memory_ptr->process_group_pids[i];
+        if (pgid > 0) {
+            kill(-pgid, SIGTERM);
+        }
+    }
 
     /* Attende che tutti i processi figli terminino prima di rimuovere le IPC */
     while (wait(NULL) > 0);
-
-    cleanup_ipc_resources(shared_memory_ptr);
-    exit(exit_code);
 }

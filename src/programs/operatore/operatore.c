@@ -132,8 +132,10 @@ void run_operatore_simulation(StatoOperatore *operatore) {
             /* Se res == -1 (interrotto da segnale), il loop ricontrolla local_daily_cycle_is_active */
         }
 
-        /* [FINE GIORNATA] Sincronizzazione Serale */
-        sync_child_start(operatore->shm_ptr->semaphore_sync_id, BARRIER_EVENING_READY, BARRIER_EVENING_GATE);
+        /* [FINE GIORNATA] Sincronizzazione Serale (skip se simulazione terminata) */
+        if (operatore->shm_ptr->is_simulation_running) {
+            sync_child_start(operatore->shm_ptr->semaphore_sync_id, BARRIER_EVENING_READY, BARRIER_EVENING_GATE);
+        }
     }
 }
 
